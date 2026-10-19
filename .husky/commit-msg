@@ -1,0 +1,101 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 커밋 메시지 파일
+COMMIT_MSG_FILE="$1"
+
+# 첫 번째 줄 가져오기
+COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+# merge 또는 revert 작업 중에는 훅을 실행하지 않음
+if [ -f "$(git rev-parse --git-path MERGE_HEAD)" ] ||
+   [ -f "$(git rev-parse --git-path REVERT_HEAD)" ]; then
+    echo "merge/revert 커밋이므로 Husky 검사를 건너뜁니다."
+    exit 0
+fi
+
+# 커밋 메시지 규칙 검사
+if ! echo "$COMMIT_MSG" | grep -qE '^(asset|build|chore|ci|design|docs|feat|fix|hotfix|perf|refactor|revert|style|test)(\(.+\))?!?: .+'; then
+    echo "❌ 커밋 메시지는 'type: 설명' 형식이어야 합니다."
+    echo ""
+    echo "예시:"
+    echo "  feat: 플레이어 이동 기능 추가"
+    echo "  fix: 총알 충돌 오류 수정"
+    echo "  docs: README 수정"
+    exit 1
+fi
+
+# 본문 검사
+# 첫 번째 줄을 제외하고, 빈 줄과 Git 주석(#)을 제거한 뒤 본문이 있는지 확인
+BODY=$(tail -n +2 "$COMMIT_MSG_FILE" | grep -vE '^[[:space:]]*(#|$)' | head -n 1)
+
+if [ -z "$BODY" ]; then
+    echo "❌ 커밋 메시지 본문을 최소 1줄 이상 작성해야 합니다."
+    echo ""
+    echo "예시:"
+    echo "  feat: 플레이어 자동 공격 기능 추가"
+    echo ""
+    echo "  오토 모드 활성화 시 일정 주기로 총알을 발사하도록 구현"
+    exit 1
+fi
+
+# type 추출
+TYPE=$(echo "$COMMIT_MSG" | sed -E 's/^([a-z]+).*/\1/')
+
+# type에 따른 이모지 설정
+case "$TYPE" in
+    asset)
+        EMOJI="🎨"
+        ;;
+    build)
+        EMOJI="📦"
+        ;;
+    chore)
+        EMOJI="🔧"
+        ;;
+    ci)
+        EMOJI="👷"
+        ;;
+    design)
+        EMOJI="🖌️"
+        ;;
+    docs)
+        EMOJI="📝"
+        ;;
+    feat)
+        EMOJI="✨"
+        ;;
+    fix)
+        EMOJI="🐛"
+        ;;
+    hotfix)
+        EMOJI="🚑"
+        ;;
+    perf)
+        EMOJI="⚡"
+        ;;
+    refactor)
+        EMOJI="♻️"
+        ;;
+    revert)
+        EMOJI="⏪"
+        ;;
+    style)
+        EMOJI="💄"
+        ;;
+    test)
+        EMOJI="✅"
+        ;;
+esac
+
+# 첫 번째 줄 앞에 이모지 추가
+TEMP_FILE="${COMMIT_MSG_FILE}.tmp"
+
+{
+    echo "$EMOJI $COMMIT_MSG"
+    tail -n +2 "$COMMIT_MSG_FILE"
+} > "$TEMP_FILE"
+
+mv "$TEMP_FILE" "$COMMIT_MSG_FILE"
+
+exit 0
