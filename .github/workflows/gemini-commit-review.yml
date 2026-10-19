@@ -1,0 +1,151 @@
+name: Gemini PR Review
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - 'Assets/02.Scripts/**/*.cs'
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: gemini-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review C# pull request
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Draft PR에서는 리뷰하지 않습니다.
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Create pull request diff
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git diff \
+            --no-ext-diff \
+            --unified=40 \
+            "${BASE_SHA}...${HEAD_SHA}" \
+            -- ':(glob)Assets/02.Scripts/**/*.cs' > pr.diff
+
+          if [[ ! -s pr.diff ]]; then
+            echo "Assets/02.Scripts에서 리뷰할 C# 변경사항이 없습니다."
+            exit 1
+          fi
+
+      - name: Run Gemini review
+        id: gemini_review
+        uses: google-github-actions/run-gemini-cli@v0.1.22
+        env:
+          GEMINI_CLI_TRUST_WORKSPACE: 'true'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          gemini_model: gemini-3.1-flash-lite
+          github_pr_number: ${{ github.event.pull_request.number }}
+          prompt: |
+            현재 Pull Request의 코드 변경사항을 리뷰하세요.
+
+            반드시 먼저 pr.diff 파일을 읽고,
+            Assets/02.Scripts 폴더에 포함된 C# 변경사항을 검토하세요.
+
+            저장소의 GEMINI.md와
+            해당 문서가 참조하는 Docs/CodeReviewGuide.md의
+            코드 리뷰 기준을 반드시 적용하세요.
+
+            PR에서 변경된 코드의 의도와 주변 코드를 함께 확인하세요.
+
+            다음 내용을 중점적으로 검토하세요.
+
+            - 실제 발생 가능한 버그
+            - NullReferenceException 등 예외 가능성
+            - Unity 생명주기 문제
+            - Update / FixedUpdate 사용 문제
+            - Coroutine / Invoke / async 작업의 생명주기
+            - 이벤트 등록 및 해제 문제
+            - 성능 문제
+            - 불필요한 메모리 할당
+            - 객체 간 결합도
+            - 클래스 책임
+            - 가독성 및 유지보수성
+
+            변경사항과 직접 관련된 문제를 우선하세요.
+
+            근거가 약한 추측,
+            단순한 취향 차이,
+            과도한 디자인 패턴 적용,
+            불필요한 리팩터링 제안은 피하세요.
+
+            실제 실행하거나 테스트하지 않은 내용은
+            실행 또는 테스트했다고 표현하지 마세요.
+
+            파일을 수정하거나 Commit하지 마세요.
+
+            리뷰 결과만 한국어로 작성하세요.
+
+      - name: Add review to Actions summary
+        if: always()
+        shell: bash
+        env:
+          REVIEW_BODY: ${{ steps.gemini_review.outputs.summary }}
+          REVIEW_ERROR: ${{ steps.gemini_review.outputs.error }}
+        run: |
+          {
+            echo "## Gemini PR Review"
+            echo
+
+            if [[ -n "${REVIEW_BODY}" ]]; then
+              printf '%s\n' "${REVIEW_BODY}"
+            else
+              echo "Gemini 리뷰 결과가 생성되지 않았습니다."
+            fi
+
+            if [[ -n "${REVIEW_ERROR}" ]]; then
+              echo
+              echo "### Error"
+              printf '%s\n' "${REVIEW_ERROR}"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Post Gemini review comment
+        if: ${{ steps.gemini_review.outputs.summary != '' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_BODY: ${{ steps.gemini_review.outputs.summary }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          jq -n \
+            --arg body "## 🤖 Gemini AI Code Review
+
+          ${REVIEW_BODY}" \
+            '{body: $body}' > comment.json
+
+          gh api \
+            --method POST \
+            "/repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --input comment.json
