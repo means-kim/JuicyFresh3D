@@ -13,6 +13,7 @@ namespace JuicyFresh3D.Editor
     {
         private const string ModelPath = "Assets/01.Scenes/UkYoung/05.Models/Character_model.fbx";
         private const string IdlePath = "Assets/01.Scenes/UkYoung/06.Animations/Idle.fbx";
+        private const string Idle2Path = "Assets/01.Scenes/UkYoung/06.Animations/Anim_Idle2.fbx";
         private const string IdleToSprintPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_IdleToSprint.fbx";
         private const string StandardRunPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_StandardRun.fbx";
         private const string SprintPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_Sprint.fbx";
@@ -111,6 +112,31 @@ namespace JuicyFresh3D.Editor
             Debug.Log("Run To Stop was reimported with a playable clip and baked root transforms.");
         }
 
+        [MenuItem("Tools/JuicyFresh3D/Use Idle2")]
+        public static void UseIdle2()
+        {
+            Avatar avatar = ConfigureCharacterModel();
+            AnimationClip idle2Clip = ConfigureAnimation(Idle2Path, avatar, true);
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+            if (controller == null)
+            {
+                throw new System.IO.FileNotFoundException("Parkour Animator Controller was not found.", ControllerPath);
+            }
+
+            AnimatorState idleState = controller.layers[0].stateMachine.states
+                .Select(child => child.state)
+                .FirstOrDefault(state => state.name == "Idle");
+            if (idleState == null)
+            {
+                throw new System.InvalidOperationException("Idle state was not found in the Parkour Animator Controller.");
+            }
+
+            idleState.motion = idle2Clip;
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Idle state motion was replaced with Anim_Idle2.");
+        }
+
         private static Avatar ConfigureCharacterModel()
         {
             ModelImporter importer = AssetImporter.GetAtPath(ModelPath) as ModelImporter;
@@ -138,7 +164,7 @@ namespace JuicyFresh3D.Editor
             string path,
             Avatar avatar,
             bool loop,
-            bool bakeRootTransforms = false)
+            bool bakeRootHeight = false)
         {
             ModelImporter importer = AssetImporter.GetAtPath(path) as ModelImporter;
             if (importer == null)
@@ -165,10 +191,10 @@ namespace JuicyFresh3D.Editor
                 clip.keepOriginalOrientation = true;
                 clip.keepOriginalPositionY = true;
                 clip.keepOriginalPositionXZ = true;
-                clip.lockRootRotation = bakeRootTransforms;
-                clip.lockRootHeightY = bakeRootTransforms;
-                clip.lockRootPositionXZ = bakeRootTransforms;
-                clip.heightFromFeet = bakeRootTransforms;
+                clip.lockRootRotation = bakeRootHeight;
+                clip.lockRootHeightY = bakeRootHeight;
+                clip.lockRootPositionXZ = false;
+                clip.heightFromFeet = bakeRootHeight;
             }
 
             importer.clipAnimations = clips;
@@ -238,6 +264,12 @@ namespace JuicyFresh3D.Editor
             rollState.speed = 1.1f;
             hardLandState.speed = 1.15f;
             stateMachine.defaultState = idleState;
+
+            AnimatorStateTransition jumpFromIdle = idleState.AddTransition(jumpState);
+            jumpFromIdle.hasExitTime = false;
+            jumpFromIdle.duration = 0.04f;
+            jumpFromIdle.canTransitionToSelf = false;
+            jumpFromIdle.AddCondition(AnimatorConditionMode.If, 0f, "Jump");
 
             AnimatorStateTransition startRunning = idleState.AddTransition(runState);
             startRunning.hasExitTime = false;

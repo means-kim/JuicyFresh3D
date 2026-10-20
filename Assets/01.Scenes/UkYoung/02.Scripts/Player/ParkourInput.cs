@@ -33,6 +33,7 @@ namespace JuicyFresh3D.Parkour
 
         private void OnEnable()
         {
+            CacheActions();
             _playerActions?.Enable();
         }
 

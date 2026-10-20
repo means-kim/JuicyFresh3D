@@ -32,6 +32,7 @@ namespace JuicyFresh3D.Parkour
         private Camera _camera;
         private float _landingImpulse;
         private float _pitch = 12f;
+        private float _smoothedSpeedRatio;
         private float _yaw;
 
         public void Initialize(Transform target, ParkourInput input, ParkourMotor motor)
@@ -91,8 +92,13 @@ namespace JuicyFresh3D.Parkour
             _yaw += look.x * _lookSensitivity;
             _pitch = Mathf.Clamp(_pitch - look.y * _lookSensitivity, _minimumPitch, _maximumPitch);
 
-            float speedRatio = Mathf.InverseLerp(5f, 14f, _motor.PlanarSpeed);
-            float framedPitch = _pitch + _sprintPitchOffset * speedRatio;
+            var targetSpeedRatio = Mathf.InverseLerp(5f, 14f, _motor.PlanarSpeed);
+            _smoothedSpeedRatio = Mathf.Lerp(
+                _smoothedSpeedRatio,
+                targetSpeedRatio,
+                1f - Mathf.Exp(-8f * Time.deltaTime));
+            var speedRatio = _smoothedSpeedRatio;
+            var framedPitch = _pitch + _sprintPitchOffset * speedRatio;
             Quaternion orbitRotation = Quaternion.Euler(framedPitch, _yaw, 0f);
 
             Vector3 movementDirection = _motor.PlanarVelocity.sqrMagnitude > 0.1f

@@ -42,11 +42,14 @@ namespace JuicyFresh3D.Parkour
                 return;
             }
 
+            var isWallRunning = _motor.CurrentRootStateType == ParkourRootStateType_y.WallRun;
+            var isMoving = _motor.HasMovementInput;
+
             _animator.SetFloat(SpeedId, _motor.PlanarSpeed, 0.12f, Time.deltaTime);
             _animator.SetFloat(VerticalSpeedId, _motor.VerticalSpeed);
             _animator.SetBool(GroundedId, _motor.IsGrounded);
-            _animator.SetBool(MovingId, _motor.HasMovementInput);
-            _animator.SetBool(WallRunningId, _motor.IsWallRunning);
+            _animator.SetBool(MovingId, isMoving);
+            _animator.SetBool(WallRunningId, isWallRunning);
             _animator.SetBool(SprintingId, _motor.IsSprinting);
         }
 
@@ -60,9 +63,11 @@ namespace JuicyFresh3D.Parkour
             _motor.Jumped -= HandleJumped;
             _motor.Rolled -= HandleRolled;
             _motor.HardLanded -= HandleHardLanded;
+            _motor.Landed -= HandleLanded;
             _motor.Jumped += HandleJumped;
             _motor.Rolled += HandleRolled;
             _motor.HardLanded += HandleHardLanded;
+            _motor.Landed += HandleLanded;
         }
 
         private void Unsubscribe()
@@ -75,6 +80,7 @@ namespace JuicyFresh3D.Parkour
             _motor.Jumped -= HandleJumped;
             _motor.Rolled -= HandleRolled;
             _motor.HardLanded -= HandleHardLanded;
+            _motor.Landed -= HandleLanded;
         }
 
         private void HandleJumped()
@@ -90,6 +96,11 @@ namespace JuicyFresh3D.Parkour
         private void HandleHardLanded()
         {
             _animator?.SetTrigger(HardLandId);
+        }
+
+        private void HandleLanded(float impactSpeed)
+        {
+            _animator?.ResetTrigger(JumpId);
         }
     }
 }
