@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 661ac6cdd171ab54492b517845bfcf49
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 211881
+  packageName: Bull Tank
+  packageVersion: 1.2
+  assetPath: Assets/Zectorlab/BullTank/Prefabs/Master/Prefab_BullTank_URP.prefab
+  uploadId: 1009784

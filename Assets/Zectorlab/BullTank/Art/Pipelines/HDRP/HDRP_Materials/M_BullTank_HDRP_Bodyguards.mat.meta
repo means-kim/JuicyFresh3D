@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c14bf1052c21a1547bd23b1db00cea96
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 211881
+  packageName: Bull Tank
+  packageVersion: 1.2
+  assetPath: Assets/Zectorlab/BullTank/Art/Pipelines/HDRP/HDRP_Materials/M_BullTank_HDRP_Bodyguards.mat
+  uploadId: 1009784
