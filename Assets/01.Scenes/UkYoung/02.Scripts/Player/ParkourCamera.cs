@@ -12,7 +12,6 @@ namespace JuicyFresh3D.Parkour
         [SerializeField] private Vector3 _targetOffset = new(0f, 1.25f, 0f);
         [SerializeField] private float _normalDistance = 3.15f;
         [SerializeField] private float _sprintDistance = 3.55f;
-        [SerializeField] private float _wallRunDistance = 2.85f;
         [SerializeField] private float _shoulderOffset = 0.42f;
         [SerializeField] private float _lookAheadDistance = 0.85f;
         [SerializeField] private float _lookSensitivity = 0.12f;
@@ -22,17 +21,16 @@ namespace JuicyFresh3D.Parkour
         [SerializeField] private float _maximumPitch = 65f;
         [SerializeField] private float _normalFieldOfView = 69f;
         [SerializeField] private float _fastFieldOfView = 83f;
-        [SerializeField] private float _wallRunRoll = 14f;
         [SerializeField] private float _collisionRadius = 0.2f;
 
         [Header("Motion Response")]
         [SerializeField] private float _sprintPitchOffset = -3f;
         [SerializeField] private float _landingRecoverySpeed = 6.5f;
 
+        private readonly RaycastHit[] _hitBuffer = new RaycastHit[8];
         private Camera _camera;
         private float _landingImpulse;
         private float _pitch = 12f;
-        private float _smoothedSpeedRatio;
         private float _yaw;
 
         public void Initialize(Transform target, ParkourInput input, ParkourMotor motor)
@@ -92,30 +90,17 @@ namespace JuicyFresh3D.Parkour
             _yaw += look.x * _lookSensitivity;
             _pitch = Mathf.Clamp(_pitch - look.y * _lookSensitivity, _minimumPitch, _maximumPitch);
 
-            var targetSpeedRatio = Mathf.InverseLerp(5f, 14f, _motor.PlanarSpeed);
-            _smoothedSpeedRatio = Mathf.Lerp(
-                _smoothedSpeedRatio,
-                targetSpeedRatio,
-                1f - Mathf.Exp(-8f * Time.deltaTime));
-            var speedRatio = _smoothedSpeedRatio;
+            var speedRatio = Mathf.InverseLerp(7f, 14f, _motor.PlanarSpeed);
             var framedPitch = _pitch + _sprintPitchOffset * speedRatio;
             Quaternion orbitRotation = Quaternion.Euler(framedPitch, _yaw, 0f);
 
-            Vector3 movementDirection = _motor.PlanarVelocity.sqrMagnitude > 0.1f
-                ? _motor.PlanarVelocity.normalized
-                : _target.forward;
-            Vector3 focusPoint = _target.position
-                                 + _targetOffset
-                                 + movementDirection * (_lookAheadDistance * speedRatio);
-
-            float distance = _motor.IsWallRunning
-                ? _wallRunDistance
-                : Mathf.Lerp(_normalDistance, _sprintDistance, speedRatio);
+            Vector3 pivotPoint = _target.position + _targetOffset;
+            var distance = Mathf.Lerp(_normalDistance, _sprintDistance, speedRatio);
             Vector3 shoulderOffset = orbitRotation * Vector3.right * _shoulderOffset;
-            Vector3 desiredPosition = focusPoint
+            Vector3 desiredPosition = pivotPoint
                                       + shoulderOffset
                                       - orbitRotation * Vector3.forward * distance;
-            desiredPosition = ResolveCameraCollision(focusPoint, desiredPosition);
+            desiredPosition = ResolveCameraCollision(pivotPoint, desiredPosition);
 
             _landingImpulse = Mathf.MoveTowards(
                 _landingImpulse,
@@ -127,13 +112,7 @@ namespace JuicyFresh3D.Parkour
                 desiredPosition + impactOffset,
                 1f - Mathf.Exp(-_positionSharpness * Time.deltaTime));
 
-            float wallSide = _motor.IsWallRunning
-                ? Mathf.Sign(Vector3.Dot(_motor.WallNormal, transform.right))
-                : 0f;
-            Quaternion desiredRotation = Quaternion.Euler(
-                framedPitch,
-                _yaw,
-                -wallSide * _wallRunRoll);
+            Quaternion desiredRotation = Quaternion.Euler(framedPitch, _yaw, 0f);
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 desiredRotation,
@@ -145,20 +124,45 @@ namespace JuicyFresh3D.Parkour
                 1f - Mathf.Exp(-7f * Time.deltaTime));
         }
 
-        private Vector3 ResolveCameraCollision(Vector3 focusPoint, Vector3 desiredPosition)
+        private Vector3 ResolveCameraCollision(Vector3 pivotPoint, Vector3 desiredPosition)
         {
-            Vector3 direction = desiredPosition - focusPoint;
-            float distance = direction.magnitude;
-            if (Physics.SphereCast(
-                    focusPoint,
-                    _collisionRadius,
-                    direction.normalized,
-                    out RaycastHit hit,
-                    distance,
-                    Physics.DefaultRaycastLayers,
-                    QueryTriggerInteraction.Ignore))
+            Vector3 direction = desiredPosition - pivotPoint;
+            var distance = direction.magnitude;
+            if (distance <= 0.001f)
             {
-                return focusPoint + direction.normalized * Mathf.Max(hit.distance - _collisionRadius, 0.5f);
+                return desiredPosition;
+            }
+
+            Vector3 normalizedDirection = direction / distance;
+            var hitCount = Physics.SphereCastNonAlloc(
+                pivotPoint,
+                _collisionRadius,
+                normalizedDirection,
+                _hitBuffer,
+                distance,
+                Physics.DefaultRaycastLayers,
+                QueryTriggerInteraction.Ignore);
+
+            var closestDistance = distance;
+            var hasObstacleHit = false;
+            for (var index = 0; index < hitCount; index++)
+            {
+                Transform hitTransform = _hitBuffer[index].transform;
+                if (hitTransform == _target || hitTransform.IsChildOf(_target))
+                {
+                    continue;
+                }
+
+                if (_hitBuffer[index].distance < closestDistance)
+                {
+                    closestDistance = _hitBuffer[index].distance;
+                    hasObstacleHit = true;
+                }
+            }
+
+            if (hasObstacleHit)
+            {
+                return pivotPoint + normalizedDirection * Mathf.Max(closestDistance - _collisionRadius, 0.5f);
             }
 
             return desiredPosition;

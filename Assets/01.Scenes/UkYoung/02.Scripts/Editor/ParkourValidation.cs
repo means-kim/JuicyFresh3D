@@ -50,7 +50,7 @@ namespace JuicyFresh3D.Editor
                     if (animator.runtimeAnimatorController is AnimatorController controller)
                     {
                         int stateCount = controller.layers[0].stateMachine.states.Length;
-                        Require(stateCount >= 10, $"Animator state count is too low: {stateCount}", failures);
+                        Require(stateCount >= 5, $"Animator state count is too low: {stateCount}", failures);
                     }
                 }
 

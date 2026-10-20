@@ -5,7 +5,6 @@ namespace JuicyFresh3D.Parkour
         private readonly ParkourJumpState_y _jumpState;
         private readonly ParkourFallState_y _fallState;
         private bool _startWithGroundJump;
-        private bool _startWithExistingAscent;
 
         public override ParkourRootStateType_y RootStateType => ParkourRootStateType_y.Airborne;
 
@@ -22,13 +21,6 @@ namespace JuicyFresh3D.Parkour
         public void SetStartWithJump(bool startWithGroundJump)
         {
             _startWithGroundJump = startWithGroundJump;
-            _startWithExistingAscent = false;
-        }
-
-        public void SetStartWithExistingAscent()
-        {
-            _startWithGroundJump = false;
-            _startWithExistingAscent = true;
         }
 
         public override void StartState()
@@ -36,15 +28,6 @@ namespace JuicyFresh3D.Parkour
             if (_startWithGroundJump)
             {
                 _startWithGroundJump = false;
-                _jumpState.SetApplyImpulseOnStart(true);
-                SetSubState(_jumpState);
-                return;
-            }
-
-            if (_startWithExistingAscent)
-            {
-                _startWithExistingAscent = false;
-                _jumpState.SetApplyImpulseOnStart(false);
                 SetSubState(_jumpState);
                 return;
             }
@@ -54,27 +37,25 @@ namespace JuicyFresh3D.Parkour
 
         public override void UpdateState(float deltaTime)
         {
-            if (Motor.CanStartOrContinueWallRun())
+            if (Motor.IsObstacleVaulting)
             {
-                StateMachine.SetRootState(Motor.WallRunState);
+                base.UpdateState(deltaTime);
                 return;
             }
 
             if (Motor.IsGrounded && Motor.VerticalSpeed <= 0f)
             {
-                if (Motor.ConsumePendingHardLandRoll())
-                {
-                    StateMachine.SetRootState(Motor.RollState);
-                }
-                else
-                {
-                    StateMachine.SetRootState(Motor.GroundedState);
-                }
-
+                StateMachine.SetRootState(Motor.GroundedState);
                 return;
             }
 
             base.UpdateState(deltaTime);
+        }
+
+        public override void StopState()
+        {
+            Motor.StopObstacleVault();
+            base.StopState();
         }
 
         public void SetAirborneSubState(ParkourStateBase_y nextSubState)

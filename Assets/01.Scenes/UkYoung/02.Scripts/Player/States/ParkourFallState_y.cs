@@ -20,7 +20,6 @@ namespace JuicyFresh3D.Parkour
         {
             if (Motor.CanStartJump())
             {
-                _airborneState.JumpState.SetApplyImpulseOnStart(true);
                 _airborneState.SetAirborneSubState(_airborneState.JumpState);
                 return;
             }

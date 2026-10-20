@@ -2,10 +2,10 @@ namespace JuicyFresh3D.Parkour
 {
     public sealed class ParkourGroundedState_y : ParkourStateBase_y
     {
-        private ParkourIdleState_y _idleState;
-        private ParkourSprintStartState_y _sprintStartState;
-        private ParkourSprintState_y _sprintState;
-        private ParkourSprintStopState_y _sprintStopState;
+        private readonly ParkourIdleState_y _idleState;
+        private readonly ParkourSprintStartState_y _sprintStartState;
+        private readonly ParkourSprintState_y _sprintState;
+        private readonly ParkourSprintStopState_y _sprintStopState;
 
         public override ParkourRootStateType_y RootStateType => ParkourRootStateType_y.Grounded;
 
@@ -25,7 +25,6 @@ namespace JuicyFresh3D.Parkour
 
         public override void StartState()
         {
-            Motor.ResetWallRunTimer();
             Motor.SnapGroundedVerticalVelocity();
 
             if (Motor.HasMovementInput)
@@ -40,12 +39,6 @@ namespace JuicyFresh3D.Parkour
 
         public override void UpdateState(float deltaTime)
         {
-            if (Motor.CanStartRoll())
-            {
-                StateMachine.SetRootState(Motor.RollState);
-                return;
-            }
-
             if (Motor.CanStartJump())
             {
                 Motor.AirborneState.SetStartWithJump(true);

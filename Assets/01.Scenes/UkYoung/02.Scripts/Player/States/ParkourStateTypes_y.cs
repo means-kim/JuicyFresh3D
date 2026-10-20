@@ -4,9 +4,7 @@ namespace JuicyFresh3D.Parkour
     {
         None = 0,
         Grounded = 1,
-        Airborne = 2,
-        WallRun = 3,
-        Roll = 4
+        Airborne = 2
     }
 
     public enum ParkourSubStateType_y
