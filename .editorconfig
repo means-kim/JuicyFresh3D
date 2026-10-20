@@ -15,6 +15,13 @@ csharp_indent_case_contents_when_block = true
 # 조기 리턴(단일 행)은 중괄호 없이 허용, 여러 줄일 때만 중괄호 강제
 csharp_prefer_braces = when_multiline:warning
 
+#### 코드 스타일 ####
+
+# 우변에서 형식이 명확할 때만 var를 사용한다.
+csharp_style_var_for_built_in_types = true:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = false:warning
+
 #### 이름 규칙 ####
 
 # 규칙 순서는 무관하다. required_modifiers가 있는 쪽이 더 구체적이라
