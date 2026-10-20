@@ -28,6 +28,7 @@ public class PlayerMovement_s : MonoBehaviour
     [SerializeField] private CharacterController _characterController;
 
     [SerializeField] private PlayerAnimation_s _animation;
+    [SerializeField] private PlayerAttack_s _combat;
 
     private struct FrameInput
     {
@@ -40,6 +41,7 @@ public class PlayerMovement_s : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         if (_animation == null) _animation = GetComponent<PlayerAnimation_s>();
+        if (_combat == null) _combat = GetComponent<PlayerAttack_s>();
         _idle = new GroundedState(this, MovementState.Idle);
         _move = new GroundedState(this, MovementState.Move);
         _sprint = new GroundedState(this, MovementState.Sprint);
@@ -72,6 +74,8 @@ public class PlayerMovement_s : MonoBehaviour
     {
         if (!_characterController.enabled || deltaTime <= 0f) return;
         bool grounded = _characterController.isGrounded && _yVelocity <= 0f;
+        // 공격 처리에는 관여하지 않고 이동/점프/질주 입력만 차단한다.
+        if (_combat != null && _combat.IsAttacking) input = new FrameInput();
         ChangeState(grounded ? SelectGroundedState(input) : _airborne);
         _state.Tick(input, deltaTime);
     }
@@ -179,3 +183,4 @@ public class PlayerMovement_s : MonoBehaviour
         }
     }
 }
+
