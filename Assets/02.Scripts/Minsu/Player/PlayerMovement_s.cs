@@ -4,75 +4,178 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement_s : MonoBehaviour
 {
+    public MovementState CurrentState => _state != null ? _state.Kind : MovementState.Idle;
+
     private const float Gravity = -20f;
     private const int MaxJumps = 2;
-    private static readonly int MoveX = Animator.StringToHash("MoveX");
-    private static readonly int MoveZ = Animator.StringToHash("MoveZ");
-    private static readonly int MoveRate = Animator.StringToHash("MoveRate");
     private float _yVelocity;
     private int _jumpCount;
+    private State _state;
+    private GroundedState _idle;
+    private GroundedState _move;
+    private GroundedState _sprint;
+    private AirborneState _airborne;
 
     [Header("스탯")]
     [SerializeField] private float _moveSpeed = 7f;
+
     [FormerlySerializedAs("_strintSpeed")]
     [SerializeField] private float _sprintSpeed = 12f;
+
     [SerializeField] private float _jumpPower = 10f;
 
     [Header("컴포넌트")]
     [SerializeField] private CharacterController _characterController;
-    [SerializeField] private Animator _animator;
+
+    [SerializeField] private PlayerAnimation_s _animation;
+
+    private struct FrameInput
+    {
+        public Vector3 Direction;
+        public bool Sprint;
+        public bool Jump;
+    }
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        if (_animator == null) _animator = GetComponentInChildren<Animator>();
-        if (_animator != null) _animator.applyRootMotion = false;
+        if (_animation == null) _animation = GetComponent<PlayerAnimation_s>();
+        _idle = new GroundedState(this, MovementState.Idle);
+        _move = new GroundedState(this, MovementState.Move);
+        _sprint = new GroundedState(this, MovementState.Sprint);
+        _airborne = new AirborneState(this);
+        // 첫 Move 전에는 isGrounded가 아직 갱신되지 않았을 수 있다.
+        ChangeState(_airborne);
     }
 
     private void Update()
     {
-        Vector3 input = Vector3.ClampMagnitude(new Vector3(
-            Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")), 1f);
-        Vector3 direction = transform.TransformDirection(input);
+        var input = new FrameInput
+        {
+            Direction = Vector3.ClampMagnitude(new Vector3(
+                Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")), 1f),
+            Sprint = Input.GetButton("Sprint"),
+            Jump = Input.GetButtonDown("Jump")
+        };
+        SimulateMovement(input.Direction, input.Sprint, input.Jump, Time.deltaTime);
+    }
 
-        if (_characterController.isGrounded && _yVelocity <= 0f)
+    // 입력 수집과 분리하여 AI 입력이나 에디터 검증에서도 같은 FSM을 사용할 수 있다.
+    public void SimulateMovement(Vector3 direction, bool sprint, bool jump, float deltaTime)
+    {
+        if (_state == null) Awake();
+        Tick(new FrameInput { Direction = Vector3.ClampMagnitude(direction, 1f), Sprint = sprint, Jump = jump },
+            deltaTime);
+    }
+
+    private void Tick(FrameInput input, float deltaTime)
+    {
+        if (!_characterController.enabled || deltaTime <= 0f) return;
+        bool grounded = _characterController.isGrounded && _yVelocity <= 0f;
+        ChangeState(grounded ? SelectGroundedState(input) : _airborne);
+        _state.Tick(input, deltaTime);
+    }
+
+    private State SelectGroundedState(FrameInput input)
+    {
+        if (input.Direction.sqrMagnitude < 0.0001f) return _idle;
+        return input.Sprint ? _sprint : _move;
+    }
+
+    private void ChangeState(State next)
+    {
+        if (_state == next) return;
+        _state?.Exit();
+        _state = next;
+        _state.Enter();
+    }
+
+    private bool TryJump(FrameInput input)
+    {
+        if (!input.Jump || _jumpCount >= MaxJumps) return false;
+        _yVelocity = _jumpPower;
+        _jumpCount++;
+        ChangeState(_airborne);
+        return true;
+    }
+
+    private void MoveAndAnimate(FrameInput input, float speed, float deltaTime)
+    {
+        Vector3 velocity = transform.TransformDirection(input.Direction) * speed;
+        velocity.y = _yVelocity;
+        CollisionFlags collisions = _characterController.Move(velocity * deltaTime);
+        if ((collisions & CollisionFlags.Above) != 0 && _yVelocity > 0f)
+            _yVelocity = 0f;
+        if ((collisions & CollisionFlags.Below) != 0 && _yVelocity <= 0f)
         {
             _yVelocity = -1f;
             _jumpCount = 0;
+            ChangeState(SelectGroundedState(input));
         }
         else
         {
-            _yVelocity += Gravity * Time.deltaTime;
+            ChangeState(_airborne);
         }
 
-        if (Input.GetButtonDown("Jump") && _jumpCount < MaxJumps)
+        if (_animation != null) _animation.UpdateLocomotion(_characterController.velocity, speed, deltaTime);
+    }
+
+    private abstract class State
+    {
+        protected readonly PlayerMovement_s Player;
+        public MovementState Kind { get; }
+
+        protected State(PlayerMovement_s player, MovementState kind)
         {
-            _yVelocity = _jumpPower;
-            _jumpCount++;
+            Player = player;
+            Kind = kind;
         }
 
-        float speed = Input.GetButton("Sprint") ? _sprintSpeed : _moveSpeed;
-        Vector3 velocity = direction * speed;
-        velocity.y = _yVelocity;
-        CollisionFlags collisions = _characterController.Move(velocity * Time.deltaTime);
-        if ((collisions & CollisionFlags.Above) != 0 && _yVelocity > 0f)
-            _yVelocity = 0f;
-        if ((collisions & CollisionFlags.Below) != 0 && _yVelocity < 0f)
+        public virtual void Enter()
         {
-            _yVelocity = -1f;
-            _jumpCount = 0;
         }
 
-        if (_animator != null)
+        public virtual void Exit()
         {
-            // 실제 수평 이동량을 사용해 벽에 막혔을 때 달리기를 멈춘다.
-            Vector3 localVelocity = transform.InverseTransformDirection(_characterController.velocity);
-            Vector2 movement = Vector2.ClampMagnitude(new Vector2(localVelocity.x, localVelocity.z)
-                / Mathf.Max(speed, 0.01f), 1f);
-            _animator.SetFloat(MoveX, movement.x, 0.1f, Time.deltaTime);
-            _animator.SetFloat(MoveZ, movement.y, 0.1f, Time.deltaTime);
-            _animator.SetFloat(MoveRate, Mathf.Lerp(1f, Mathf.Max(speed / 5f, 0.01f), movement.magnitude));
+        }
+
+        public abstract void Tick(FrameInput input, float deltaTime);
+    }
+
+    private sealed class GroundedState : State
+    {
+        public GroundedState(PlayerMovement_s player, MovementState kind) : base(player, kind)
+        {
+        }
+
+        public override void Enter()
+        {
+            Player._yVelocity = -1f;
+            Player._jumpCount = 0;
+        }
+
+        public override void Tick(FrameInput input, float deltaTime)
+        {
+            Player._yVelocity = -1f;
+            Player.TryJump(input);
+            float speed = Kind == MovementState.Sprint ? Player._sprintSpeed : Player._moveSpeed;
+            Player.MoveAndAnimate(input, speed, deltaTime);
+        }
+    }
+
+    private sealed class AirborneState : State
+    {
+        public AirborneState(PlayerMovement_s player) : base(player, MovementState.Airborne)
+        {
+        }
+
+        public override void Tick(FrameInput input, float deltaTime)
+        {
+            Player._yVelocity += Gravity * deltaTime;
+            Player.TryJump(input);
+            // 기존 공중 방향 제어 및 Shift 가속을 유지한다.
+            float speed = input.Sprint ? Player._sprintSpeed : Player._moveSpeed;
+            Player.MoveAndAnimate(input, speed, deltaTime);
         }
     }
 }
-

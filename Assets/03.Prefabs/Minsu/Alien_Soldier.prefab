@@ -70,6 +70,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8911339358397419070}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1075553096703365885}
   m_SourcePrefab: {fileID: 100100000, guid: a5c37f9419d768649a38403fe702e096, type: 3}
 --- !u!1 &2126935695444006562 stripped
 GameObject:
@@ -117,7 +120,22 @@ MonoBehaviour:
   _sprintSpeed: 12
   _jumpPower: 10
   _characterController: {fileID: 6768326093431111658}
+  _animation: {fileID: 1075553096703365885}
+--- !u!114 &1075553096703365885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126935695444006562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1bd3d9ea196f3e45918643b88076ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation_s
   _animator: {fileID: 4625083322341807714}
+  _dampTime: 0.1
+  _referenceRunSpeed: 5
 --- !u!95 &4625083322341807714 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a5c37f9419d768649a38403fe702e096, type: 3}
