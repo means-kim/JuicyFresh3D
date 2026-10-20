@@ -3,45 +3,6 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PlayerAnimation_s : MonoBehaviour
 {
-    private static readonly int LocomotionState = Animator.StringToHash("Base Layer.Locomotion");
-    private static readonly int AttackState = Animator.StringToHash("Base Layer.Attack");
-    private bool _attackRequested;
-    public bool CanAttack
-    {
-        get
-        {
-            Initialize();
-            return _animator != null && _animator.isActiveAndEnabled
-                && _animator.runtimeAnimatorController != null && _animator.HasState(0, AttackState)
-                && !_animator.IsInTransition(0);
-        }
-    }
-    public bool AttackFinished
-    {
-        get
-        {
-            if (!_attackRequested || _animator == null || !_animator.isActiveAndEnabled) return true;
-            var state = _animator.GetCurrentAnimatorStateInfo(0);
-            return state.fullPathHash == AttackState && state.normalizedTime >= 1f
-                && !_animator.IsInTransition(0);
-        }
-    }
-    public void BeginAttack()
-    {
-        _attackRequested = true;
-        // CrossFade의 전환 길이는 초가 아닌 정규화된 시간이다.
-        _animator.CrossFade(AttackState, 0.08f, 0, 0f);
-    }
-    public void EndAttack()
-    {
-        _attackRequested = false;
-        if (_animator != null && _animator.isActiveAndEnabled
-                              && _animator.runtimeAnimatorController != null)
-        {
-            _animator.CrossFade(LocomotionState, 0.1f, 0, 0f);
-        }
-    }
-
     private static readonly int MoveX = Animator.StringToHash("MoveX");
     private static readonly int MoveZ = Animator.StringToHash("MoveZ");
     private static readonly int MoveRate = Animator.StringToHash("MoveRate");
@@ -86,4 +47,5 @@ public class PlayerAnimation_s : MonoBehaviour
             Mathf.Max(speed / Mathf.Max(_referenceRunSpeed, 0.01f), 0.01f), movement.magnitude));
     }
 }
+
 

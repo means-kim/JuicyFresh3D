@@ -1,17 +1,15 @@
 using UnityEngine;
 
-// 공격 시작 프레임부터 이동 입력을 차단하도록 이동 컴포넌트보다 먼저 실행한다.
 [DefaultExecutionOrder(-100)]
 [DisallowMultipleComponent]
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(PlayerComboAnimation_s))]
 public class PlayerAttack_s : MonoBehaviour
 {
-    [SerializeField] private PlayerAnimation_s _animation;
+    [SerializeField] private PlayerComboAnimation_s _comboAnimation;
     [SerializeField] private CharacterController _characterController;
 
-    public bool IsAttacking { get; private set; }
-    public bool IsFinished => !IsAttacking || !isActiveAndEnabled
-        || _animation == null || _animation.AttackFinished;
+    public bool IsAttacking => _comboAnimation != null && _comboAnimation.IsPlaying;
+    public bool IsFinished => !IsAttacking;
 
     private void Awake()
     {
@@ -20,7 +18,7 @@ public class PlayerAttack_s : MonoBehaviour
 
     private void Initialize()
     {
-        if (_animation == null) _animation = GetComponent<PlayerAnimation_s>();
+        if (_comboAnimation == null) _comboAnimation = GetComponent<PlayerComboAnimation_s>();
         if (_characterController == null) _characterController = GetComponent<CharacterController>();
     }
 
@@ -29,17 +27,20 @@ public class PlayerAttack_s : MonoBehaviour
         SimulateAttack(Input.GetMouseButtonDown(0));
     }
 
-    // 공격 입력, 시작 조건, 중복 차단, 완료 처리를 이 컴포넌트에서 관리한다.
     public void SimulateAttack(bool attackPressed)
     {
         if (!isActiveAndEnabled) return;
         Initialize();
         if (IsAttacking)
         {
-            if (IsFinished) EndAttack();
+            _comboAnimation.TickCombo(attackPressed);
             return;
         }
-        if (attackPressed) TryBeginAttack();
+
+        if (attackPressed)
+        {
+            TryBeginAttack();
+        }
     }
 
     public bool TryBeginAttack()
@@ -47,21 +48,17 @@ public class PlayerAttack_s : MonoBehaviour
         Initialize();
         if (!isActiveAndEnabled || IsAttacking || _characterController == null
             || !_characterController.enabled || !_characterController.isGrounded
-            || _characterController.velocity.y > 0f
-            || _animation == null || !_animation.CanAttack)
+            || _characterController.velocity.y > 0f || _comboAnimation == null)
         {
             return false;
         }
-        IsAttacking = true;
-        _animation.BeginAttack();
-        return true;
+
+        return _comboAnimation.TryBeginCombo();
     }
 
     public void EndAttack()
     {
-        if (!IsAttacking) return;
-        IsAttacking = false;
-        if (_animation != null) _animation.EndAttack();
+        if (_comboAnimation != null) _comboAnimation.EndCombo();
     }
 
     private void OnDisable()

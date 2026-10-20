@@ -111,6 +111,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6764649906888887934}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5567507979174324988}
   m_SourcePrefab: {fileID: 100100000, guid: a5c37f9419d768649a38403fe702e096, type: 3}
 --- !u!4 &644192478205776955 stripped
 Transform:
@@ -192,8 +195,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf87d78382932534fac2088d2e1864e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack_s
-  _animation: {fileID: 1075553096703365885}
+  _comboAnimation: {fileID: 5567507979174324988}
   _characterController: {fileID: 6768326093431111658}
+--- !u!114 &5567507979174324988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126935695444006562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7903568ad14c304b98237e2c072ef2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAnimation_s
+  _animator: {fileID: 4625083322341807714}
+  _firstChainTime: 0.45
+  _secondChainTime: 0.5
+  _crossFadeDuration: 0.03
 --- !u!95 &4625083322341807714 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a5c37f9419d768649a38403fe702e096, type: 3}
