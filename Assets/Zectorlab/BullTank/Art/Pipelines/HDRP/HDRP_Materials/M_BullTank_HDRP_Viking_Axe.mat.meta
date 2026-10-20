@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 623c5d000a3a7f64380a6ee02f0bb5c2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 211881
+  packageName: Bull Tank
+  packageVersion: 1.2
+  assetPath: Assets/Zectorlab/BullTank/Art/Pipelines/HDRP/HDRP_Materials/M_BullTank_HDRP_Viking_Axe.mat
+  uploadId: 1009784

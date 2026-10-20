@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2fe4fd2ddc3b68d46af9c97fce6ec8ff
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 211881
+  packageName: Bull Tank
+  packageVersion: 1.2
+  assetPath: Assets/Zectorlab/BullTank/Art/Pipelines/HDRP/HDRP_Materials/M_BullTank_HDRP_Black.mat
+  uploadId: 1009784

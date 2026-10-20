@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: aa7c4b9ec09735344abc06cc3343fe99
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 211881
+  packageName: Bull Tank
+  packageVersion: 1.2
+  assetPath: Assets/Zectorlab/BullTank/Prefabs/Master/Prefab_BullTank_HDRP.prefab
+  uploadId: 1009784
