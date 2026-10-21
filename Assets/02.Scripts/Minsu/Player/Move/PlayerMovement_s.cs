@@ -10,11 +10,11 @@ public class PlayerMovement_s : MonoBehaviour
     private const int MaxJumps = 2;
     private float _yVelocity;
     private int _jumpCount;
-    private State _state;
-    private GroundedState _idle;
-    private GroundedState _move;
-    private GroundedState _sprint;
-    private AirborneState _airborne;
+    private State_s _state;
+    private GroundedState_s _idle;
+    private GroundedState_s _move;
+    private GroundedState_s _sprint;
+    private AirborneState_s _airborne;
 
     [Header("스탯")]
     [SerializeField] private float _moveSpeed = 7f;
@@ -42,10 +42,10 @@ public class PlayerMovement_s : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         if (_animation == null) _animation = GetComponent<PlayerAnimation_s>();
         if (_combat == null) _combat = GetComponent<PlayerAttack_s>();
-        _idle = new GroundedState(this, MovementState.Idle);
-        _move = new GroundedState(this, MovementState.Move);
-        _sprint = new GroundedState(this, MovementState.Sprint);
-        _airborne = new AirborneState(this);
+        _idle = new GroundedState_s(this, MovementState.Idle);
+        _move = new GroundedState_s(this, MovementState.Move);
+        _sprint = new GroundedState_s(this, MovementState.Sprint);
+        _airborne = new AirborneState_s(this);
         // 첫 Move 전에는 isGrounded가 아직 갱신되지 않았을 수 있다.
         ChangeState(_airborne);
     }
@@ -80,13 +80,13 @@ public class PlayerMovement_s : MonoBehaviour
         _state.Tick(input, deltaTime);
     }
 
-    private State SelectGroundedState(FrameInput input)
+    private State_s SelectGroundedState(FrameInput input)
     {
         if (input.Direction.sqrMagnitude < 0.0001f) return _idle;
         return input.Sprint ? _sprint : _move;
     }
 
-    private void ChangeState(State next)
+    private void ChangeState(State_s next)
     {
         if (_state == next) return;
         _state?.Exit();
@@ -124,12 +124,12 @@ public class PlayerMovement_s : MonoBehaviour
         if (_animation != null) _animation.UpdateLocomotion(_characterController.velocity, speed, deltaTime);
     }
 
-    private abstract class State
+    private abstract class State_s
     {
         protected readonly PlayerMovement_s Player;
         public MovementState Kind { get; }
 
-        protected State(PlayerMovement_s player, MovementState kind)
+        protected State_s(PlayerMovement_s player, MovementState kind)
         {
             Player = player;
             Kind = kind;
@@ -146,9 +146,9 @@ public class PlayerMovement_s : MonoBehaviour
         public abstract void Tick(FrameInput input, float deltaTime);
     }
 
-    private sealed class GroundedState : State
+    private sealed class GroundedState_s : State_s
     {
-        public GroundedState(PlayerMovement_s player, MovementState kind) : base(player, kind)
+        public GroundedState_s(PlayerMovement_s player, MovementState kind) : base(player, kind)
         {
         }
 
@@ -167,9 +167,9 @@ public class PlayerMovement_s : MonoBehaviour
         }
     }
 
-    private sealed class AirborneState : State
+    private sealed class AirborneState_s : State_s
     {
-        public AirborneState(PlayerMovement_s player) : base(player, MovementState.Airborne)
+        public AirborneState_s(PlayerMovement_s player) : base(player, MovementState.Airborne)
         {
         }
 

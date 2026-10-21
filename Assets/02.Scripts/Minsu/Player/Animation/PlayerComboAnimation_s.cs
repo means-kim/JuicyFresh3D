@@ -21,6 +21,24 @@ public class PlayerComboAnimation_s : MonoBehaviour
     [SerializeField, Range(0.1f, 0.95f)] private float _secondChainTime = 0.65f;
     [SerializeField, Range(0f, 0.2f)] private float _crossFadeDuration = 0.05f;
 
+    [Header("타격 구간 (정규화된 재생 시간)")]
+    [SerializeField] private Vector2 _firstDamageWindow = new Vector2(0.16f, 0.44f);
+    [SerializeField] private Vector2 _secondDamageWindow = new Vector2(0.32f, 0.49f);
+    [SerializeField] private Vector2 _thirdDamageWindow = new Vector2(0.2f, 0.5f);
+    private int _swingSequence;
+    public event System.Action DamageWindowClosed;
+
+    public bool TryGetDamagePhase(out int swing, out int step, out float time, out Vector2 window)
+    {
+        swing = _swingSequence; step = ComboStep; time = 0f; window = Vector2.zero;
+        if (!isActiveAndEnabled || !IsPlaying || !_animator || !_animator.isActiveAndEnabled) return false;
+        var state = _animator.GetCurrentAnimatorStateInfo(0);
+        if (state.fullPathHash != AttackStates[_step] || _animator.IsInTransition(0)) return false;
+        time = state.normalizedTime;
+        window = _step == 0 ? _firstDamageWindow : _step == 1 ? _secondDamageWindow : _thirdDamageWindow;
+        return true;
+    }
+
     private int _step = -1;
     private bool _nextAttackQueued;
     public bool IsPlaying => _step >= 0;
@@ -110,6 +128,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
 
     private void PlayStep(int step)
     {
+        DamageWindowClosed?.Invoke();
+        _swingSequence++;
         _step = step;
         _nextAttackQueued = false;
         _animator.CrossFade(AttackStates[step], _crossFadeDuration, 0, 0f);
@@ -117,6 +137,7 @@ public class PlayerComboAnimation_s : MonoBehaviour
 
     public void EndCombo()
     {
+        DamageWindowClosed?.Invoke();
         bool wasPlaying = IsPlaying;
         _step = -1;
         _nextAttackQueued = false;
@@ -132,3 +153,4 @@ public class PlayerComboAnimation_s : MonoBehaviour
         EndCombo();
     }
 }
+
