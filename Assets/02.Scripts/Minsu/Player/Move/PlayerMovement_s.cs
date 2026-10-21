@@ -5,6 +5,8 @@ using UnityEngine.Serialization;
 public class PlayerMovement_s : MonoBehaviour
 {
     public MovementState CurrentState => _state != null ? _state.Kind : MovementState.Idle;
+    public bool IsActionBlocked => CurrentState == MovementState.Hit || CurrentState == MovementState.Dead
+                                   || (_health != null && _health.IsDead);
 
     private const float Gravity = -20f;
     private const int MaxJumps = 2;
@@ -15,6 +17,9 @@ public class PlayerMovement_s : MonoBehaviour
     private GroundedState_s _move;
     private GroundedState_s _sprint;
     private AirborneState_s _airborne;
+    private ReactionState_s _hit;
+    private ReactionState_s _dead;
+    private Health_s _health;
 
     [Header("스탯")]
     [SerializeField] private float _moveSpeed = 7f;
@@ -42,12 +47,43 @@ public class PlayerMovement_s : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         if (_animation == null) _animation = GetComponent<PlayerAnimation_s>();
         if (_combat == null) _combat = GetComponent<PlayerAttack_s>();
+        _health = GetComponent<Health_s>();
         _idle = new GroundedState_s(this, MovementState.Idle);
         _move = new GroundedState_s(this, MovementState.Move);
         _sprint = new GroundedState_s(this, MovementState.Sprint);
         _airborne = new AirborneState_s(this);
+        _hit = new ReactionState_s(this, MovementState.Hit);
+        _dead = new ReactionState_s(this, MovementState.Dead);
         // 첫 Move 전에는 isGrounded가 아직 갱신되지 않았을 수 있다.
         ChangeState(_airborne);
+    }
+
+    private void OnEnable()
+    {
+        if (_health == null) return;
+        _health.Damaged += OnDamaged;
+        _health.Died += OnDied;
+        if (_health.IsDead) OnDied();
+    }
+
+    private void OnDisable()
+    {
+        if (_health == null) return;
+        _health.Damaged -= OnDamaged;
+        _health.Died -= OnDied;
+    }
+
+    private void OnDamaged(int damage)
+    {
+        // 치명타에서는 Hit를 거치지 않고 Died 이벤트가 Dead로 전환한다.
+        if (_health.IsDead || CurrentState == MovementState.Dead) return;
+        if (_state == _hit) _hit.Enter();
+        else ChangeState(_hit);
+    }
+
+    private void OnDied()
+    {
+        ChangeState(_dead);
     }
 
     private void Update()
@@ -73,6 +109,11 @@ public class PlayerMovement_s : MonoBehaviour
     private void Tick(FrameInput input, float deltaTime)
     {
         if (!_characterController.enabled || deltaTime <= 0f) return;
+        if (IsActionBlocked)
+        {
+            _state.Tick(new FrameInput(), deltaTime);
+            return;
+        }
         bool grounded = _characterController.isGrounded && _yVelocity <= 0f;
         // 공격 처리에는 관여하지 않고 이동/점프/질주 입력만 차단한다.
         if (_combat != null && _combat.IsAttacking) input = new FrameInput();
@@ -144,6 +185,33 @@ public class PlayerMovement_s : MonoBehaviour
         }
 
         public abstract void Tick(FrameInput input, float deltaTime);
+    }
+
+    private sealed class ReactionState_s : State_s
+    {
+        public ReactionState_s(PlayerMovement_s player, MovementState kind) : base(player, kind)
+        {
+        }
+
+        public override void Enter()
+        {
+            Player._combat?.EndAttack();
+            Player._yVelocity = Mathf.Min(Player._yVelocity, 0f);
+            Player._animation?.PlayReaction(Kind);
+        }
+
+        public override void Tick(FrameInput input, float deltaTime)
+        {
+            // 입력 이동은 막되 공중에서 피격/사망해도 지면까지 떨어지게 한다.
+            Player._yVelocity = Player._characterController.isGrounded ? -1f
+                : Player._yVelocity + Gravity * deltaTime;
+            Player._characterController.Move(Vector3.up * (Player._yVelocity * deltaTime));
+            if (Kind == MovementState.Hit && Player._animation != null && Player._animation.IsHitFinished)
+            {
+                Player._animation.PlayLocomotion();
+                Player.ChangeState(Player._characterController.isGrounded ? Player._idle : Player._airborne);
+            }
+        }
     }
 
     private sealed class GroundedState_s : State_s

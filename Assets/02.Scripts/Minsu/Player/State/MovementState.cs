@@ -4,5 +4,7 @@ public enum MovementState
     Move,
     Sprint,
     Airborne,
-    Attack
+    Attack,
+    Hit,
+    Dead
 }

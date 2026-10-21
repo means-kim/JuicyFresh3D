@@ -6,6 +6,9 @@ public class PlayerAnimation_s : MonoBehaviour
     private static readonly int MoveX = Animator.StringToHash("MoveX");
     private static readonly int MoveZ = Animator.StringToHash("MoveZ");
     private static readonly int MoveRate = Animator.StringToHash("MoveRate");
+    private static readonly int Hit = Animator.StringToHash("Base Layer.Hit");
+    private static readonly int Dead = Animator.StringToHash("Base Layer.Death");
+    private static readonly int Locomotion = Animator.StringToHash("Base Layer.Locomotion");
 
     [SerializeField] private Animator _animator;
     [SerializeField, Min(0f)] private float _dampTime = 0.1f;
@@ -14,6 +17,32 @@ public class PlayerAnimation_s : MonoBehaviour
     private void Awake()
     {
         Initialize();
+    }
+
+    public bool IsHitFinished
+    {
+        get
+        {
+            if (_animator == null || !_animator.isActiveAndEnabled || _animator.IsInTransition(0)) return false;
+            var state = _animator.GetCurrentAnimatorStateInfo(0);
+            return state.fullPathHash == Hit && state.normalizedTime >= 1f;
+        }
+    }
+
+    public void PlayReaction(MovementState state)
+    {
+        Initialize();
+        if (_animator == null || !_animator.isActiveAndEnabled) return;
+        _animator.CrossFadeInFixedTime(state == MovementState.Dead ? Dead : Hit, 0.05f, 0, 0f);
+    }
+
+    public void PlayLocomotion()
+    {
+        Initialize();
+        if (_animator == null || !_animator.isActiveAndEnabled) return;
+        _animator.SetFloat(MoveX, 0f);
+        _animator.SetFloat(MoveZ, 0f);
+        _animator.CrossFadeInFixedTime(Locomotion, 0.05f, 0, 0f);
     }
 
     private void Initialize()
