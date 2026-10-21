@@ -508,6 +508,10 @@ PrefabInstance:
       propertyPath: _effectCamera
       value: 
       objectReference: {fileID: 1721081202}
+    - target: {fileID: 3118520892350985848, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+      propertyPath: _outlineFadeOutDuration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4329750253024872555, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

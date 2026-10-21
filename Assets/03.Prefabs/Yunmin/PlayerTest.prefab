@@ -2289,10 +2289,16 @@ MonoBehaviour:
   _flashArmFalloff: 2
   _flashBrightness: 4
   _flashDepthOffset: 0.02
+  _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
+  _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
+  _rimWidth: 2.7
+  _rimBrightness: 3
+  _outlineFadeInDuration: 0.05
+  _outlineFadeOutDuration: 1.5
   _flashFadeInDuration: 0.1
-  _flashHoldDuration: 2
+  _flashHoldDuration: 0
   _flashFadeOutDuration: 1
-  _stopFadeDuration: 0.4
+  _stopFadeDuration: 0
 --- !u!1 &7404618803377014162
 GameObject:
   m_ObjectHideFlags: 0
