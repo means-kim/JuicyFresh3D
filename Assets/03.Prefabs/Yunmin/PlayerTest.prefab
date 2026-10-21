@@ -2242,6 +2242,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4329750253024872555}
   - component: {fileID: 3118520892350985848}
+  - component: {fileID: 6342059721850346011}
+  - component: {fileID: 6342059721850346012}
   m_Layer: 0
   m_Name: PlayerTest
   m_TagString: Untagged
@@ -2278,6 +2280,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectController_m
   _effectColor: {r: 0.35, g: 1, b: 0.85, a: 1}
+  _stopFadeDuration: 0
+  _crossFlashEffect: {fileID: 6342059721850346011}
+  _silhouetteOutlineEffect: {fileID: 6342059721850346012}
+--- !u!114 &6342059721850346011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c71a788b2360496aadc4361fc670af58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CrossFlashEffect_m
   _modelRenderers:
   - {fileID: 276065158444449434}
   - {fileID: 8866554457860683310}
@@ -2289,16 +2306,30 @@ MonoBehaviour:
   _flashArmFalloff: 2
   _flashBrightness: 4
   _flashDepthOffset: 0.02
+  _flashFadeInDuration: 0.1
+  _flashHoldDuration: 0
+  _flashFadeOutDuration: 1
+--- !u!114 &6342059721850346012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de71f3fcad9468bb533b1397429c112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShilhouetteOutlineEffect_m
+  _modelRenderers:
+  - {fileID: 276065158444449434}
+  - {fileID: 8866554457860683310}
   _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
   _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
   _rimWidth: 2.7
   _rimBrightness: 3
   _outlineFadeInDuration: 0.05
   _outlineFadeOutDuration: 1.5
-  _flashFadeInDuration: 0.1
-  _flashHoldDuration: 0
-  _flashFadeOutDuration: 1
-  _stopFadeDuration: 0
 --- !u!1 &7404618803377014162
 GameObject:
   m_ObjectHideFlags: 0

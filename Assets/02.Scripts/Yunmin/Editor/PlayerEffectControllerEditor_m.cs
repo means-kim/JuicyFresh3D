@@ -9,10 +9,10 @@ public sealed class PlayerEffectControllerEditor_m : Editor
         DrawDefaultInspector();
         EditorGUILayout.Space();
         EditorGUILayout.HelpBox(
-            "Play 모드에서 재생·정지할 수 있습니다. Effect Color가 공통 연출 색상입니다. "
-            + "외곽선은 Outline Fade In Duration 동안 켜진 뒤, Outline Fade Out Duration 동안 자동으로 사라집니다. "
-            + "도중에 정지하면 현재 밝기에서 Stop Fade Duration 동안 사라집니다. "
-            + "Outline Width는 픽셀 두께, Outline Brightness는 발광 밝기입니다.",
+            "Play 모드에서 두 연출을 함께 재생·정지할 수 있습니다. "
+            + "Effect Color와 Stop Fade Duration은 공통 설정입니다. "
+            + "개별 연출의 모양과 자동 페이드 시간은 CrossFlashEffect_m와 "
+            + "ShilhouetteOutlineEffect_m 컴포넌트에서 조절합니다.",
             MessageType.Info);
 
         using (new EditorGUI.DisabledScope(!EditorApplication.isPlaying))
