@@ -8,6 +8,7 @@ public class PlayerLockOn_s : MonoBehaviour
     [SerializeField, Min(0f)] private float _releaseDistance = 15f;
     private Health_s _health;
     private Health_s _targetHealth;
+    private LockOnHighlight_s _targetHighlight;
     public Transform Target { get; private set; }
     public bool IsLockedOn => Target != null;
 
@@ -71,6 +72,11 @@ public class PlayerLockOn_s : MonoBehaviour
 
         _targetHealth = nearest;
         Target = nearest.transform;
+        _targetHighlight = nearest.GetComponent<LockOnHighlight_s>();
+        if (_targetHighlight != null)
+        {
+            _targetHighlight.SetHighlighted(true);
+        }
 
         _targetHealth.Died += Release;
     }
@@ -87,6 +93,13 @@ public class PlayerLockOn_s : MonoBehaviour
 
     public void Release()
     {
+        if (_targetHighlight != null)
+        {
+            _targetHighlight.SetHighlighted(false);
+        }
+
+        _targetHighlight = null;
+
         if (_targetHealth != null)
         {
             _targetHealth.Died -= Release;

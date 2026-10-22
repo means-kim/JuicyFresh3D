@@ -846,6 +846,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7542882902122677376}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4108070678092718280}
   m_SourcePrefab: {fileID: 100100000, guid: b16de64f344835249a16622b834ca21f, type: 3}
 --- !u!95 &1439677759213502829 stripped
 Animator:
@@ -855,6 +858,11 @@ Animator:
 --- !u!4 &1777851156573301055 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6502182839619065283, guid: b16de64f344835249a16622b834ca21f, type: 3}
+  m_PrefabInstance: {fileID: 4796429134751546620}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1875922231405531826 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -2839295581537669554, guid: b16de64f344835249a16622b834ca21f, type: 3}
   m_PrefabInstance: {fileID: 4796429134751546620}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4979555807706110743 stripped
@@ -1022,6 +1030,23 @@ MonoBehaviour:
   _damage: 10
   _cooldown: 1
   _damageWindow: {x: 0.12, y: 0.78}
+--- !u!114 &4108070678092718280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643361297610178989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1906137f941044eba67fd60c84b88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LockOnHighlight_s
+  _renderers:
+  - {fileID: 1875922231405531826}
+  _outlineLayer:
+    serializedVersion: 0
+    m_Bits: 256
 --- !u!4 &6567930685159949108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: b16de64f344835249a16622b834ca21f, type: 3}
