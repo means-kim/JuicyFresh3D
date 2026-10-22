@@ -1,0 +1,1 @@
+mode=attack-finish-regression; frames=2100; fixedSteps=34.98; rigidbodies=11; dynamic=11; minFeetY=0.1505; maxRootY=2.5506; completedAttacks=7; finalRoot=(0.1040, 0.1800, -11.8702); finalSkeleton=(0.1040, 0.1800, -11.8702); melee=2; charge=3; throw=2

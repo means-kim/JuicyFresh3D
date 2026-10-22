@@ -1,0 +1,16 @@
+{
+  "Frames": 2100,
+  "Seconds": 35,
+  "States": [
+    "ChargeAttack",
+    "Chase",
+    "MeleeAttack",
+    "Recovery",
+    "ThrowAttack"
+  ],
+  "BeforeMinFootY": -0.2004,
+  "AfterMinFootY": 0.1505,
+  "JumpPeakBefore": 2.5506,
+  "JumpPeakAfter": 2.5506,
+  "PreservedFiles": 7
+}

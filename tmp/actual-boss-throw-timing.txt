@@ -1,0 +1,1 @@
+mode=throw-timing; frames=360; fixedSteps=5.98; rigidbodies=11; dynamic=11; minFeetY=0.1781; maxRootY=0.1800; completedAttacks=2; finalRoot=(0.0000, 0.1800, -8.1357); finalSkeleton=(0.0000, 0.1800, -8.1357); restoreFrames=116; movementDuringRestore=1.9333

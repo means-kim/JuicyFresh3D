@@ -1,0 +1,3 @@
+yaw=0 wall=False finished=True attackFlag=False landing=(0.0000, 0.0800, 8.6789) forward=8.679 idleReturn=0.000000 bodyDrift=0.0291 maxStep=0.0950 editorManualCallbacks=173 maxRootHeight=0.0800 minFeetHeight=-0.2545
+yaw=90 wall=False finished=True attackFlag=False landing=(8.6789, 0.0800, 0.0000) forward=8.679 idleReturn=0.000000 bodyDrift=0.0291 maxStep=0.0950 editorManualCallbacks=173 maxRootHeight=0.0800 minFeetHeight=-0.2545
+yaw=0 wall=True finished=True attackFlag=False landing=(0.0000, 0.0800, 2.1700) forward=2.170 idleReturn=0.000000 bodyDrift=0.0291 maxStep=0.0950 editorManualCallbacks=173 maxRootHeight=0.0800 minFeetHeight=-0.2545

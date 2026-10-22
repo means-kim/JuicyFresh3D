@@ -1,0 +1,30 @@
+[
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\02.Scripts\\KwangHee\\Boss\\BossAttackController.cs",
+    "Hash": "32A4F439638D78909D5A7A9133D153EE8AB87855CAFE87CCEE8309A7096427AD"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\07.Animations\\KwnagHee\\BossMonsterAnimator.controller",
+    "Hash": "5E64329BE08EAD8FE72B26AC4ED0BA44408888AB7363D73FDDD0F52C5961D95D"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\07.Animations\\KwnagHee\\BullTank_Walk_F_InPlace.fbx.meta",
+    "Hash": "37CE7C40EAC39EB14312950E54649DC55E744A5834E475510EFE791000F5868A"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\05.Models\\KwangHee\\BossMonster.prefab",
+    "Hash": "D4FD1A1E7DD32421A23ACBBA596F77617C5145AD3BFE9D7657DC8FF3448266CE"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\01.Scenes\\KwangHeeScene.unity",
+    "Hash": "C51EC89A02D29824D700B06AD2134FD592C7DAFC2A07CFAA9CEBF4678FC5DD3F"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\Zectorlab\\BullTank\\Art\\Animations\\AS_BullTank_Attack03_End.FBX",
+    "Hash": "C7A01AC8FA2E5DF0B73335443394C47D0975AE26C77D279118F44C285D8BA531"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\Zectorlab\\BullTank\\Art\\Animations\\AS_BullTank_Attack03_SpawnAxe.FBX",
+    "Hash": "6E8CDE6D896CF393CB702C347AD36F3AD18CFEA0352813FA3FCF28E50997AAB2"
+  }
+]

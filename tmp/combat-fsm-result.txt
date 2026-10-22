@@ -1,0 +1,5 @@
+PASS: out-of-range and missing target keep Chase without starting an attack
+PASS: MeleeAttack -> Recovery -> Chase -> MeleeAttack; target changes ignored during attack; animation gate=True; peakY=0.000; maxStep=0.000
+PASS: ChargeAttack -> Recovery -> Chase -> ChargeAttack; target changes ignored during attack; animation gate=True; peakY=2.451; maxStep=0.409
+PASS: ThrowAttack -> Recovery -> Chase -> ThrowAttack; target changes ignored during attack; animation gate=True; peakY=0.000; maxStep=0.000
+PASS: external attack adoption, missed completion event recovery, duplicate completion protection

@@ -1,0 +1,1 @@
+mode=throw-timing-fixed-30fps; frames=300; fixedSteps=9.96; rigidbodies=11; dynamic=11; minFeetY=0.1525; maxRootY=0.1800; completedAttacks=2; finalRoot=(0.0000, 0.1800, -8.4857); finalSkeleton=(0.0000, 0.1800, -8.4857); restoreFrames=60; movementDuringRestore=0.0000; throwSequenceMovement=0.0000; walkDistance=3.8667; completionEvents=2

@@ -1,0 +1,26 @@
+{
+  "source_unchanged_sha256": "ac2fee5a5d3cca2ebff8896badc0fb71188751fbadf8d7c6b2bd48d80a74061f",
+  "output": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\07.Animations\\KwnagHee\\BullTank_Walk_F_InPlace.fbx",
+  "guid": "6f379d26fa0746d788f90bc2bb44ccae",
+  "changed_curves": [
+    {
+      "axis": "d|X",
+      "keys": 81,
+      "original_delta": 0.0,
+      "new_delta": 0.0
+    },
+    {
+      "axis": "d|Y",
+      "keys": 81,
+      "original_delta": -125.0,
+      "new_delta": 0.0
+    }
+  ],
+  "verified": [
+    "source byte-identical",
+    "binary parser/writer lossless round-trip",
+    "generated FBX reparses identically",
+    "only planar root curve values changed",
+    "Boss_Walk motion reference updated"
+  ]
+}

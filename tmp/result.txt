@@ -1,0 +1,6 @@
+End_Def.fbx duration=1.900 root=(0.0000, -5.2220, 0.0000) deltaSum=(0.0000, -5.2220, 0.0000) bodyDrift=(0.1768, 0.0235, -0.0175) maxDelta=0.4087
+End_None.fbx duration=1.900 root=(0.0000, 0.0000, 5.2220) deltaSum=(0.0000, 0.0000, 5.2220) bodyDrift=(0.1768, -0.0175, -0.0235) maxDelta=0.4087
+End_Root.fbx duration=1.900 root=(-2.9629, 4.1059, -1.1910) deltaSum=(-2.9629, 4.1059, -1.1910) bodyDrift=(0.0000, 0.0000, 0.0000) maxDelta=0.4499
+Run_Loop_Def.fbx duration=0.700 root=(0.0000, -3.9898, 0.0000) deltaSum=(0.0000, -3.9898, 0.0000) bodyDrift=(0.0000, 0.0000, 0.0000) maxDelta=0.0950
+Run_Loop_None.fbx duration=0.700 root=(0.0000, 0.0000, 3.9898) deltaSum=(0.0000, 0.0000, 3.9898) bodyDrift=(0.0000, 0.0000, 0.0000) maxDelta=0.0950
+Run_Loop_Root.fbx duration=0.700 root=(-2.2444, 3.1965, -0.8146) deltaSum=(-2.2444, 3.1965, -0.8146) bodyDrift=(0.0000, 0.0000, 0.0000) maxDelta=0.1161

@@ -1,0 +1,29 @@
+{
+  "context": {
+    "projectPath": "C:/Users/akh10/Documents/JuicyFresh3D/tmp/ChargeMotionValidation/Packages",
+    "unityVersion": "6000.3.22f1"
+  },
+  "inputs": [
+    "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\tmp\\ChargeMotionValidation\\Packages\\manifest.json",
+    "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\tmp\\ChargeMotionValidation\\Packages\\packages-lock.json",
+    "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.22f1\\Editor\\Data\\Resources\\PackageManager\\BuiltInPackages\\BuiltInPackagesCombined.sha1"
+  ],
+  "outputs": {
+    "com.unity.modules.animation@1.0.0": {
+      "name": "com.unity.modules.animation",
+      "displayName": "Animation",
+      "resolvedPath": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\tmp\\ChargeMotionValidation\\Library\\PackageCache\\com.unity.modules.animation",
+      "version": "1.0.0",
+      "source": "builtin",
+      "testable": false
+    },
+    "com.unity.modules.physics@1.0.0": {
+      "name": "com.unity.modules.physics",
+      "displayName": "Physics",
+      "resolvedPath": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\tmp\\ChargeMotionValidation\\Library\\PackageCache\\com.unity.modules.physics",
+      "version": "1.0.0",
+      "source": "builtin",
+      "testable": false
+    }
+  }
+}

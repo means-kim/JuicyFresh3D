@@ -1,0 +1,1 @@
+mode=before; frames=2100; fixedSteps=34.98; rigidbodies=11; dynamic=11; minFeetY=-0.2004; maxRootY=2.5506; completedAttacks=8; finalRoot=(0.0919, 0.1800, -11.3203); finalSkeleton=(0.0919, 0.1800, -11.3203)
