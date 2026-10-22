@@ -413,6 +413,37 @@ Transform:
   - {fileID: 4097274610620660536}
   m_Father: {fileID: 8274965167393952110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2136226034807252981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4039004607751181218}
+  m_Layer: 0
+  m_Name: CrossFlashLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4039004607751181218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136226034807252981}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.437, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4329750253024872555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2162845712227818395
 GameObject:
   m_ObjectHideFlags: 0
@@ -2245,6 +2276,8 @@ GameObject:
   - component: {fileID: 6342059721850346011}
   - component: {fileID: 6342059721850346012}
   - component: {fileID: 3242454954853373724}
+  - component: {fileID: 2273756616619187829}
+  - component: {fileID: 5533532292947389266}
   m_Layer: 0
   m_Name: PlayerTest
   m_TagString: Untagged
@@ -2267,6 +2300,7 @@ Transform:
   m_Children:
   - {fileID: 36630074750141808}
   - {fileID: 834005085621800795}
+  - {fileID: 4039004607751181218}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3118520892350985848
@@ -2281,7 +2315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68f97ebd5bd1c424385582be2938747a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectController_m
-  _effectColor: {r: 0.35, g: 1, b: 0.85, a: 1}
+  _effectColor: {r: 0.34901965, g: 0.63096696, b: 1, a: 1}
   _stopFadeDuration: 0
   _crossFlashEffect: {fileID: 6342059721850346011}
   _silhouetteOutlineEffect: {fileID: 6342059721850346012}
@@ -2302,7 +2336,7 @@ MonoBehaviour:
   - {fileID: 276065158444449434}
   - {fileID: 8866554457860683310}
   _effectCamera: {fileID: 0}
-  _flashOrigin: {fileID: 0}
+  _flashOrigin: {fileID: 4039004607751181218}
   _flashMaterial: {fileID: 2100000, guid: 386dd81faac844759d5e34f64cf812e0, type: 2}
   _flashSize: 1.25
   _flashEndHorizontalStretch: 3
@@ -2333,7 +2367,7 @@ MonoBehaviour:
   _rimWidth: 2.7
   _rimBrightness: 3
   _outlineFadeInDuration: 0.05
-  _outlineFadeOutDuration: 1.5
+  _outlineFadeOutDuration: 1
 --- !u!114 &3242454954853373724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2350,7 +2384,7 @@ MonoBehaviour:
   - {fileID: 276065158444449434}
   - {fileID: 8866554457860683310}
   _particlePrefab: {fileID: 3175079410127055413, guid: 18627731e625a49449929fd62f5d0f12, type: 3}
-  _particleOrigin: {fileID: 834005085621800795}
+  _particleOrigin: {fileID: 4039004607751181218}
   _emissionDuration: 1
   _particleCount: 24
   _particleSizeRange: {x: 0.025, y: 0.065}
@@ -2360,6 +2394,46 @@ MonoBehaviour:
   _gravityModifier: 0.1
   _noiseStrength: 0.08
   _particleBrightness: 2.5
+--- !u!143 &2273756616619187829
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.25
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &5533532292947389266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd1daf1bb8009404882273ffa72782ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalCharacterController_m
+  _moveSpeed: 5
+  _characterController: {fileID: 0}
+  _playerEffectController: {fileID: 0}
 --- !u!1 &7404618803377014162
 GameObject:
   m_ObjectHideFlags: 0
