@@ -18,6 +18,8 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     [SerializeField] private Camera _effectCamera;
 
     [Header("Cross Flash")]
+    [Tooltip("Optional position anchor. Follows this Transform while playing; uses the model bounds center when unassigned. Camera-facing depth correction still keeps the flash in front of the model.")]
+    [SerializeField] private Transform _flashOrigin;
     [SerializeField] private Material _flashMaterial;
     [Tooltip("Flash size as a multiple of the character's current bounds height.")]
     [SerializeField, Min(0.01f)] private float _flashSize = 1.25f;
@@ -233,7 +235,8 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     private void UpdateFlash(Bounds bounds, Camera effectCamera)
     {
         Transform cameraTransform = effectCamera.transform;
-        float centerDepth = Vector3.Dot(bounds.center - cameraTransform.position, cameraTransform.forward);
+        Vector3 originPosition = _flashOrigin != null ? _flashOrigin.position : bounds.center;
+        float centerDepth = Vector3.Dot(originPosition - cameraTransform.position, cameraTransform.forward);
         float minimumDepth = effectCamera.nearClipPlane + 0.01f;
         _flashRenderer.enabled = centerDepth > minimumDepth;
         if (!_flashRenderer.enabled)
@@ -241,15 +244,17 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
 
         Vector3 towardCamera = effectCamera.orthographic
             ? -cameraTransform.forward
-            : (cameraTransform.position - bounds.center).normalized;
+            : (cameraTransform.position - originPosition).normalized;
         Vector3 absoluteDirection = new Vector3(
             Mathf.Abs(towardCamera.x), Mathf.Abs(towardCamera.y), Mathf.Abs(towardCamera.z));
-        float frontDistance = Vector3.Dot(bounds.extents, absoluteDirection)
-            + Mathf.Max(0f, _flashDepthOffset);
+        // Move along the anchor's view ray so its screen position stays fixed.
+        float modelFrontDistance = Vector3.Dot(bounds.center - originPosition, towardCamera)
+            + Vector3.Dot(bounds.extents, absoluteDirection);
+        float frontDistance = Mathf.Max(0f, modelFrontDistance) + Mathf.Max(0f, _flashDepthOffset);
         float depthFactor = Vector3.Dot(towardCamera, -cameraTransform.forward);
         frontDistance = Mathf.Min(frontDistance, (centerDepth - minimumDepth) / depthFactor);
 
-        Vector3 flashPosition = bounds.center + towardCamera * frontDistance;
+        Vector3 flashPosition = originPosition + towardCamera * frontDistance;
         float size = Mathf.Max(0.01f, bounds.size.y) * Mathf.Max(0.01f, _flashSize);
         // Preserve the projected size when moving a perspective billboard in front of the model.
         if (!effectCamera.orthographic)
