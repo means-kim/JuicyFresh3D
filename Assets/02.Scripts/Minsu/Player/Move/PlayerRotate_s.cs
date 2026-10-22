@@ -2,15 +2,41 @@ using UnityEngine;
 
 public class PlayerRotate_s : MonoBehaviour
 {
-    [SerializeField] private float _rotationSpeed = 200f;
+    [SerializeField, Min(0f)] private float _rotationSpeed = 720f;
 
-    private float _accumulationX = 0f; // 좌우  회전 각도
+    private PlayerMovement_s _movement;
+    private Health_s _health;
+    private Camera _camera;
+
+    private void Awake()
+    {
+        _movement = GetComponent<PlayerMovement_s>();
+        _health = GetComponent<Health_s>();
+    }
 
     private void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        _accumulationX += mouseX * _rotationSpeed * Time.deltaTime;
+        if (_camera == null || !_camera.isActiveAndEnabled) _camera = Camera.main;
+        if (_camera == null || !Application.isFocused) return;
+        if (!_camera.pixelRect.Contains(Input.mousePosition)) return;
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        // 캐릭터나 장애물에 가려져도 방향이 튀지 않도록 수평면을 사용한다.
+        var plane = new Plane(Vector3.up, transform.position);
+        if (plane.Raycast(ray, out float distance)) FaceWorldPoint(ray.GetPoint(distance), Time.deltaTime);
+    }
 
-        transform.eulerAngles = new Vector3(0f, _accumulationX, 0f);
+    public void FaceWorldPoint(Vector3 point, float deltaTime)
+    {
+        if (!isActiveAndEnabled || deltaTime <= 0f
+            || (_movement != null && _movement.IsActionBlocked) || (_health != null && _health.IsDead))
+        {
+            return;
+        }
+        Vector3 direction = point - transform.position;
+        direction.y = 0f;
+        if (direction.sqrMagnitude < 0.01f) return;
+        // 마우스 이동량이 아니라 초당 회전 속도에 deltaTime을 적용한다.
+        transform.rotation = Quaternion.RotateTowards(transform.rotation,
+            Quaternion.LookRotation(direction), _rotationSpeed * deltaTime);
     }
 }

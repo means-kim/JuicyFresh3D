@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 마우스 커서를 화면 가운데에 잠그고 숨긴다.
+// 커서를 게임 화면 안에서 움직일 수 있도록 제한한다.
 public class CursorManager_s : MonoBehaviour
 {
     private void Awake()
@@ -10,8 +10,8 @@ public class CursorManager_s : MonoBehaviour
 
     public void LockCursor()
     {
-        Cursor.lockState = CursorLockMode.Locked; // 화면 가운데에 고정
-        Cursor.visible = false;                   // 커서 숨기기
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
     }
 
     public void UnlockCursor()
