@@ -3,5 +3,6 @@ public enum MonsterStateType_s
     Idle,
     Hit,
     Dead,
-    Walk
+    Walk,
+    Attack
 }

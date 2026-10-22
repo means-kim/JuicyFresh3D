@@ -14,6 +14,15 @@ public class MonsterMovement_s : MonoBehaviour
     private float _nextTargetSearch;
     private float _nextRepath;
 
+    public Transform Target
+    {
+        get
+        {
+            FindTarget();
+            return _target;
+        }
+    }
+
     private void Awake()
     {
         if (_agent == null) _agent = GetComponent<NavMeshAgent>();
