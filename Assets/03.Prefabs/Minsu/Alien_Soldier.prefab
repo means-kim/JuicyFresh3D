@@ -155,6 +155,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4755603681579394268}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7580006880308704621}
   m_SourcePrefab: {fileID: 100100000, guid: a5c37f9419d768649a38403fe702e096, type: 3}
 --- !u!4 &644192478205776955 stripped
 Transform:
@@ -275,6 +278,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health_s
   _maxHealth: 100
+--- !u!114 &7580006880308704621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126935695444006562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8bf80266bfa3d0488bd9f610ce4e716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRotate_s
+  _rotationSpeed: 200
 --- !u!95 &4625083322341807714 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a5c37f9419d768649a38403fe702e096, type: 3}
