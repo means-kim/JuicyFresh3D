@@ -68,6 +68,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     private void Awake()
     {
+        ResolveComponents();
         ApplySharedSettings();
     }
 
@@ -84,7 +85,6 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     private void ApplySharedSettings()
     {
-        ResolveComponents();
         if (_crossFlashEffect != null) _crossFlashEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
         if (_silhouetteOutlineEffect != null) _silhouetteOutlineEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
         if (_outlineParticleLightEffect != null) _outlineParticleLightEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
