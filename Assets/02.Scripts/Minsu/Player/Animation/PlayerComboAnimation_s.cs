@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerComboAnimation_s : MonoBehaviour
 {
     private static readonly int Locomotion = Animator.StringToHash("Base Layer.Locomotion");
+    private static readonly int Land = Animator.StringToHash("Base Layer.Land");
 
     private static readonly int[] AttackStates =
     {
@@ -67,9 +68,19 @@ public class PlayerComboAnimation_s : MonoBehaviour
     {
         Initialize();
         if (!isActiveAndEnabled || IsPlaying || _animator == null || !_animator.isActiveAndEnabled
-            || _animator.runtimeAnimatorController == null || _animator.IsInTransition(0))
+            || _animator.runtimeAnimatorController == null)
         {
             return false;
+        }
+
+        if (_animator.IsInTransition(0))
+        {
+            var current = _animator.GetCurrentAnimatorStateInfo(0);
+            var next = _animator.GetNextAnimatorStateInfo(0);
+            // 접지 검사는 PlayerAttack_s에서 수행한다. 착지 블렌드는 공격으로 끊을 수 있다.
+            bool landing = next.fullPathHash == Land
+                           || (current.fullPathHash == Land && next.fullPathHash == Locomotion);
+            if (!landing) return false;
         }
 
         if (!_animator.HasState(0, Locomotion))
