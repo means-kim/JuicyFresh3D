@@ -27,6 +27,7 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
     [SerializeField] private Vector2 _particleSizeRange = new Vector2(0.025f, 0.065f);
     [SerializeField] private Vector2 _particleSpeedRange = new Vector2(0.25f, 0.65f);
     [SerializeField] private Vector2 _particleLifetimeRange = new Vector2(0.65f, 1.1f);
+
     [Tooltip("Fallback box size used only when no valid model renderer is assigned.")]
     [SerializeField] private Vector3 _spawnArea = new Vector3(0.75f, 0.9f, 0.5f);
     [SerializeField, Min(0f)] private float _gravityModifier = 0.1f;
@@ -55,18 +56,17 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
 
     internal void PlayEffect()
     {
-        if (!Application.isPlaying || !isActiveAndEnabled)
-            return;
-
-        if (!EnsureParticleSystems())
-            return;
+        if (!Application.isPlaying || !isActiveAndEnabled) return;
+        if (!EnsureParticleSystems()) return;
 
         foreach (ParticleEmitter emitter in _emitters)
         {
             emitter.Particles.gameObject.SetActive(true);
             emitter.Particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
             ConfigureParticleSystem(emitter);
             UpdateEmitterTransform(emitter);
+
             emitter.EmittedCount = 0;
             emitter.Particles.Play(true);
         }
@@ -77,14 +77,14 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         _opacity = 1f;
         _isPlaying = true;
         _isStopping = false;
+
         EmitUntilCount(1);
         ApplyParticleProperties();
     }
 
     internal void StopEffect()
     {
-        if (!_isPlaying)
-            return;
+        if (!_isPlaying) return;
 
         if (_stopFadeDuration <= 0f)
         {
@@ -95,7 +95,9 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         if (!_isStopping)
         {
             foreach (ParticleEmitter emitter in _emitters)
+            {
                 emitter.Particles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            }
 
             _stopStartOpacity = _opacity;
             _stopElapsedTime = 0f;
@@ -108,17 +110,21 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         bool colorChanged = _effectColor != color;
         _effectColor = color;
         _stopFadeDuration = Mathf.Max(0f, stopFadeDuration);
+
         if (colorChanged && _emitters.Count > 0)
+        {
             ApplyParticleProperties();
+        }
     }
 
     private void LateUpdate()
     {
-        if (!_isPlaying || _emitters.Count == 0)
-            return;
+        if (!_isPlaying || _emitters.Count == 0) return;
 
         foreach (ParticleEmitter emitter in _emitters)
+        {
             UpdateEmitterTransform(emitter);
+        }
 
         if (_isStopping)
         {
@@ -130,25 +136,27 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
                 return;
             }
 
-            _opacity = _stopStartOpacity
-                * (1f - Mathf.SmoothStep(0f, 1f, _stopElapsedTime / duration));
+            _opacity = _stopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _stopElapsedTime / duration));
+
             ApplyParticleProperties();
             return;
         }
 
         _elapsedTime += Time.deltaTime;
+
         float emissionDuration = Mathf.Max(0.01f, _emissionDuration);
         float progress = Mathf.Clamp01(_elapsedTime / emissionDuration);
         EmitUntilCount(Mathf.CeilToInt(progress * Mathf.Max(1, _particleCount)));
 
         if (_elapsedTime >= emissionDuration && !AnyParticlesAlive())
+        {
             HideParticles();
+        }
     }
 
     private bool EnsureParticleSystems()
     {
-        if (_emitters.Count > 0)
-            return true;
+        if (_emitters.Count > 0) return true;
 
         if (_particlePrefab == null)
         {
@@ -161,10 +169,10 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         {
             foreach (SkinnedMeshRenderer modelRenderer in _modelRenderers)
             {
-                if (modelRenderer == null || modelRenderer.sharedMesh == null)
-                    continue;
+                if (modelRenderer == null || modelRenderer.sharedMesh == null) continue;
 
                 hasModelRenderer = true;
+
                 if (!TryCreateEmitter(modelRenderer))
                 {
                     ClearRuntimeParticles();
@@ -185,11 +193,12 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
     private bool TryCreateEmitter(SkinnedMeshRenderer source)
     {
         ParticleSystem particles = Instantiate(_particlePrefab);
-        particles.name = source != null
-            ? name + " " + source.name + " Light Dust (Runtime)"
-            : name + " Light Dust (Runtime)";
+
+        particles.name = source != null ? $"{name} {source.name} Light Dust (Runtime)" : $"{name} Light Dust (Runtime)";
+
         particles.gameObject.hideFlags = HideFlags.DontSave;
         particles.transform.SetParent(null, false);
+
         SceneManager.MoveGameObjectToScene(particles.gameObject, gameObject.scene);
         ParticleSystemRenderer particleRenderer = particles.GetComponent<ParticleSystemRenderer>();
 
@@ -207,6 +216,7 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
             Renderer = particleRenderer,
             Properties = new MaterialPropertyBlock()
         });
+
         return true;
     }
 
@@ -234,6 +244,7 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
 
         ParticleSystem.ShapeModule shape = emitter.Particles.shape;
         shape.enabled = true;
+
         if (emitter.Source != null)
         {
             shape.shapeType = ParticleSystemShapeType.SkinnedMeshRenderer;
@@ -245,10 +256,7 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         else
         {
             shape.shapeType = ParticleSystemShapeType.Box;
-            shape.scale = new Vector3(
-                Mathf.Max(0f, _spawnArea.x),
-                Mathf.Max(0f, _spawnArea.y),
-                Mathf.Max(0f, _spawnArea.z));
+            shape.scale = new Vector3(Mathf.Max(0f, _spawnArea.x), Mathf.Max(0f, _spawnArea.y), Mathf.Max(0f, _spawnArea.z));
             shape.randomDirectionAmount = 1f;
         }
 
@@ -296,24 +304,26 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
     private void EmitUntilCount(int targetCount)
     {
         int clampedTarget = Mathf.Clamp(targetCount, 0, Mathf.Max(1, _particleCount));
-        if (clampedTarget <= _emittedParticleCount)
-            return;
+        if (clampedTarget <= _emittedParticleCount) return;
 
         float totalWeight = 0f;
         foreach (ParticleEmitter emitter in _emitters)
+        {
             totalWeight += GetEmitterWeight(emitter);
+        }
 
         float cumulativeWeight = 0f;
         int allocatedCount = 0;
+
         for (int i = 0; i < _emitters.Count; i++)
         {
             ParticleEmitter emitter = _emitters[i];
             cumulativeWeight += GetEmitterWeight(emitter);
-            int desiredCumulativeCount = i == _emitters.Count - 1
-                ? clampedTarget
-                : Mathf.RoundToInt(clampedTarget * cumulativeWeight / totalWeight);
+
+            int desiredCumulativeCount = (i == _emitters.Count - 1) ? clampedTarget : Mathf.RoundToInt(clampedTarget * cumulativeWeight / totalWeight);
             int desiredEmitterCount = desiredCumulativeCount - allocatedCount;
             int emitCount = desiredEmitterCount - emitter.EmittedCount;
+
             if (emitCount > 0)
             {
                 emitter.Particles.Emit(emitCount);
@@ -327,8 +337,7 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
 
     private static float GetEmitterWeight(ParticleEmitter emitter)
     {
-        if (emitter.Source == null)
-            return 1f;
+        if (emitter.Source == null) return 1f;
 
         Vector3 size = emitter.Source.bounds.size;
         return Mathf.Max(0.001f, 2f * (size.x * size.y + size.x * size.z + size.y * size.z));
@@ -337,6 +346,7 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
     private void UpdateEmitterTransform(ParticleEmitter emitter)
     {
         Transform origin = _particleOrigin != null ? _particleOrigin : transform;
+
         emitter.Particles.transform.SetPositionAndRotation(origin.position, origin.rotation);
         emitter.Particles.transform.localScale = Vector3.one;
     }
@@ -345,9 +355,9 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
     {
         foreach (ParticleEmitter emitter in _emitters)
         {
-            if (emitter.Particles.IsAlive(true))
-                return true;
+            if (emitter.Particles.IsAlive(true)) return true;
         }
+
         return false;
     }
 

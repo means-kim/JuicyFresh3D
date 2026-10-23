@@ -9,15 +9,15 @@ public class AnimalCharacterController_m : MonoBehaviour
 
     private void Awake()
     {
-        if(_characterController == null)
+        if (_characterController == null)
         {
             _characterController = GetComponent<CharacterController>();
         }
-        if(_playerEffectController == null)
+        if (_playerEffectController == null)
         {
             _playerEffectController = GetComponent<PlayerEffectController_m>();
         }
-        if(_postProcessEffectController == null)
+        if (_postProcessEffectController == null)
         {
             _postProcessEffectController = FindAnyObjectByType<PostProcessEffectController_m>();
         }
@@ -35,7 +35,7 @@ public class AnimalCharacterController_m : MonoBehaviour
             _characterController.Move(moveDirection * _moveSpeed * Time.deltaTime);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             _playerEffectController.PlayEffect();
             _postProcessEffectController.PlayEffect();

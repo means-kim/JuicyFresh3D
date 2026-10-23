@@ -14,17 +14,20 @@ public sealed class ChromaticAberrationEffect_m : MonoBehaviour
     {
         Clear();
         if (!profile.TryGet(out _chromaticAberration))
+        {
             _chromaticAberration = profile.Add<ChromaticAberration>();
+        }
+
         _chromaticAberration.intensity.overrideState = true;
         _chromaticAberration.active = false;
     }
 
     internal void ApplyStrength(float strength)
     {
-        if (_chromaticAberration == null)
-            return;
+        if (_chromaticAberration == null) return;
 
         strength = Mathf.Clamp01(strength);
+
         _chromaticAberration.intensity.value = Mathf.Clamp01(_maxIntensity) * strength;
         _chromaticAberration.active = isActiveAndEnabled && strength > 0f;
     }

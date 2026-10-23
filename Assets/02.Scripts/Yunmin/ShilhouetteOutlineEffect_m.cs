@@ -53,8 +53,7 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     internal void PlayEffect()
     {
-        if (!Application.isPlaying || !isActiveAndEnabled)
-            return;
+        if (!Application.isPlaying || !isActiveAndEnabled) return;
 
         if (_rimMaterial == null || _outlineMaskMaterial == null)
         {
@@ -104,27 +103,25 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!_isRimPlaying)
-            return;
-
+        if (!_isRimPlaying) return;
         if (_isRimStopping)
         {
             _rimStopElapsedTime += Time.deltaTime;
             float duration = Mathf.Max(0f, _stopFadeDuration);
+
             if (_rimStopElapsedTime >= duration)
             {
                 HideRim();
                 return;
             }
 
-            _rimOpacity = _rimStopStartOpacity
-                * (1f - Mathf.SmoothStep(0f, 1f, _rimStopElapsedTime / duration));
+            _rimOpacity = _rimStopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _rimStopElapsedTime / duration));
         }
         else
         {
             _rimElapsedTime += Time.deltaTime;
-            float duration = Mathf.Max(0f, _outlineFadeInDuration)
-                + Mathf.Max(0f, _outlineFadeOutDuration);
+            float duration = Mathf.Max(0f, _outlineFadeInDuration) + Mathf.Max(0f, _outlineFadeOutDuration);
+
             if (_rimElapsedTime >= duration)
             {
                 HideRim();
@@ -141,28 +138,29 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
     {
         float fadeInDuration = Mathf.Max(0f, _outlineFadeInDuration);
         if (fadeInDuration > 0f && elapsedTime < fadeInDuration)
+        {
             return Mathf.SmoothStep(0f, 1f, elapsedTime / fadeInDuration);
+        }
 
         float fadeOutDuration = Mathf.Max(0f, _outlineFadeOutDuration);
-        return fadeOutDuration > 0f
-            ? 1f - Mathf.SmoothStep(0f, 1f, (elapsedTime - fadeInDuration) / fadeOutDuration)
-            : 0f;
+
+        return (fadeOutDuration > 0f) ? (1f - Mathf.SmoothStep(0f, 1f, (elapsedTime - fadeInDuration) / fadeOutDuration)) : 0f;
     }
 
     private void EnsureRimObjects()
     {
-        if (_modelRenderers == null)
-            return;
-
+        if (_modelRenderers == null) return;
         if (_rimProperties == null)
+        {
             _rimProperties = new MaterialPropertyBlock();
+        }
 
         foreach (SkinnedMeshRenderer source in _modelRenderers)
         {
-            if (source == null || source.sharedMesh == null)
-                continue;
+            if (source == null || source.sharedMesh == null) continue;
 
             bool alreadyCreated = false;
+
             foreach (RimLayer layer in _rimLayers)
             {
                 if (layer.Source == source && layer.Renderer != null)
@@ -171,8 +169,8 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
                     break;
                 }
             }
-            if (alreadyCreated)
-                continue;
+
+            if (alreadyCreated) continue;
 
             _rimLayers.Add(new RimLayer
             {
@@ -185,13 +183,15 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     private static SkinnedMeshRenderer CreateOutlineRenderer(SkinnedMeshRenderer source, string suffix)
     {
-        GameObject outlineObject = new GameObject(source.name + " " + suffix + " (Runtime)")
+        GameObject outlineObject = new GameObject($"{source.name} {suffix}(Runtime)")
         {
             hideFlags = HideFlags.DontSave,
             layer = source.gameObject.layer
         };
+
         outlineObject.transform.SetParent(source.transform, false);
         SkinnedMeshRenderer renderer = outlineObject.AddComponent<SkinnedMeshRenderer>();
+
         renderer.enabled = false;
         renderer.shadowCastingMode = ShadowCastingMode.Off;
         renderer.receiveShadows = false;
@@ -199,6 +199,7 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
         renderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
         renderer.skinnedMotionVectors = false;
+
         return renderer;
     }
 
@@ -209,12 +210,11 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
             SkinnedMeshRenderer source = layer.Source;
             SkinnedMeshRenderer rimRenderer = layer.Renderer;
             SkinnedMeshRenderer maskRenderer = layer.MaskRenderer;
+
             if (rimRenderer == null || maskRenderer == null)
             {
-                if (rimRenderer != null)
-                    rimRenderer.enabled = false;
-                if (maskRenderer != null)
-                    maskRenderer.enabled = false;
+                if (rimRenderer != null) rimRenderer.enabled = false;
+                if (maskRenderer != null) maskRenderer.enabled = false;
                 continue;
             }
 
@@ -228,8 +228,12 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
             Mesh mesh = source.sharedMesh;
             SynchronizeOutlineRenderer(source, rimRenderer, mesh);
             SynchronizeOutlineRenderer(source, maskRenderer, mesh);
-            bool visible = source.enabled && source.gameObject.activeInHierarchy
-                && _rimMaterial != null && _outlineMaskMaterial != null && _rimWidth > 0f;
+
+            bool visible = source.enabled
+                        && source.gameObject.activeInHierarchy
+                        && _rimMaterial != null && _outlineMaskMaterial != null
+                        && _rimWidth > 0f;
+
             rimRenderer.enabled = visible;
             maskRenderer.enabled = visible;
 
@@ -237,8 +241,12 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
                 || layer.Material != _rimMaterial)
             {
                 layer.Materials = new Material[mesh.subMeshCount];
+
                 for (int i = 0; i < layer.Materials.Length; i++)
+                {
                     layer.Materials[i] = _rimMaterial;
+                }
+
                 rimRenderer.sharedMaterials = layer.Materials;
                 layer.Material = _rimMaterial;
             }
@@ -247,8 +255,12 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
                 || layer.MaskMaterial != _outlineMaskMaterial)
             {
                 layer.MaskMaterials = new Material[mesh.subMeshCount];
+
                 for (int i = 0; i < layer.MaskMaterials.Length; i++)
+                {
                     layer.MaskMaterials[i] = _outlineMaskMaterial;
+                }
+
                 maskRenderer.sharedMaterials = layer.MaskMaterials;
                 layer.MaskMaterial = _outlineMaskMaterial;
             }
@@ -257,8 +269,7 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         ApplyRimProperties();
     }
 
-    private static void SynchronizeOutlineRenderer(
-        SkinnedMeshRenderer source, SkinnedMeshRenderer target, Mesh mesh)
+    private static void SynchronizeOutlineRenderer(SkinnedMeshRenderer source, SkinnedMeshRenderer target, Mesh mesh)
     {
         if (target.sharedMesh != mesh)
         {
@@ -269,9 +280,11 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
         target.quality = source.quality;
         target.updateWhenOffscreen = source.updateWhenOffscreen;
+
         // Keep effect bounds separate from the bounds used to size and position the flash.
         Bounds bounds = source.localBounds;
         bounds.Expand(bounds.size.magnitude * 0.1f);
+
         target.localBounds = bounds;
         target.gameObject.layer = source.gameObject.layer;
         target.renderingLayerMask = source.renderingLayerMask;
@@ -280,7 +293,9 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         target.forceRenderingOff = source.forceRenderingOff;
 
         for (int i = 0; i < mesh.blendShapeCount; i++)
+        {
             target.SetBlendShapeWeight(i, source.GetBlendShapeWeight(i));
+        }
     }
 
     private void ApplyRimProperties()
@@ -293,7 +308,9 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         foreach (RimLayer layer in _rimLayers)
         {
             if (layer.Renderer != null)
+            {
                 layer.Renderer.SetPropertyBlock(_rimProperties);
+            }
         }
     }
 
@@ -304,12 +321,18 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         _rimOpacity = 0f;
         _rimElapsedTime = 0f;
         _rimStopElapsedTime = 0f;
+
         foreach (RimLayer layer in _rimLayers)
         {
             if (layer.Renderer != null)
+            {
                 layer.Renderer.enabled = false;
+            }
+
             if (layer.MaskRenderer != null)
+            {
                 layer.MaskRenderer.enabled = false;
+            }
         }
     }
 
@@ -328,11 +351,10 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         HideRim();
         foreach (RimLayer layer in _rimLayers)
         {
-            if (layer.Renderer != null)
-                Destroy(layer.Renderer.gameObject);
-            if (layer.MaskRenderer != null)
-                Destroy(layer.MaskRenderer.gameObject);
+            if (layer.Renderer != null) Destroy(layer.Renderer.gameObject);
+            if (layer.MaskRenderer != null) Destroy(layer.MaskRenderer.gameObject);
         }
+
         _rimLayers.Clear();
         _rimProperties = null;
     }

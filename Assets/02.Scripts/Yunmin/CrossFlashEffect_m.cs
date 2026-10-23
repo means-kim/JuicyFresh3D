@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 public sealed class CrossFlashEffect_m : MonoBehaviour
@@ -54,8 +55,7 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
 
     internal void PlayEffect()
     {
-        if (!Application.isPlaying || !isActiveAndEnabled)
-            return;
+        if (!Application.isPlaying || !isActiveAndEnabled) return;
 
         if (_flashMaterial == null || !TryGetModelBounds(out Bounds bounds))
         {
@@ -64,6 +64,7 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         }
 
         Camera effectCamera = ResolveCamera();
+
         if (effectCamera == null)
         {
             Debug.LogWarning("Assign an effect camera or tag a camera MainCamera before playing the effect.", this);
@@ -71,12 +72,14 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         }
 
         EnsureFlashObject();
+
         _elapsedTime = 0f;
         _isStopping = false;
         _isFlashPlaying = true;
         _horizontalStretch = 1f;
         _opacity = EvaluateFlashOpacity(0f);
         _flashObject.SetActive(true);
+
         UpdateFlash(bounds, effectCamera);
     }
 
@@ -100,22 +103,24 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     internal void SetSharedSettings(Color color, float stopFadeDuration)
     {
         bool colorChanged = _effectColor != color;
+
         _effectColor = color;
         _stopFadeDuration = Mathf.Max(0f, stopFadeDuration);
+
         if (colorChanged && _flashRenderer != null)
+        {
             ApplyFlashProperties();
+        }
     }
 
     private void LateUpdate()
     {
-        if (!_isFlashPlaying)
-            return;
+        if (!_isFlashPlaying) return;
 
         _elapsedTime += Time.deltaTime;
         float duration = _isStopping
             ? Mathf.Max(0f, _stopFadeDuration)
-            : Mathf.Max(0f, _flashFadeInDuration) + Mathf.Max(0f, _flashHoldDuration)
-                + Mathf.Max(0f, _flashFadeOutDuration);
+            : Mathf.Max(0f, _flashFadeInDuration) + Mathf.Max(0f, _flashHoldDuration) + Mathf.Max(0f, _flashFadeOutDuration);
 
         if (_elapsedTime >= duration)
         {
@@ -123,17 +128,14 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
             return;
         }
 
-        _opacity = _isStopping
-            ? _stopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _elapsedTime / duration))
-            : EvaluateFlashOpacity(_elapsedTime);
-        float stretchProgress = _isStopping
-            ? Mathf.SmoothStep(0f, 1f, _elapsedTime / duration)
-            : EvaluateFadeOutProgress(_elapsedTime);
-        _horizontalStretch = Mathf.Lerp(
-            _isStopping ? _stopStartHorizontalStretch : 1f,
-            Mathf.Max(1f, _flashEndHorizontalStretch), stretchProgress);
+        _opacity = _isStopping ? _stopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _elapsedTime / duration)) : EvaluateFlashOpacity(_elapsedTime);
+
+        float stretchProgress = _isStopping ? Mathf.SmoothStep(0f, 1f, _elapsedTime / duration) : EvaluateFadeOutProgress(_elapsedTime);
+
+        _horizontalStretch = Mathf.Lerp((_isStopping ? _stopStartHorizontalStretch : 1f), Mathf.Max(1f, _flashEndHorizontalStretch), stretchProgress);
 
         Camera effectCamera = ResolveCamera();
+
         if (effectCamera == null || !TryGetModelBounds(out Bounds bounds))
         {
             _flashRenderer.enabled = false;
@@ -148,20 +150,19 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         float fadeInDuration = Mathf.Max(0f, _flashFadeInDuration);
 
         if (fadeInDuration > 0f && elapsedTime < fadeInDuration)
+        {
             return Mathf.SmoothStep(0f, 1f, elapsedTime / fadeInDuration);
+        }
 
         return 1f - EvaluateFadeOutProgress(elapsedTime);
     }
 
     private float EvaluateFadeOutProgress(float elapsedTime)
     {
-        float fadeOutTime = elapsedTime - Mathf.Max(0f, _flashFadeInDuration)
-            - Mathf.Max(0f, _flashHoldDuration);
+        float fadeOutTime = elapsedTime - Mathf.Max(0f, _flashFadeInDuration) - Mathf.Max(0f, _flashHoldDuration);
         float fadeOutDuration = Mathf.Max(0f, _flashFadeOutDuration);
 
-        return fadeOutDuration > 0f
-            ? Mathf.SmoothStep(0f, 1f, fadeOutTime / fadeOutDuration)
-            : (fadeOutTime >= 0f ? 1f : 0f);
+        return (fadeOutDuration > 0f) ? Mathf.SmoothStep(0f, 1f, fadeOutTime / fadeOutDuration) : (fadeOutTime >= 0f ? 1f : 0f);
     }
 
     private Camera ResolveCamera()
@@ -173,8 +174,8 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     {
         bounds = default;
         bool hasBounds = false;
-        if (_modelRenderers == null)
-            return false;
+
+        if (_modelRenderers == null) return false;
 
         foreach (SkinnedMeshRenderer modelRenderer in _modelRenderers)
         {
@@ -185,9 +186,13 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
             }
 
             if (hasBounds)
+            {
                 bounds.Encapsulate(modelRenderer.bounds);
+            }
             else
+            {
                 bounds = modelRenderer.bounds;
+            }
 
             hasBounds = true;
         }
@@ -197,8 +202,7 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
 
     private void EnsureFlashObject()
     {
-        if (_flashObject != null)
-            return;
+        if (_flashObject != null) return;
 
         _flashMesh = new Mesh
         {
@@ -212,6 +216,7 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
             uv = new[] { Vector2.zero, Vector2.right, Vector2.one, Vector2.up },
             triangles = new[] { 0, 2, 1, 0, 3, 2 }
         };
+
         _flashMesh.RecalculateBounds();
 
         // Keep the billboard in world space so non-uniform player scale cannot distort it.
@@ -220,8 +225,11 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
             hideFlags = HideFlags.DontSave,
             layer = gameObject.layer
         };
-        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(_flashObject, gameObject.scene);
+
+        SceneManager.MoveGameObjectToScene(_flashObject, gameObject.scene);
+
         _flashObject.AddComponent<MeshFilter>().sharedMesh = _flashMesh;
+
         _flashRenderer = _flashObject.AddComponent<MeshRenderer>();
         _flashRenderer.sharedMaterial = _flashMaterial;
         _flashRenderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -229,6 +237,7 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         _flashRenderer.lightProbeUsage = LightProbeUsage.Off;
         _flashRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
         _flashRenderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
+
         _flashProperties = new MaterialPropertyBlock();
     }
 
@@ -236,33 +245,36 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     {
         Transform cameraTransform = effectCamera.transform;
         Vector3 originPosition = _flashOrigin != null ? _flashOrigin.position : bounds.center;
+
         float centerDepth = Vector3.Dot(originPosition - cameraTransform.position, cameraTransform.forward);
         float minimumDepth = effectCamera.nearClipPlane + 0.01f;
-        _flashRenderer.enabled = centerDepth > minimumDepth;
-        if (!_flashRenderer.enabled)
-            return;
 
-        Vector3 towardCamera = effectCamera.orthographic
-            ? -cameraTransform.forward
-            : (cameraTransform.position - originPosition).normalized;
-        Vector3 absoluteDirection = new Vector3(
-            Mathf.Abs(towardCamera.x), Mathf.Abs(towardCamera.y), Mathf.Abs(towardCamera.z));
+        _flashRenderer.enabled = (centerDepth > minimumDepth);
+        if (!_flashRenderer.enabled) return;
+
+        Vector3 towardCamera = (effectCamera.orthographic) ? -cameraTransform.forward : (cameraTransform.position - originPosition).normalized;
+        Vector3 absoluteDirection = new Vector3(Mathf.Abs(towardCamera.x), Mathf.Abs(towardCamera.y), Mathf.Abs(towardCamera.z));
+
         // Move along the anchor's view ray so its screen position stays fixed.
-        float modelFrontDistance = Vector3.Dot(bounds.center - originPosition, towardCamera)
-            + Vector3.Dot(bounds.extents, absoluteDirection);
+        float modelFrontDistance = Vector3.Dot(bounds.center - originPosition, towardCamera) + Vector3.Dot(bounds.extents, absoluteDirection);
         float frontDistance = Mathf.Max(0f, modelFrontDistance) + Mathf.Max(0f, _flashDepthOffset);
         float depthFactor = Vector3.Dot(towardCamera, -cameraTransform.forward);
+
         frontDistance = Mathf.Min(frontDistance, (centerDepth - minimumDepth) / depthFactor);
 
         Vector3 flashPosition = originPosition + towardCamera * frontDistance;
         float size = Mathf.Max(0.01f, bounds.size.y) * Mathf.Max(0.01f, _flashSize);
+
         // Preserve the projected size when moving a perspective billboard in front of the model.
         if (!effectCamera.orthographic)
+        {
             size *= (centerDepth - frontDistance * depthFactor) / centerDepth;
+        }
 
         _flashObject.transform.SetPositionAndRotation(flashPosition, cameraTransform.rotation);
         _flashObject.transform.localScale = new Vector3(size * _horizontalStretch, size, size);
         _flashRenderer.sharedMaterial = _flashMaterial;
+
         ApplyFlashProperties();
     }
 
@@ -283,8 +295,11 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         _isStopping = false;
         _opacity = 0f;
         _horizontalStretch = 1f;
+
         if (_flashObject != null)
+        {
             _flashObject.SetActive(false);
+        }
     }
 
     private void OnDisable()
@@ -300,10 +315,8 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     internal void Clear()
     {
         HideFlash();
-        if (_flashObject != null)
-            Destroy(_flashObject);
-        if (_flashMesh != null)
-            Destroy(_flashMesh);
+        if (_flashObject != null) Destroy(_flashObject);
+        if (_flashMesh != null) Destroy(_flashMesh);
 
         _flashObject = null;
         _flashMesh = null;

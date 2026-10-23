@@ -45,6 +45,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         _phaseStartStrength = _strength;
         _phaseElapsed = 0f;
         _phase = _strength >= 1f ? Phase.Hold : Phase.FadeIn;
+
         AdvanceTime(0f);
         ApplyEffects();
     }
@@ -92,9 +93,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         // Carry unused time across phases, including phases with zero duration.
         while (_phase != Phase.Idle)
         {
-            float duration = _phase == Phase.FadeIn ? Mathf.Max(0f, _fadeInDuration)
-                : _phase == Phase.Hold ? Mathf.Max(0f, _holdDuration)
-                : Mathf.Max(0f, _fadeOutDuration);
+            float duration = _phase == Phase.FadeIn ? Mathf.Max(0f, _fadeInDuration) : (_phase == Phase.Hold ? Mathf.Max(0f, _holdDuration) : Mathf.Max(0f, _fadeOutDuration));
             float remaining = Mathf.Max(0f, duration - _phaseElapsed);
 
             if (duration > 0f && deltaTime < remaining)
@@ -102,9 +101,14 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
                 _phaseElapsed += deltaTime;
                 float progress = Mathf.SmoothStep(0f, 1f, _phaseElapsed / duration);
                 if (_phase == Phase.FadeIn)
+                {
                     _strength = Mathf.Lerp(_phaseStartStrength, 1f, progress);
+                }
                 else if (_phase == Phase.FadeOut)
+                {
                     _strength = Mathf.Lerp(_phaseStartStrength, 0f, progress);
+                }
+
                 return;
             }
 
@@ -132,20 +136,26 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     {
         ResolveComponents();
         if (_effectCamera == null)
+        {
             _effectCamera = Camera.main;
-        if (_effectCamera == null || _volume == null)
-            return false;
+        }
+        if (_effectCamera == null || _volume == null) return false;
 
         if (_runtimeProfile == null)
         {
             _volume.weight = 0f;
             _volume.isGlobal = true;
+
             // Volume.profile deep-copies the shared profile and its components.
+
             _runtimeProfile = _volume.profile;
             _runtimeProfile.name = name + " Post Process (Runtime)";
             _runtimeProfile.hideFlags = HideFlags.DontSave;
+
             foreach (VolumeComponent component in _runtimeProfile.components)
+            {
                 component.hideFlags = HideFlags.DontSave;
+            }
 
             _vignette.Initialize(_runtimeProfile);
             _depthOfField.Initialize(_runtimeProfile, _effectCamera);
@@ -158,19 +168,26 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     private void ResolveComponents()
     {
         if (_volume == null)
+        {
             _volume = GetComponent<Volume>();
+        }
         if (_vignette == null)
+        {
             _vignette = GetComponent<VignetteEffect_m>();
+        }
         if (_depthOfField == null)
+        {
             _depthOfField = GetComponent<DepthOfFieldEffect_m>();
+        }
         if (_chromaticAberration == null)
+        {
             _chromaticAberration = GetComponent<ChromaticAberrationEffect_m>();
+        }
     }
 
     private void ApplyEffects()
     {
-        if (_runtimeProfile == null || _volume == null)
-            return;
+        if (_runtimeProfile == null || _volume == null) return;
 
         _vignette.ApplyStrength(_strength);
         _depthOfField.ApplyStrength(_strength, _effectCamera);
@@ -184,14 +201,23 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         _strength = 0f;
         _phaseElapsed = 0f;
         _phaseStartStrength = 0f;
+
         if (_volume != null)
+        {
             _volume.weight = 0f;
+        }
         if (_vignette != null)
+        {
             _vignette.Clear();
+        }
         if (_depthOfField != null)
+        {
             _depthOfField.Clear();
+        }
         if (_chromaticAberration != null)
+        {
             _chromaticAberration.Clear();
+        }
     }
 
     private void OnDisable()
@@ -202,13 +228,16 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     private void OnDestroy()
     {
         Clear();
-        if (_runtimeProfile == null)
-            return;
 
-        if (_volume != null)
-            _volume.profile = null;
+        if (_runtimeProfile == null) return;
+        if (_volume != null) _volume.profile = null;
+
         foreach (VolumeComponent component in _runtimeProfile.components)
+        {
             Destroy(component);
+        }
+
+
         Destroy(_runtimeProfile);
         _runtimeProfile = null;
     }

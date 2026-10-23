@@ -21,22 +21,27 @@ public sealed class DepthOfFieldEffect_m : MonoBehaviour
     {
         Clear();
         if (!profile.TryGet(out _depthOfField))
+        {
             _depthOfField = profile.Add<DepthOfField>();
+        }
+
         _depthOfField.mode.Override(DepthOfFieldMode.Bokeh);
         _depthOfField.focusDistance.overrideState = true;
         _depthOfField.focalLength.overrideState = true;
         _depthOfField.aperture.overrideState = true;
+
         UpdateFocusDistance(effectCamera);
+
         _depthOfField.active = false;
     }
 
     internal void ApplyStrength(float strength, Camera effectCamera)
     {
-        if (_depthOfField == null)
-            return;
+        if (_depthOfField == null) return;
 
         strength = Mathf.Clamp01(strength);
         UpdateFocusDistance(effectCamera);
+
         _depthOfField.focalLength.value = Mathf.Lerp(1f, Mathf.Clamp(_maxFocalLength, 1f, 300f), strength);
         _depthOfField.aperture.value = Mathf.Clamp(_aperture, 1f, 32f);
         _depthOfField.active = isActiveAndEnabled && strength > 0f;
@@ -46,10 +51,13 @@ public sealed class DepthOfFieldEffect_m : MonoBehaviour
     {
         if (_focusTarget != null && effectCamera != null)
         {
-            float depth = Vector3.Dot(_focusTarget.position - effectCamera.transform.position,
-                effectCamera.transform.forward);
+            Vector3 cameraToTarget = _focusTarget.position - effectCamera.transform.position;
+            float depth = Vector3.Dot(cameraToTarget, effectCamera.transform.forward);
+
             if (depth > 0f && !float.IsNaN(depth) && !float.IsInfinity(depth))
+            {
                 _lastValidFocusDistance = depth;
+            }
         }
 
         // URP divides by (focus distance - focal length in metres).

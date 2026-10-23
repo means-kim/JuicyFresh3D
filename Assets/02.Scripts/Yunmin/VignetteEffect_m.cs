@@ -23,7 +23,10 @@ public sealed class VignetteEffect_m : MonoBehaviour
     {
         Clear();
         if (!profile.TryGet(out _vignette))
+        {
             _vignette = profile.Add<Vignette>();
+        }
+
         _vignette.color.overrideState = true;
         _vignette.intensity.overrideState = true;
         _vignette.smoothness.overrideState = true;
@@ -35,8 +38,11 @@ public sealed class VignetteEffect_m : MonoBehaviour
     internal void ApplyStrength(float strength)
     {
         _strength = Mathf.Clamp01(strength);
+
         if (_vignette == null)
+        {
             return;
+        }
 
         _vignette.color.value = _color;
         _vignette.intensity.value = Mathf.Clamp01(_maxIntensity) * _strength;

@@ -97,8 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _focusTarget: {fileID: 0}
-  _maxFocalLength: 150
-  _aperture: 5.6
+  _maxFocalLength: 75
+  _aperture: 3
 --- !u!114 &113084138144375306
 MonoBehaviour:
   m_ObjectHideFlags: 0
