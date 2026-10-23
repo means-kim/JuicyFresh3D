@@ -1,0 +1,18 @@
+EDITOR NOTE: pre-existing isolated-project SearchDatabase startup error (outside gameplay)
+PASS 60fps combo1: duration=0.6333; clip=0.6000; next=2; stop/rotation/dash/spam locks=True
+PASS 60fps combo2: duration=0.7167; clip=0.6667; next=3; stop/rotation/dash/spam locks=True
+PASS 60fps combo3: duration=0.6333; clip=0.6000; next=4; stop/rotation/dash/spam locks=True
+PASS 60fps combo4: duration=0.8833; clip=0.8333; next=5; stop/rotation/dash/spam locks=True
+PASS 60fps combo5: duration=1.0500; clip=1.0000; next=1; stop/rotation/dash/spam locks=True
+PASS 60fps cancel: Space priority; immediate RollForward; countdown continues; next=2 after roll/grace
+PASS 60fps full attack -> roll -> 0.2s grace -> combo2
+PASS 60fps expiry: reset to 1 without aborting attack; all 5 delays independent; live edits and zero supported
+PASS 30fps combo1: duration=0.6667; clip=0.6000; next=2; stop/rotation/dash/spam locks=True
+PASS 30fps combo2: duration=0.7333; clip=0.6667; next=3; stop/rotation/dash/spam locks=True
+PASS 30fps combo3: duration=0.6667; clip=0.6000; next=4; stop/rotation/dash/spam locks=True
+PASS 30fps combo4: duration=0.9000; clip=0.8333; next=5; stop/rotation/dash/spam locks=True
+PASS 30fps combo5: duration=1.0667; clip=1.0000; next=1; stop/rotation/dash/spam locks=True
+PASS 30fps cancel: Space priority; immediate RollForward; countdown continues; next=2 after roll/grace
+PASS 30fps full attack -> roll -> 0.2s grace -> combo2
+PASS 30fps expiry: reset to 1 without aborting attack; all 5 delays independent; live edits and zero supported
+PASS no runtime errors/parameter warnings

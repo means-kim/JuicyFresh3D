@@ -16,12 +16,12 @@ public class BossCombatController : MonoBehaviour
     [SerializeField] private Transform _target;
 
     [Header("공격 범위")]
-    [SerializeField] [Min(0f)] private float _meleeRange = 2.5f;
+    [SerializeField][Min(0f)] private float _meleeRange = 2.5f;
 
-    [SerializeField] [Min(0f)] private float _rangedRange = 12f;
+    [SerializeField][Min(0f)] private float _rangedRange = 12f;
 
     [Header("공격 간격")]
-    [SerializeField] [Min(0f)] private float _attackCooldown = 2f;
+    [SerializeField][Min(0f)] private float _attackCooldown = 2f;
 
     private BossAttackController _attackController;
     private Animator _animator;
@@ -36,6 +36,15 @@ public class BossCombatController : MonoBehaviour
     private static readonly int WalkStateHash = Animator.StringToHash("Boss_Walk");
 
     public BossState CurrentState => _currentState;
+    public Transform Target => _target;
+    public float MeleeRange => _meleeRange;
+
+    public bool IsWithinMeleeRange(Vector3 worldPosition)
+    {
+        Vector3 direction = worldPosition - transform.position;
+        direction.y = 0f;
+        return direction.magnitude <= _meleeRange;
+    }
 
     // 공격 간격 중에도 추적은 가능하지만, 남은 공격 모션과 복귀 전이는 먼저 끝나야 합니다.
     public bool CanChase => _attackController != null
@@ -81,7 +90,7 @@ public class BossCombatController : MonoBehaviour
     private void Update()
     {
         if (!_attackController.isActiveAndEnabled || !_animator.isActiveAndEnabled
-            || _animator.runtimeAnimatorController == null)
+                                                  || _animator.runtimeAnimatorController == null)
         {
             return;
         }
@@ -126,7 +135,7 @@ public class BossCombatController : MonoBehaviour
         float distance = direction.magnitude;
 
         // 근접범위가 원거리범위 안에 포함되므로 먼저 검사
-        if (distance <= _meleeRange)
+        if (IsWithinMeleeRange(_target.position))
         {
             _attackController.TryStartAttack(BossAttackType.Melee);
         }

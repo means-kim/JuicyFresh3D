@@ -42,6 +42,36 @@ public class ActualBossRuntimeProbe : MonoBehaviour
     {
         if (SessionState.GetBool("ActualBossProbeRunning", false))
         {
+            if (File.ReadAllText(Path.Combine(Application.dataPath, "../actual-boss-probe-mode.txt")).Trim() == "boss-dodge")
+            {
+                new GameObject("BossDodgeRuntimeProbe").AddComponent<BossDodgeRuntimeProbe>();
+                return;
+            }
+            if (File.ReadAllText(Path.Combine(Application.dataPath, "../actual-boss-probe-mode.txt")).Trim() == "player-combo45-analysis")
+            {
+                new GameObject("PlayerCombo45PoseProbe").AddComponent<PlayerCombo45PoseProbe>();
+                return;
+            }
+            if (File.ReadAllText(Path.Combine(Application.dataPath, "../actual-boss-probe-mode.txt")).Trim() == "player-attack")
+            {
+                new GameObject("PlayerAttackRuntimeProbe").AddComponent<PlayerAttackRuntimeProbe>();
+                return;
+            }
+            if (File.ReadAllText(Path.Combine(Application.dataPath, "../actual-boss-probe-mode.txt")).Trim() == "player-eight-way")
+            {
+                new GameObject("PlayerEightWayRuntimeProbe").AddComponent<PlayerEightWayRuntimeProbe>();
+                return;
+            }
+            if (File.ReadAllText(Path.Combine(Application.dataPath, "../actual-boss-probe-mode.txt")).Trim() == "player-grounding")
+            {
+                new GameObject("PlayerGroundingRuntimeProbe").AddComponent<PlayerGroundingRuntimeProbe>();
+                return;
+            }
+            if (File.ReadAllText(Path.Combine(Application.dataPath, "../actual-boss-probe-mode.txt")).Trim() == "player-move")
+            {
+                new GameObject("PlayerMoveRuntimeProbe").AddComponent<PlayerMoveRuntimeProbe>();
+                return;
+            }
             new GameObject("ActualBossPlayProbe").AddComponent<ActualBossRuntimeProbe>();
         }
     }

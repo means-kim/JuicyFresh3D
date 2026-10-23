@@ -1,0 +1,7 @@
+Scene=Assets/01.Scenes/KwangHeeScene.unity
+Camera=PlayerFollowCamera
+Target=CameraTarget
+Binding=LockToTargetOnAssign
+Offset=(0.00, 1.00, -4.00)
+Brain=LateUpdate
+Main camera=(-0.59, 2.00, -20.66); yaw=7.810431

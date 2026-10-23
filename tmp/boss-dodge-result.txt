@@ -1,0 +1,24 @@
+Clip=Attack_01; length=1.5000s; sourceFPS=60.00; totalFrames=90.00
+PASS 60fps sourceFrame=39.00: success=False; actualRoll=True
+PASS 60fps sourceFrame=40.00: success=True; actualRoll=True
+PASS 60fps sourceFrame=50.00: success=True; actualRoll=True
+PASS 60fps sourceFrame=59.90: success=True; actualRoll=True
+PASS 60fps sourceFrame=60.00: success=False; actualRoll=True
+PASS 60fps sourceFrame=65.00: success=False; actualRoll=True
+PASS 60fps startDistance=2.50: success=True; preMovementPosition=True
+PASS 60fps startDistance=2.51: success=False; preMovementPosition=True
+PASS 60fps startDistance=4.00: success=False; preMovementPosition=True
+PASS 60fps lifecycle: lure rejected; early roll rejected; one success/attack; live shared range; air rejected; attack-cancel roll; ranged rejected; end/disable closed; subscription restored
+PASS 60fps natural playback: openFrame=40.0000; closeFrame=60.0000
+PASS 30fps sourceFrame=39.00: success=False; actualRoll=True
+PASS 30fps sourceFrame=40.00: success=True; actualRoll=True
+PASS 30fps sourceFrame=50.00: success=True; actualRoll=True
+PASS 30fps sourceFrame=59.90: success=True; actualRoll=True
+PASS 30fps sourceFrame=60.00: success=False; actualRoll=True
+PASS 30fps sourceFrame=65.00: success=False; actualRoll=True
+PASS 30fps startDistance=2.50: success=True; preMovementPosition=True
+PASS 30fps startDistance=2.51: success=False; preMovementPosition=True
+PASS 30fps startDistance=4.00: success=False; preMovementPosition=True
+PASS 30fps lifecycle: lure rejected; early roll rejected; one success/attack; live shared range; air rejected; attack-cancel roll; ranged rejected; end/disable closed; subscription restored
+PASS 30fps natural playback: openFrame=40.0000; closeFrame=60.0000
+PASS parameterless DodgeSucceeded; no runtime errors/parameter warnings

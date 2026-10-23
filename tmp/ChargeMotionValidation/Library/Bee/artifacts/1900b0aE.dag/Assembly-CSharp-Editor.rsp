@@ -406,12 +406,22 @@
 -r:"C:/Program Files/Unity/Hub/Editor/6000.3.22f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/6000.3.22f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/mscorlib.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Cinemachine.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Cinemachine.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Mathematics.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Mathematics.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Settings.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Splines.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Splines.ref.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.3.22f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.3.22f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.3.22f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
 "Assets/Editor/ActualBossPlayProbe.cs"
 "Assets/Editor/ChargeMotionProbe.cs"
 "Assets/Editor/CombatFsmProbe.cs"
+"Assets/Editor/PlayerAttackSetup.cs"
+"Assets/Editor/PlayerCombo45Analysis.cs"
+"Assets/Editor/PlayerMoveProbeSetup.cs"
 -langversion:9.0
 /deterministic
 /optimize+

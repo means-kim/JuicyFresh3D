@@ -1,0 +1,58 @@
+[
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossAttackController.cs",
+    "Hash": "E2B0AED36D9499A89AD684656DB734400A2ADEF084AE3A568CFD34C066A0D7C1"
+  },
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossCombatController.cs",
+    "Hash": "D37A806B07DD1483EAC981C0617E67A84E2DF181CF9AE139CC54D723964E6292"
+  },
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossMovement.cs",
+    "Hash": "F992764A6E14B6AB07AC2FDD9016873092B455778F301FC583B20373E0DFFA1B"
+  },
+  {
+    "Path": "Assets/07.Animations/KwnagHee/BossMonsterAnimator.controller",
+    "Hash": "5E64329BE08EAD8FE72B26AC4ED0BA44408888AB7363D73FDDD0F52C5961D95D"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo01.fbx",
+    "Hash": "3D8A7B22A1B0A458753E046BC9020EA201790FC717CDAC54188458923DEDE874"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo01.fbx.meta",
+    "Hash": "3421B8D03647948AD924A8D020BE2712C0A5B56E9A8D35F8C21B3A7D935132BE"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo02.fbx",
+    "Hash": "AE5FBA9EF0E140EE39CA618FCC5FC66EF01A2815881AA36AC0B343B3ADC0AF6C"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo02.fbx.meta",
+    "Hash": "05E71F5A3F368D5F475092E0ABBCD390943EAD7962A3D37A4CC3FEF68FFD00C3"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo03.fbx",
+    "Hash": "87BF08AD9CCB2545AD7DF35F3A78A4A52461E0D2BDD3B044319820FD1D272B1A"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo03.fbx.meta",
+    "Hash": "003D30BDA7DC1871C85E2731AAC51441F4A7AB7A45BAA7DE2066D5EBE75A90F2"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo04.fbx",
+    "Hash": "A99E8FEE0792F7E2B0CB07EDF328840A72EE56DF3DA819CC0F49C3880BFF7A63"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo04.fbx.meta",
+    "Hash": "8DF3D7C584EDE99814C8C798A2B1E6FE53BED60BDD4E0D85B9B75F983E92700E"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo05.fbx",
+    "Hash": "BDD18D60046279F87915754A5916147E5BB33A871E02537526B6F5A000255993"
+  },
+  {
+    "Path": "C:\\Users\\akh10\\Documents\\JuicyFresh3D\\Assets\\ModularAnimalKnightsPolyart\\Animation\\AttackCombo05.fbx.meta",
+    "Hash": "F16ED14483A2C99E7054091F2AD0CD066DBBA7844477F70E199ED6EAA22CA582"
+  }
+]

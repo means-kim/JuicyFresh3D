@@ -1,0 +1,6 @@
+{
+  "DirectionChecks": 32,
+  "ActionChecks": 2,
+  "HasFailures": 0,
+  "Setup": "Scene=Assets/01.Scenes/KwangHeeScene.unity\nCamera=PlayerFollowCamera\nTarget=CameraTarget\nBinding=LockToTargetOnAssign\nOffset=(0.00, 1.00, -4.00)\nBrain=LateUpdate\nMain camera=(-0.59, 2.00, -20.66); yaw=7.810431"
+}

@@ -1,0 +1,32 @@
+{
+  "04_last_frame_vs_05_start": {
+    "RightHand": [
+      0.0,
+      0.0
+    ],
+    "Chest": [
+      0.0,
+      0.0
+    ]
+  },
+  "04_last_step": {
+    "RightHand": [
+      0.0021,
+      1.18
+    ],
+    "Chest": [
+      0.0003,
+      0.01
+    ]
+  },
+  "05_first_step": {
+    "RightHand": [
+      0.0081,
+      4.67
+    ],
+    "Chest": [
+      0.0049,
+      2.05
+    ]
+  }
+}

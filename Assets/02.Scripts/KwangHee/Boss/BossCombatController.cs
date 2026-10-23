@@ -36,6 +36,15 @@ public class BossCombatController : MonoBehaviour
     private static readonly int WalkStateHash = Animator.StringToHash("Boss_Walk");
 
     public BossState CurrentState => _currentState;
+    public Transform Target => _target;
+    public float MeleeRange => _meleeRange;
+
+    public bool IsWithinMeleeRange(Vector3 worldPosition)
+    {
+        Vector3 direction = worldPosition - transform.position;
+        direction.y = 0f;
+        return direction.magnitude <= _meleeRange;
+    }
 
     // 공격 간격 중에도 추적은 가능하지만, 남은 공격 모션과 복귀 전이는 먼저 끝나야 합니다.
     public bool CanChase => _attackController != null
@@ -80,11 +89,7 @@ public class BossCombatController : MonoBehaviour
 
     private void Update()
     {
-        if (!_attackController.isActiveAndEnabled || !_animator.isActiveAndEnabled
-                                                  || _animator.runtimeAnimatorController == null)
-        {
-            return;
-        }
+        if (!_attackController.isActiveAndEnabled || !_animator.isActiveAndEnabled || _animator.runtimeAnimatorController == null) return;
 
         switch (_currentState)
         {
@@ -113,10 +118,7 @@ public class BossCombatController : MonoBehaviour
             return;
         }
 
-        if (_target == null || !IsLocomotionReady())
-        {
-            return;
-        }
+        if (_target == null || !IsLocomotionReady()) return;
 
         Vector3 direction = _target.position - transform.position;
 
@@ -126,7 +128,7 @@ public class BossCombatController : MonoBehaviour
         float distance = direction.magnitude;
 
         // 근접범위가 원거리범위 안에 포함되므로 먼저 검사
-        if (distance <= _meleeRange)
+        if (IsWithinMeleeRange(_target.position))
         {
             _attackController.TryStartAttack(BossAttackType.Melee);
         }
@@ -164,10 +166,7 @@ public class BossCombatController : MonoBehaviour
         // 추적 이동은 BossMovement가 CanChase를 확인한 뒤 재개합니다.
         _cooldownRemaining = Mathf.Max(0f, _cooldownRemaining - deltaTime);
 
-        if (_cooldownRemaining > 0f || !IsLocomotionReady())
-        {
-            return;
-        }
+        if (_cooldownRemaining > 0f || !IsLocomotionReady()) return;
 
         ChangeState(BossState.Chase);
     }
@@ -192,10 +191,7 @@ public class BossCombatController : MonoBehaviour
 
     private bool IsLocomotionReady()
     {
-        if (_animator.IsInTransition(0))
-        {
-            return false;
-        }
+        if (_animator.IsInTransition(0)) return false;
 
         int stateHash = _animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
         return IsLocomotionState(stateHash);
@@ -205,10 +201,7 @@ public class BossCombatController : MonoBehaviour
     {
         int currentStateHash = _animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
 
-        if (!IsLocomotionState(currentStateHash))
-        {
-            return false;
-        }
+        if (!IsLocomotionState(currentStateHash)) return false;
 
         // Idle와 Walk 사이의 전이는 이동을 유지해야 걷기가 끊기지 않습니다.
         // 공격에서 Idle로 복귀하는 전이는 위의 현재 상태 검사에서 차단됩니다.
@@ -223,10 +216,7 @@ public class BossCombatController : MonoBehaviour
 
     private void ChangeState(BossState nextState)
     {
-        if (_currentState == nextState)
-        {
-            return;
-        }
+        if (_currentState == nextState) return;
 
         _currentState = nextState;
 
@@ -243,9 +233,8 @@ public class BossCombatController : MonoBehaviour
 
     private void HandleAttackFinished()
     {
-        if (_currentState == BossState.MeleeAttack
-            || _currentState == BossState.ChargeAttack
-            || _currentState == BossState.ThrowAttack)
+        if (_currentState == BossState.MeleeAttack || _currentState == BossState.ChargeAttack ||
+            _currentState == BossState.ThrowAttack)
         {
             ChangeState(BossState.Recovery);
         }

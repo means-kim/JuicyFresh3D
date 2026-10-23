@@ -1,0 +1,22 @@
+[
+  {
+    "Path": "Assets/07.Animations/KwnagHee/PlayerMoveAnimator.controller",
+    "Hash": "0C3E6446B2339E3E3231EAFEBB67AD7FF4B9C8D60284575BB42F342961591528"
+  },
+  {
+    "Path": "Assets/01.Scenes/KwangHeeScene.unity",
+    "Hash": "C9E93836F1D916DAA7359716A6C30B2664DF8ECDBF59A56044D91E8D29056D76"
+  },
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossAttackController.cs",
+    "Hash": "E2B0AED36D9499A89AD684656DB734400A2ADEF084AE3A568CFD34C066A0D7C1"
+  },
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossCombatController.cs",
+    "Hash": "D37A806B07DD1483EAC981C0617E67A84E2DF181CF9AE139CC54D723964E6292"
+  },
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossMovement.cs",
+    "Hash": "F992764A6E14B6AB07AC2FDD9016873092B455778F301FC583B20373E0DFFA1B"
+  }
+]
