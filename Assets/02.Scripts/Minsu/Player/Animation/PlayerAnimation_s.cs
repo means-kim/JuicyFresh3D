@@ -99,6 +99,15 @@ public class PlayerAnimation_s : MonoBehaviour
                 PlayLocomotion();
             }
         }
+        else if (!_animator.IsInTransition(0))
+        {
+            var state = _animator.GetCurrentAnimatorStateInfo(0);
+            // 착지 복귀를 코드에서 처리한다. 공격·피격 등으로 중단된 상태는 덮어쓰지 않는다.
+            if (state.fullPathHash == Land && state.normalizedTime >= 0.94f)
+            {
+                _animator.CrossFadeInFixedTime(Locomotion, 0.12f, 0, 0f);
+            }
+        }
     }
 
     public void UpdateLocomotion(Vector3 worldVelocity, float speed, float deltaTime)

@@ -42,8 +42,8 @@ Shader "JuicyFresh/LightningArc"
             half4 Frag(Varyings input) : SV_Target
             {
                 float edge = saturate(1 - abs(input.uv.y * 2 - 1));
-                float core = pow(edge, 8);
-                return half4((input.color.rgb + core * 0.7) * _Intensity, edge * input.color.a);
+                float core = pow(edge, 14);
+                return half4((input.color.rgb + core * 0.4) * _Intensity, pow(edge, 2.2) * input.color.a);
             }
             ENDHLSL
         }

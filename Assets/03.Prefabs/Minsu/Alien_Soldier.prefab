@@ -10058,7 +10058,7 @@ MonoBehaviour:
   _skill: {fileID: 2505842510656970400}
   _converge: {fileID: 676152881241597689}
   _flash: {fileID: 2043773426006997583}
-  _radius: 0.65
+  _radius: 3
   _emissionRate: 35
 --- !u!114 &7649714747756185866
 MonoBehaviour:
@@ -10076,12 +10076,15 @@ MonoBehaviour:
   _sword: {fileID: 3378153724589073996}
   _bladeBase: {x: 0, y: 0.16, z: 0}
   _bladeTip: {x: 0, y: 1.04, z: 0}
-  _trailLifetime: 0.18
-  _bodyWidth: 0.035
-  _impactRadius: 3
-  _normalImpactWidth: 0.1
-  _finisherImpactRadius: 5
-  _finisherImpactWidth: 0.15
+  _trailSize: 1.5
+  _trailWidth: 0.1
+  _trailSecondaryWidth: 0.07
+  _trailLifetime: 0.3
+  _bodyWidth: 0.018
+  _impactRadius: 5
+  _normalImpactWidth: 0.07
+  _finisherImpactRadius: 7
+  _finisherImpactWidth: 0.1
   _finisherMultiplier: 3
 --- !u!95 &4625083322341807714 stripped
 Animator:

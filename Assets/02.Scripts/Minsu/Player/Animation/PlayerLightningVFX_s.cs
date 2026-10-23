@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -25,8 +26,16 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     [SerializeField] private Transform _sword;
     [SerializeField] private Vector3 _bladeBase = new Vector3(0f, 0.16f, 0f);
     [SerializeField] private Vector3 _bladeTip = new Vector3(0f, 1.04f, 0f);
-    [SerializeField, Range(0.05f, 0.4f)] private float _trailLifetime = 0.18f;
-    [SerializeField, Range(0.01f, 0.1f)] private float _bodyWidth = 0.035f;
+    [Header("휘두르기 번개 궤적")]
+    [Tooltip("검 밑부분 기준 궤적 크기 배율입니다. 1은 기존 크기이며 공격 판정에는 영향을 주지 않습니다.")]
+    [SerializeField, Min(0.01f)] private float _trailSize = 1f;
+    [Tooltip("중심 번개 궤적의 굵기입니다.")]
+    [SerializeField, Min(0.001f)] private float _trailWidth = 0.04f;
+    [Tooltip("두 보조 번개 궤적의 굵기입니다.")]
+    [SerializeField, Min(0.001f)] private float _trailSecondaryWidth = 0.016f;
+    [SerializeField, Range(0.05f, 0.4f)] private float _trailLifetime = 0.14f;
+    [Header("차징 몸 전기")]
+    [SerializeField, Range(0.01f, 0.1f)] private float _bodyWidth = 0.018f;
     [Header("일반 명중 · 차징 1/2타")]
     [InspectorName("Normal Impact Radius")]
     [SerializeField, Min(0.01f)] private float _impactRadius = 0.55f;
@@ -43,6 +52,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private PlayerMovement_s _movement;
     private Animator _animator;
     private GameObject _root;
+    private readonly Dictionary<LineRenderer, LineRenderer> _branches = new Dictionary<LineRenderer, LineRenderer>();
     private readonly Transform[] _bones = new Transform[14];
     private readonly LineRenderer[] _arcs = new LineRenderer[ArcCount];
     private readonly LineRenderer[] _bladeArcs = new LineRenderer[2];
@@ -79,6 +89,9 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private void OnValidate()
     {
         InitializeImpactSettings();
+        _trailSize = Mathf.Max(0.01f, _trailSize);
+        _trailWidth = Mathf.Max(0.001f, _trailWidth);
+        _trailSecondaryWidth = Mathf.Max(0.001f, _trailSecondaryWidth);
     }
 
     private void InitializeImpactSettings()
@@ -108,11 +121,11 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         _root.transform.SetParent(transform, false);
         for (int i = 0; i < ArcCount; i++)
         {
-            _arcs[i] = CreateLine("Body Arc " + i);
+            _arcs[i] = CreateLine("Body Arc " + i, i % 2 == 0);
         }
         for (int i = 0; i < _bladeArcs.Length; i++)
         {
-            _bladeArcs[i] = CreateLine("Blade Arc " + i);
+            _bladeArcs[i] = CreateLine("Blade Arc " + i, true);
         }
         for (int i = 0; i < _trails.Length; i++)
         {
@@ -129,12 +142,12 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         {
             for (int ray = 0; ray < ImpactRays; ray++)
             {
-                _impacts[slot, ray] = CreateLine("Impact " + slot + " Spark " + ray);
+                _impacts[slot, ray] = CreateLine("Impact " + slot + " Spark " + ray, ray % 2 == 0);
             }
         }
     }
 
-    private LineRenderer CreateLine(string label)
+    private LineRenderer CreateLine(string label, bool withBranch = false)
     {
         var lineObject = new GameObject(label);
         lineObject.layer = gameObject.layer;
@@ -144,9 +157,15 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         line.useWorldSpace = true;
         line.shadowCastingMode = ShadowCastingMode.Off;
         line.receiveShadows = false;
-        line.numCornerVertices = 2;
-        line.numCapVertices = 2;
+        line.numCornerVertices = 1;
+        line.numCapVertices = 0;
+        line.widthCurve = new AnimationCurve(new Keyframe(0f, 0.7f), new Keyframe(0.12f, 1f),
+            new Keyframe(0.55f, 0.55f), new Keyframe(1f, 0.015f));
         line.enabled = false;
+        if (withBranch)
+        {
+            _branches.Add(line, CreateLine(label + " Branch"));
+        }
         return line;
     }
 
@@ -165,11 +184,15 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             return;
         }
         _clock += deltaTime;
+        foreach (var branch in _branches.Values)
+        {
+            branch.enabled = false;
+        }
         UpdateImpacts(deltaTime);
         bool charging = _charge != null && _charge.IsCharging;
         int stage = charging ? _charge.ChargeStage : Mathf.Max(1, _charge != null ? _charge.ReleasedStage : 1);
         ActiveBodyArcs = charging ? (stage == 1 ? 4 : stage == 2 ? 8 : ArcCount) : 0;
-        Color color = stage == 3 ? new Color(0.65f, 0.75f, 1f) : new Color(0.2f, 0.75f, 1f);
+        Color color = stage == 3 ? new Color(0.4f, 0.7f, 1f) : new Color(0.15f, 0.65f, 1f);
         for (int i = 0; i < ArcCount; i++)
         {
             var start = _bones[Starts[i]];
@@ -179,7 +202,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             if (!visible) continue;
             Vector3 offset = transform.forward * (i % 2 == 0 ? 0.12f : -0.12f);
             DrawArc(_arcs[i], start.position + offset, end.position + offset,
-                i, _bodyWidth * (0.6f + stage * 0.3f), 0.045f + stage * 0.018f, color);
+                i, _bodyWidth * (0.6f + stage * 0.3f), 0.025f + stage * 0.012f, color);
         }
 
         int swing = 0;
@@ -197,8 +220,8 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             _bladeArcs[i].enabled = charging || swinging;
             if (_bladeArcs[i].enabled)
             {
-                DrawArc(_bladeArcs[i], bladeBase, bladeTip, i + 31, 0.025f + stage * 0.01f,
-                    0.03f + stage * 0.015f, color);
+                DrawArc(_bladeArcs[i], bladeBase, bladeTip, i + 31, 0.012f + stage * 0.005f,
+                    0.02f + stage * 0.01f, color);
             }
         }
         for (int i = 0; i < _count; i++)
@@ -234,13 +257,13 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             line.enabled = _count > 1;
             line.positionCount = _count;
             float fade = _count == 0 ? 0f : 1f - Mathf.Clamp01(_ages[0] / _trailLifetime);
-            line.widthMultiplier = (rail == 0 ? 0.065f : 0.025f) * fade * (0.8f + stage * 0.2f);
+            line.widthMultiplier = (rail == 0 ? _trailWidth : _trailSecondaryWidth) * fade * (0.8f + stage * 0.2f);
             for (int i = 0; i < _count; i++)
             {
-                Vector3 position = Vector3.Lerp(_bases[i], _tips[i], 1f - rail * 0.24f);
+                Vector3 position = Vector3.LerpUnclamped(_bases[i], _tips[i], (1f - rail * 0.24f) * _trailSize);
                 if (i > 0 && i < _count - 1)
                 {
-                    position += Jitter(i + rail * 17) * 0.045f;
+                    position += Jitter(i + rail * 17) * (0.045f * _trailSize);
                 }
                 line.SetPosition(i, position);
             }
@@ -275,7 +298,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             if (!_impactActive[slot]) continue;
             _impactAges[slot] += deltaTime;
             bool finisher = _impactFinishers[slot];
-            float lifetime = finisher ? 0.38f : 0.22f;
+            float lifetime = finisher ? 0.28f : 0.18f;
             float progress = Mathf.Clamp01(_impactAges[slot] / lifetime);
             int count = finisher ? ImpactRays : 7;
             float impactRadius = finisher ? _finisherImpactRadius : _impactRadius;
@@ -294,7 +317,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
                                * Mathf.Lerp(0.45f, 1f, Mathf.Sqrt(progress));
                 Vector3 start = _impactPositions[slot] + direction * length * progress * 0.35f;
                 Vector3 end = _impactPositions[slot] + direction * length;
-                Color color = finisher ? new Color(0.7f, 0.85f, 1f) : new Color(0.25f, 0.8f, 1f);
+                Color color = finisher ? new Color(0.5f, 0.8f, 1f) : new Color(0.2f, 0.7f, 1f);
                 color.a = (1f - progress) * (1f - progress);
                 DrawArc(line, start, end, slot * 97 + ray, impactWidth,
                     0.04f * impactRadius / 0.55f * (1f - progress), color);
@@ -316,6 +339,23 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             Vector3 jitter = i == 0 || i == ArcPoints - 1 ? Vector3.zero : Jitter(seed * 13 + i) * noise;
             line.SetPosition(i, Vector3.Lerp(start, end, t) + jitter);
         }
+        if (_branches.TryGetValue(line, out var branch))
+        {
+            branch.enabled = line.enabled;
+            int fork = 3 + (seed & 1);
+            Vector3 branchStart = line.GetPosition(fork);
+            Vector3 direction = end - start;
+            Vector3 side = Vector3.Cross(direction, Vector3.up);
+            if (side.sqrMagnitude < 0.0001f)
+            {
+                side = Vector3.Cross(direction, Vector3.right);
+            }
+            float sign = (seed & 1) == 0 ? 1f : -1f;
+            Vector3 branchEnd = branchStart + direction * 0.2f
+                                + side.normalized * (direction.magnitude * 0.22f * sign);
+            color.a *= 0.65f;
+            DrawArc(branch, branchStart, branchEnd, seed + 71, width * 0.4f, noise * 0.45f, color);
+        }
     }
 
     private void Clear()
@@ -324,6 +364,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         _count = 0;
         _lastSwing = -1;
         if (_root == null) return;
+        foreach (var branch in _branches.Values)
+        {
+            branch.enabled = false;
+        }
         foreach (var line in _arcs)
         {
             line.enabled = false;
