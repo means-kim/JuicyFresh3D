@@ -1,6 +1,43 @@
 {
   "dependencies": {
+    "com.unity.cinemachine": {
+      "version": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.cinemachine@f3f96bcb59af",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.splines": "2.0.0",
+        "com.unity.modules.imgui": "1.0.0"
+      }
+    },
+    "com.unity.mathematics": {
+      "version": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.mathematics@19a9377c4ffa",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.unity.settings-manager": {
+      "version": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.settings-manager@0b8638c5ce86",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.unity.splines": {
+      "version": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.splines@e6e1d5900acc",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.settings-manager": "1.0.3",
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.modules.imgui": "1.0.0"
+      }
+    },
     "com.unity.modules.animation": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.imgui": {
       "version": "1.0.0",
       "depth": 0,
       "source": "builtin",

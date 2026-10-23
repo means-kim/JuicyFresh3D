@@ -1,0 +1,10 @@
+AttackCombo01: length=0.600000s; fps=30.00; loop=False; transitions=0
+AttackCombo02: length=0.666667s; fps=30.00; loop=False; transitions=0
+AttackCombo03: length=0.600000s; fps=30.00; loop=False; transitions=0
+AttackCombo04: length=0.833333s; fps=30.00; loop=False; transitions=0
+AttackCombo05: length=1.000000s; fps=30.00; loop=False; transitions=0
+ComboDelay01=2.20s (clip + roll 0.60s + approximately 1s grace)
+ComboDelay02=2.30s (clip + roll 0.60s + approximately 1s grace)
+ComboDelay03=2.20s (clip + roll 0.60s + approximately 1s grace)
+ComboDelay04=2.50s (clip + roll 0.60s + approximately 1s grace)
+ComboDelay05=2.60s (clip + roll 0.60s + approximately 1s grace)

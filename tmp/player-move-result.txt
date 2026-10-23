@@ -1,0 +1,4 @@
+PASS 60fps Rolling: distance=3.0000; frames=40; complete=True; duplicateBlocked=True
+PASS 60fps Dashing: distance=4.0000; frames=22; complete=True; duplicateBlocked=True
+PASS 30fps Rolling: distance=3.0000; frames=21; complete=True; duplicateBlocked=True
+PASS 30fps Dashing: distance=4.0000; frames=12; complete=True; duplicateBlocked=True

@@ -1,0 +1,30 @@
+[
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Player/PlayerMove.cs",
+    "Hash": "7FB4302019739C0B2234CB27C5CB235991616CA0F2040903624DDCB66151CA5E"
+  },
+  {
+    "Path": "Assets/07.Animations/KwnagHee/PlayerMoveAnimator.controller",
+    "Hash": "0C3E6446B2339E3E3231EAFEBB67AD7FF4B9C8D60284575BB42F342961591528"
+  },
+  {
+    "Path": "Assets/01.Scenes/KwangHeeScene.unity",
+    "Hash": "C9E93836F1D916DAA7359716A6C30B2664DF8ECDBF59A56044D91E8D29056D76"
+  },
+  {
+    "Path": "Assets/ModularAnimalKnightsPolyart/Animation/AttackCombo04.fbx",
+    "Hash": "A99E8FEE0792F7E2B0CB07EDF328840A72EE56DF3DA819CC0F49C3880BFF7A63"
+  },
+  {
+    "Path": "Assets/ModularAnimalKnightsPolyart/Animation/AttackCombo04.fbx.meta",
+    "Hash": "8DF3D7C584EDE99814C8C798A2B1E6FE53BED60BDD4E0D85B9B75F983E92700E"
+  },
+  {
+    "Path": "Assets/ModularAnimalKnightsPolyart/Animation/AttackCombo05.fbx",
+    "Hash": "BDD18D60046279F87915754A5916147E5BB33A871E02537526B6F5A000255993"
+  },
+  {
+    "Path": "Assets/ModularAnimalKnightsPolyart/Animation/AttackCombo05.fbx.meta",
+    "Hash": "F16ED14483A2C99E7054091F2AD0CD066DBBA7844477F70E199ED6EAA22CA582"
+  }
+]

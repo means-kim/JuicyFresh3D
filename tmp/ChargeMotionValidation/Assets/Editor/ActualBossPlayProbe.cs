@@ -42,6 +42,21 @@ public static class ActualBossPlayProbe
             AssetDatabase.SaveAssets();
         }
         EditorSceneManager.OpenScene("Assets/01.Scenes/KwangHeeScene.unity");
+        if (mode == "player-attack")
+        {
+            PlayerAttackSetup.Prepare(Path.Combine(Application.dataPath, "../../player-attack-clip-report.txt"));
+        }
+        if (mode == "player-move")
+        {
+            PlayerMoveProbeSetup.Prepare();
+        }
+        if (mode == "player-grounding" || mode == "player-eight-way" || mode == "player-attack" || mode == "player-combo45-analysis")
+        {
+            foreach (BossCombatController boss in Object.FindObjectsByType<BossCombatController>(FindObjectsSortMode.None))
+            {
+                boss.gameObject.SetActive(false);
+            }
+        }
         SessionState.SetBool("ActualBossProbeRunning", true);
         EditorApplication.EnterPlaymode();
     }

@@ -7,9 +7,9 @@ public class BossMovement : MonoBehaviour
     [SerializeField] private Transform _target;
 
     [Header("이동 설정")]
-    [SerializeField] [Min(0f)] private float _moveSpeed = 3f;
-    [SerializeField] [Min(0f)] private float _rotationSpeed = 360f;
-    [SerializeField] [Min(0f)] private float _stopDistance = 2f;
+    [SerializeField][Min(0f)] private float _moveSpeed = 3f;
+    [SerializeField][Min(0f)] private float _rotationSpeed = 360f;
+    [SerializeField][Min(0f)] private float _stopDistance = 2f;
 
     [Header("중력 설정")]
     [SerializeField] private float _gravity = -20f;
@@ -89,7 +89,8 @@ public class BossMovement : MonoBehaviour
 
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
 
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+                transform.rotation =
+                    Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
 
                 // 이번 프레임에 정지거리를 지나치지 않도록 제한
                 float remainingDistance = distance - _stopDistance;
@@ -112,6 +113,7 @@ public class BossMovement : MonoBehaviour
         {
             _verticalSpeed += _gravity * Time.deltaTime;
         }
+
         Vector3 velocity = horizontalVelocity + Vector3.up * _verticalSpeed;
         _characterController.Move(velocity * Time.deltaTime);
 

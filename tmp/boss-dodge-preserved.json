@@ -1,0 +1,34 @@
+[
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Player/PlayerAttack.cs",
+    "Hash": "6EA6A177CBB864D417D6A6F3CBF896A901E15E00999C0C47E49E4C2926B058F9"
+  },
+  {
+    "Path": "Assets/02.Scripts/KwangHee/Boss/BossMovement.cs",
+    "Hash": "F992764A6E14B6AB07AC2FDD9016873092B455778F301FC583B20373E0DFFA1B"
+  },
+  {
+    "Path": "Assets/07.Animations/KwnagHee/BossMonsterAnimator.controller",
+    "Hash": "5E64329BE08EAD8FE72B26AC4ED0BA44408888AB7363D73FDDD0F52C5961D95D"
+  },
+  {
+    "Path": "Assets/07.Animations/KwnagHee/PlayerMoveAnimator.controller",
+    "Hash": "0C3E6446B2339E3E3231EAFEBB67AD7FF4B9C8D60284575BB42F342961591528"
+  },
+  {
+    "Path": "Assets/01.Scenes/KwangHeeScene.unity",
+    "Hash": "F38736BCDB7108B13C8DD6EE3E55AA4847E6D7A5A4F93A17928D51EFDF30BCFB"
+  },
+  {
+    "Path": "Assets/05.Models/KwangHee/BossMonster.prefab",
+    "Hash": "D4FD1A1E7DD32421A23ACBBA596F77617C5145AD3BFE9D7657DC8FF3448266CE"
+  },
+  {
+    "Path": "Assets/Zectorlab/BullTank/Art/Animations/AS_BullTank_Attack01.FBX",
+    "Hash": "3CCADF17AB9BD158F114CC794438E430452D161832276D48A18188ED9A8FFF75"
+  },
+  {
+    "Path": "Assets/Zectorlab/BullTank/Art/Animations/AS_BullTank_Attack01.FBX.meta",
+    "Hash": "E4E09FBCA438A5668A96A76E97A1EE1C0290B32E7A46867EAD7921F84D099EAC"
+  }
+]

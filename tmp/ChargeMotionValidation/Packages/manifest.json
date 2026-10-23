@@ -1,1 +1,11 @@
-{"dependencies":{"com.unity.modules.animation":"1.0.0","com.unity.modules.physics":"1.0.0"}}
+{
+  "dependencies": {
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.cinemachine": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.cinemachine@f3f96bcb59af",
+    "com.unity.splines": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.splines@e6e1d5900acc",
+    "com.unity.mathematics": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.mathematics@19a9377c4ffa",
+    "com.unity.settings-manager": "file:C:/Users/akh10/Documents/JuicyFresh3D/Library/PackageCache/com.unity.settings-manager@0b8638c5ce86",
+    "com.unity.modules.imgui": "1.0.0"
+  }
+}
