@@ -19,4 +19,13 @@
 ## or put your custom commands -------------------
 #echo 'Husky.Net is awesome!'
 
-dotnet format JuicyFresh3D.sln --verify-no-changes --severity warn --include Assets/02.Scripts/
+if [ -f "JuicyFresh3D.slnx" ]; then
+    solution="JuicyFresh3D.slnx"
+elif [ -f "JuicyFresh3D.sln" ]; then
+    solution="JuicyFresh3D.sln"
+else
+    echo "솔루션 파일이 없습니다. Unity에서 Regenerate project files를 실행하세요."
+    exit 1
+fi
+
+dotnet format "$solution" --verify-no-changes --severity warn --include Assets/02.Scripts/

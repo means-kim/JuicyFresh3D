@@ -9,7 +9,7 @@ namespace DM
     {
         Animator anim;
         ControlManager control;
-        
+
         void Start()
         {
             anim = GetComponent<Animator>();
@@ -28,13 +28,13 @@ namespace DM
             float multiplier = 3f;
 
             Vector3 dPosition = anim.deltaPosition;   //storing delta positin of active model's position.         
-            
+
             dPosition.y = 0f;   //flatten the Y (height) value of root animations.
-            
+
             Vector3 vPosition = (dPosition * multiplier) / Time.fixedDeltaTime;     //defines the vector 3 value for the velocity.      
-            
+
             control.rigid.linearVelocity = vPosition; //This will move the root gameObject for matching active model's position.
-        
+
         }
     }
 }
