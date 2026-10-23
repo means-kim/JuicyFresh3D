@@ -14,6 +14,7 @@ public class SwordHitDetector_s : MonoBehaviour
     private int _swing = -1;
     private int _step;
     private PlayerChargeSkill_s _charge;
+    private PlayerLightningVFX_s _lightning;
     private bool _skillSwing;
     private int _skillDamage;
     public int HitsThisSwing => _hitTargets.Count;
@@ -33,6 +34,7 @@ public class SwordHitDetector_s : MonoBehaviour
     }
     private void Initialize()
     {
+        if (_lightning == null) _lightning = GetComponentInParent<PlayerLightningVFX_s>();
         if (_charge == null) _charge = GetComponentInParent<PlayerChargeSkill_s>();
         if (_hitbox == null)
         {
@@ -103,12 +105,17 @@ public class SwordHitDetector_s : MonoBehaviour
         if (!health || _hitTargets.Contains(health)) return;
         int damage = _skillSwing ? _skillDamage
             : Mathf.RoundToInt(_step == 1 ? _damage.x : _step == 2 ? _damage.y : _damage.z);
+        // 피해 콜백이 대상을 제거하거나 공격 상태를 바꾸기 전에 명중 정보를 보관한다.
+        Vector3 point = other.ClosestPoint(_hitbox.bounds.center);
+        bool finisher = _skillSwing && _charge != null && _charge.AttackStep == 3;
         // 피해 이벤트에서 재진입하더라도 중복 적용하지 않는다.
         _hitTargets.Add(health);
         if (!health.TakeDamage(damage))
         {
             _hitTargets.Remove(health);
+            return;
         }
+        if (_lightning != null) _lightning.PlayImpact(point, finisher);
     }
 
     public void DisableHitbox()

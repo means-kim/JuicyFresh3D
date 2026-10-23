@@ -43,7 +43,7 @@ public class PlayerChargeVFX_s : MonoBehaviour
     }
 
     private Color StageColor => _stage == 1 ? new Color(0.15f, 0.65f, 1f)
-        : _stage == 2 ? new Color(0.4f, 1f, 1f) : new Color(1f, 0.8f, 0.2f);
+        : _stage == 2 ? new Color(0.4f, 1f, 1f) : new Color(0.65f, 0.75f, 1f);
 
     private void Flash(int stage)
     {

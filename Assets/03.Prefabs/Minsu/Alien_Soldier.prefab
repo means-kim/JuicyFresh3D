@@ -9778,15 +9778,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.040417507
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0000012003104
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 8.281158
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9872,6 +9872,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6931005905558120601}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7649714747756185866}
   m_SourcePrefab: {fileID: 100100000, guid: a5c37f9419d768649a38403fe702e096, type: 3}
 --- !u!4 &644192478205776955 stripped
 Transform:
@@ -9907,7 +9910,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -10057,6 +10060,29 @@ MonoBehaviour:
   _flash: {fileID: 2043773426006997583}
   _radius: 0.65
   _emissionRate: 35
+--- !u!114 &7649714747756185866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126935695444006562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8560191e0b586844ac5ff90e47f7ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightningVFX_s
+  _material: {fileID: 2100000, guid: 73bf11c1434f3884b82786aec72e9a2a, type: 2}
+  _sword: {fileID: 3378153724589073996}
+  _bladeBase: {x: 0, y: 0.16, z: 0}
+  _bladeTip: {x: 0, y: 1.04, z: 0}
+  _trailLifetime: 0.18
+  _bodyWidth: 0.035
+  _impactRadius: 3
+  _normalImpactWidth: 0.1
+  _finisherImpactRadius: 5
+  _finisherImpactWidth: 0.15
+  _finisherMultiplier: 3
 --- !u!95 &4625083322341807714 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a5c37f9419d768649a38403fe702e096, type: 3}

@@ -1553,14 +1553,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alien_Soldier
       objectReference: {fileID: 0}
-    - target: {fileID: 6768326093431111658, guid: 2365a2a3554d6914598b40ec43cd96fd, type: 3}
-      propertyPath: m_Radius
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6768326093431111658, guid: 2365a2a3554d6914598b40ec43cd96fd, type: 3}
-      propertyPath: m_Center.y
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
