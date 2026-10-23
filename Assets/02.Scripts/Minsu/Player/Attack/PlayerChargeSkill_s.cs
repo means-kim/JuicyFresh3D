@@ -32,6 +32,12 @@ public class PlayerChargeSkill_s : MonoBehaviour
     public float ChargeTime => _chargeTime;
     public int ChargeStage => _chargeTime >= _maxChargeTime ? 3 : _chargeTime >= _partialChargeTime ? 2 : 1;
     public event Action DamageWindowClosed;
+    public bool IsCharging => _active && _movement != null && _movement.CurrentState == MovementState.Charging;
+    public float ChargeProgress => Mathf.Clamp01(_chargeTime / _maxChargeTime);
+    public event Action ChargeStarted;
+    public event Action<float> ChargeProgressChanged;
+    public event Action<int> ChargeStageChanged;
+    public event Action ChargeStopped;
 
     private void Awake()
     {
@@ -64,7 +70,16 @@ public class PlayerChargeSkill_s : MonoBehaviour
         if (!_active) return;
         if (_movement.CurrentState == MovementState.Charging)
         {
-            if (held) _chargeTime = Mathf.Min(_maxChargeTime, _chargeTime + Mathf.Max(0f, deltaTime));
+            if (held)
+            {
+                int previousStage = ChargeStage;
+                _chargeTime = Mathf.Min(_maxChargeTime, _chargeTime + Mathf.Max(0f, deltaTime));
+                ChargeProgressChanged?.Invoke(ChargeProgress);
+                for (int stage = previousStage + 1; stage <= ChargeStage; stage++)
+                {
+                    ChargeStageChanged?.Invoke(stage);
+                }
+            }
             if (released) ReleaseCharge();
             else if (!held) CancelCharge();
         }
@@ -99,6 +114,8 @@ public class PlayerChargeSkill_s : MonoBehaviour
         _chargeTime = 0f;
         ReleasedStage = 0;
         _animator.CrossFadeInFixedTime(Charging, 0.08f, 0, 0.1f);
+        ChargeStarted?.Invoke();
+        ChargeProgressChanged?.Invoke(0f);
         return true;
     }
 
@@ -106,6 +123,7 @@ public class PlayerChargeSkill_s : MonoBehaviour
     {
         if (!_active || !_movement.BeginChargingAttack()) return;
         ReleasedStage = ChargeStage;
+        ChargeStopped?.Invoke();
         PlayStep(0);
     }
 
@@ -138,11 +156,13 @@ public class PlayerChargeSkill_s : MonoBehaviour
 
     public void CancelCharge(bool returnToMovement = true)
     {
+        bool wasActive = _active;
         _active = false;
         _step = -1;
         _chargeTime = 0f;
         ReleasedStage = 0;
         DamageWindowClosed?.Invoke();
+        if (wasActive) ChargeStopped?.Invoke();
         if (returnToMovement && _movement != null) _movement.EndChargeSkill();
     }
 

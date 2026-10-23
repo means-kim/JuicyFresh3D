@@ -495,6 +495,7 @@ GameObject:
   m_Component:
   - component: {fileID: 950182776}
   - component: {fileID: 950182775}
+  - component: {fileID: 950182777}
   m_Layer: 0
   m_Name: LockOnCameraRig
   m_TagString: Untagged
@@ -536,6 +537,24 @@ Transform:
   - {fileID: 986842367}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &950182777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950182774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ba1f3f5043b4746ae355922024e62a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeCamera_s
+  _skill: {fileID: 6630536347267656715}
+  _cameras:
+  - {fileID: 973715276}
+  - {fileID: 986842364}
+  _maxFovReduction: 6
+  _smoothTime: 0.18
 --- !u!1 &973715274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1577,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3c596499ad9eb0459e66cd3e1ffe616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLockOn_s
+--- !u!114 &6630536347267656715 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2505842510656970400, guid: 2365a2a3554d6914598b40ec43cd96fd, type: 3}
+  m_PrefabInstance: {fileID: 6630536347267656706}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f4000c8f196a5d4ea6d58e7328b8106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeSkill_s
 --- !u!1001 &8609841727880211945
 PrefabInstance:
   m_ObjectHideFlags: 0
