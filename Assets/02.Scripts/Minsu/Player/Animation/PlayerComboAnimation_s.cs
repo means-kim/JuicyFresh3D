@@ -16,9 +16,9 @@ public class PlayerComboAnimation_s : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     [Header("정규화된 재생 시간 (0~1)")]
-    [SerializeField, Range(0.1f, 0.95f)] private float _firstChainTime = 0.65f;
+    [SerializeField, Range(0.1f, 0.95f)] private float _firstChainTime = 0.45f;
 
-    [SerializeField, Range(0.1f, 0.95f)] private float _secondChainTime = 0.65f;
+    [SerializeField, Range(0.1f, 0.95f)] private float _secondChainTime = 0.5f;
     [SerializeField, Range(0f, 0.2f)] private float _crossFadeDuration = 0.05f;
 
     [Header("타격 구간 (정규화된 재생 시간)")]
@@ -113,7 +113,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
         // CrossFade 도중에는 이전 상태의 진행률로 다음 단계를 실행하지 않는다.
         if (!currentStepActive || _animator.IsInTransition(0)) return;
 
-        float chainTime = _step == 0 ? _firstChainTime : _secondChainTime;
+        float chainTime = _step == 0 ? Mathf.Max(_firstChainTime, _firstDamageWindow.y)
+            : Mathf.Max(_secondChainTime, _secondDamageWindow.y);
         if (_nextAttackQueued && _step < AttackStates.Length - 1 && state.normalizedTime >= chainTime)
         {
             PlayStep(_step + 1);

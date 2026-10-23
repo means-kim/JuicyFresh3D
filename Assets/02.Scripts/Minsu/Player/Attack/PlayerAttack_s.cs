@@ -10,7 +10,7 @@ public class PlayerAttack_s : MonoBehaviour
     private PlayerMovement_s _movement;
     private Health_s _health;
 
-    private bool IsActionBlocked => (_movement != null && _movement.IsActionBlocked)
+    private bool IsActionBlocked => (_movement != null && (_movement.IsActionBlocked || _movement.IsUsingChargeSkill))
                                     || (_health != null && _health.IsDead);
 
     public bool IsAttacking => _comboAnimation != null && _comboAnimation.IsPlaying;

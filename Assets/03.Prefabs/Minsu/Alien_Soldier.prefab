@@ -161,6 +161,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4437539677089746267}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5c37f9419d768649a38403fe702e096, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2505842510656970400}
   m_SourcePrefab: {fileID: 100100000, guid: a5c37f9419d768649a38403fe702e096, type: 3}
 --- !u!4 &644192478205776955 stripped
 Transform:
@@ -308,6 +311,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLockOn_s
   _searchDistance: 12
   _releaseDistance: 15
+--- !u!114 &2505842510656970400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126935695444006562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f4000c8f196a5d4ea6d58e7328b8106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeSkill_s
+  _animator: {fileID: 4625083322341807714}
+  _partialChargeTime: 0.6
+  _maxChargeTime: 1.5
+  _damage: {x: 30, y: 50, z: 80}
+  _damageWindow: {x: 0.35, y: 0.52}
+  _secondDamageWindow: {x: 0.25, y: 0.43}
+  _thirdDamageWindow: {x: 0.35, y: 0.52}
+  _firstChainTime: 0.58
+  _secondChainTime: 0.5
 --- !u!95 &4625083322341807714 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a5c37f9419d768649a38403fe702e096, type: 3}

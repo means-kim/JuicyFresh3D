@@ -35,7 +35,8 @@ public class PlayerRotate_s : MonoBehaviour
     public void FaceWorldPoint(Vector3 point, float deltaTime)
     {
         if (!isActiveAndEnabled || deltaTime <= 0f
-            || (_movement != null && _movement.IsActionBlocked) || (_health != null && _health.IsDead))
+            || (_movement != null && (_movement.IsActionBlocked
+                || _movement.CurrentState == MovementState.ChargingAttack)) || (_health != null && _health.IsDead))
         {
             return;
         }

@@ -6,5 +6,7 @@ public enum MovementState
     Airborne,
     Attack,
     Hit,
-    Dead
+    Dead,
+    Charging,
+    ChargingAttack
 }

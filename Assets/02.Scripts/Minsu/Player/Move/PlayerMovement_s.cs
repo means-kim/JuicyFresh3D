@@ -20,6 +20,11 @@ public class PlayerMovement_s : MonoBehaviour
     private ReactionState_s _hit;
     private ReactionState_s _dead;
     private Health_s _health;
+    private PlayerChargeSkill_s _charge;
+    private SkillState_s _charging;
+    private SkillState_s _chargingAttack;
+    public bool IsUsingChargeSkill => CurrentState == MovementState.Charging
+                                     || CurrentState == MovementState.ChargingAttack;
 
     [Header("스탯")]
     [SerializeField] private float _moveSpeed = 7f;
@@ -48,6 +53,9 @@ public class PlayerMovement_s : MonoBehaviour
         if (_animation == null) _animation = GetComponent<PlayerAnimation_s>();
         if (_combat == null) _combat = GetComponent<PlayerAttack_s>();
         _health = GetComponent<Health_s>();
+        _charge = GetComponent<PlayerChargeSkill_s>();
+        _charging = new SkillState_s(this, MovementState.Charging);
+        _chargingAttack = new SkillState_s(this, MovementState.ChargingAttack);
         _idle = new GroundedState_s(this, MovementState.Idle);
         _move = new GroundedState_s(this, MovementState.Move);
         _sprint = new GroundedState_s(this, MovementState.Sprint);
@@ -68,6 +76,7 @@ public class PlayerMovement_s : MonoBehaviour
 
     private void OnDisable()
     {
+        _charge?.CancelCharge();
         if (_health == null) return;
         _health.Damaged -= OnDamaged;
         _health.Died -= OnDied;
@@ -114,11 +123,43 @@ public class PlayerMovement_s : MonoBehaviour
             _state.Tick(new FrameInput(), deltaTime);
             return;
         }
+        if (IsUsingChargeSkill)
+        {
+            _state.Tick(new FrameInput(), deltaTime);
+            return;
+        }
         bool grounded = _characterController.isGrounded && _yVelocity <= 0f;
         // 공격 처리에는 관여하지 않고 이동/점프/질주 입력만 차단한다.
         if (_combat != null && _combat.IsAttacking) input = new FrameInput();
         ChangeState(grounded ? SelectGroundedState(input) : _airborne);
         _state.Tick(input, deltaTime);
+    }
+
+    public bool TryBeginCharging()
+    {
+        if (!isActiveAndEnabled || IsActionBlocked || IsUsingChargeSkill
+            || (_combat != null && _combat.IsAttacking) || !_characterController.enabled
+            || !_characterController.isGrounded || _yVelocity > 0f)
+        {
+            return false;
+        }
+
+        ChangeState(_charging);
+        return true;
+    }
+
+    public bool BeginChargingAttack()
+    {
+        if (CurrentState != MovementState.Charging || IsActionBlocked) return false;
+        ChangeState(_chargingAttack);
+        return true;
+    }
+
+    public void EndChargeSkill()
+    {
+        if (!IsUsingChargeSkill) return;
+        ChangeState(_characterController.isGrounded ? _idle : _airborne);
+        _animation?.PlayLocomotion();
     }
 
     private State_s SelectGroundedState(FrameInput input)
@@ -196,6 +237,7 @@ public class PlayerMovement_s : MonoBehaviour
         public override void Enter()
         {
             Player._combat?.EndAttack();
+            Player._charge?.CancelCharge(false);
             Player._yVelocity = Mathf.Min(Player._yVelocity, 0f);
             Player._animation?.PlayReaction(Kind);
         }
@@ -211,6 +253,20 @@ public class PlayerMovement_s : MonoBehaviour
                 Player._animation.PlayLocomotion();
                 Player.ChangeState(Player._characterController.isGrounded ? Player._idle : Player._airborne);
             }
+        }
+    }
+
+    private sealed class SkillState_s : State_s
+    {
+        public SkillState_s(PlayerMovement_s player, MovementState kind) : base(player, kind)
+        {
+        }
+
+        public override void Tick(FrameInput input, float deltaTime)
+        {
+            Player._yVelocity = Player._characterController.isGrounded ? -1f
+                : Player._yVelocity + Gravity * deltaTime;
+            Player._characterController.Move(Vector3.up * (Player._yVelocity * deltaTime));
         }
     }
 
