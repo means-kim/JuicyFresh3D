@@ -9928,8 +9928,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2058a1e6bd07d47939a84c0c70027c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement_s
-  _moveSpeed: 7
-  _sprintSpeed: 12
+  _moveSpeed: 1.5
+  _sprintSpeed: 3.5
   _jumpPower: 10
   _characterController: {fileID: 6768326093431111658}
   _animation: {fileID: 1075553096703365885}
@@ -9948,7 +9948,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation_s
   _animator: {fileID: 4625083322341807714}
   _dampTime: 0.1
-  _referenceRunSpeed: 5
 --- !u!114 &6764649906888887934
 MonoBehaviour:
   m_ObjectHideFlags: 0
