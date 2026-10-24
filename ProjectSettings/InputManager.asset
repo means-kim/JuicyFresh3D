@@ -489,7 +489,7 @@ InputManager:
     m_Name: Sprint
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: left
+    negativeButton:
     positiveButton: left shift
     altNegativeButton: 
     altPositiveButton: 

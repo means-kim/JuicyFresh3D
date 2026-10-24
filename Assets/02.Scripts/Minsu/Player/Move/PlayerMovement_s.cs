@@ -207,7 +207,8 @@ public class PlayerMovement_s : MonoBehaviour
         if (_animation != null)
         {
             _animation.UpdateAirborne(CurrentState == MovementState.Airborne, _yVelocity, _jumpPower, deltaTime);
-            _animation.UpdateLocomotion(_characterController.velocity, speed, deltaTime);
+            _animation.UpdateLocomotion(_characterController.velocity, speed,
+                CurrentState == MovementState.Sprint, deltaTime);
         }
     }
 
