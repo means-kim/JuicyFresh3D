@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7ab28b1b186cee14e84d32e63087e9c7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/08_Hit/01_Hit/08_Block/Block_Start.anim
+  uploadId: 608094

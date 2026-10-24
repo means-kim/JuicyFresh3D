@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: badf876eef5377d41a6154de8238cc58
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/09_Turn/02_Turn_Combat/01_Turn_Combat/Turn_Combat_90_R.anim
+  uploadId: 608094

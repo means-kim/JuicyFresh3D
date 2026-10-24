@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9facf3fd4f6b579408897ee264073cae
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/03_Walk/02_Walk_Combat/01_Walk_Combat/02_Walk_Combat_F_L_45/Walk_Combat_Start_F_L_45.anim
+  uploadId: 608094

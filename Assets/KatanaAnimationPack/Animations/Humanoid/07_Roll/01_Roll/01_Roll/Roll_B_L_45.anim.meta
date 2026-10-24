@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e0ee880b374ed144a9f4e7cab3b1263f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/07_Roll/01_Roll/01_Roll/Roll_B_L_45.anim
+  uploadId: 608094

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5aa9219179683774c96a60fb0926fe34
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/06_Dodge/02_Dodge_Combat/02_Dodge_Combat_Air/Dodge_Combat_Air_B_180.anim
+  uploadId: 608094

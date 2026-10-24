@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4a1b6ca64d4f51d4b8e0346b05facf27
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/03_Walk/02_Walk_Combat/02_Walk_Combat_Block/06_Walk_Combat_Block_B_180/Walk_Combat_Block_Start_B_180.anim
+  uploadId: 608094

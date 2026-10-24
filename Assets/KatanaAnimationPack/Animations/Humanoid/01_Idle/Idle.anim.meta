@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 39adaf28c679a5942b5c199921bf4e70
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/01_Idle/Idle.anim
+  uploadId: 608094

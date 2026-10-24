@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4bfa31037b07b8241ab65c6b4fe87cce
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/07_Roll/01_Roll/02_Roll_to_Run/Roll_to_Run_F_R_45.anim
+  uploadId: 608094

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c0a39b113404d4d4596653b597f90bf1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/03_Walk/02_Walk_Combat/01_Walk_Combat/09_Walk_Combat_B_L_90/Walk_Combat_Stop_B_L_90.anim
+  uploadId: 608094

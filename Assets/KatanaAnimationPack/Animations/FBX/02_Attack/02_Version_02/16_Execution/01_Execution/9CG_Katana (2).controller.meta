@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c6fa988700060c74e85c0c20f8cc288c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/FBX/02_Attack/02_Version_02/16_Execution/01_Execution/9CG_Katana
+    (2).controller
+  uploadId: 608094

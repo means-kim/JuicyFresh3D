@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d0fc8f8b25ba15f419c30429d59b4d50
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/05_Jump/01_Jump/01_Jump/02_Jump_F_0/Jump_to_Run_Fast_F_0.anim
+  uploadId: 608094

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1bc6135d24017ed41b8e710ed9230017
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/05_Jump/01_Jump/01_Jump/05_Jump_R_90/Jump_to_Run_R_90.anim
+  uploadId: 608094

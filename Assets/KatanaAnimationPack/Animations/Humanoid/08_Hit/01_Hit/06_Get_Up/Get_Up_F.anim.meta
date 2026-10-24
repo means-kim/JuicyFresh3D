@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 934ed8d500ca2ab4f81165dc206faa48
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/08_Hit/01_Hit/06_Get_Up/Get_Up_F.anim
+  uploadId: 608094

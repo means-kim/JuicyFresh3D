@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 34d196ff032770e45a6936f40bd7021d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/08_Hit/01_Hit/07_Knock_Down/Knock_Down_Start.anim
+  uploadId: 608094

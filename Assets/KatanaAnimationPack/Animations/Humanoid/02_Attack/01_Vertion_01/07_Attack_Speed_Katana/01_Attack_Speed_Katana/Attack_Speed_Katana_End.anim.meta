@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d662f3e9b1c405949ae1f4097f512399
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/02_Attack/01_Vertion_01/07_Attack_Speed_Katana/01_Attack_Speed_Katana/Attack_Speed_Katana_End.anim
+  uploadId: 608094

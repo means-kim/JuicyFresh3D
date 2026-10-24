@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6d13cf1ee67663449b0801586ecf0adf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/02_Attack/02_Vertion_02/06_Buff/Buff_V02.anim
+  uploadId: 608094

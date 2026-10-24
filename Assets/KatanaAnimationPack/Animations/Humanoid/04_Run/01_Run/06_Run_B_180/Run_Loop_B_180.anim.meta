@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e47afd9bfa8ada04f935cca212b4945b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/04_Run/01_Run/06_Run_B_180/Run_Loop_B_180.anim
+  uploadId: 608094

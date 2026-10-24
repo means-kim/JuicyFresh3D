@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7ff878c8af0f0284bad7ec4e6589a317
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/05_Jump/01_Jump/02_Double_Jump/03_Double_Jump_B_180/Double_Jump_B_180.anim
+  uploadId: 608094

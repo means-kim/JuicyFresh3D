@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 826cc4c2ac3c64b45b846f33d9f3ab6f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/04_Run/01_Run/04_Run_F_L_90/Run_Stop_F_L_90.anim
+  uploadId: 608094

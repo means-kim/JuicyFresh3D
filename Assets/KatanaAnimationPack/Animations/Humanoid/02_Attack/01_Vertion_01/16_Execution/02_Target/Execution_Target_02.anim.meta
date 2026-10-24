@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f4696b652e0f223418a6a000f8a44c3c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/02_Attack/01_Vertion_01/16_Execution/02_Target/Execution_Target_02.anim
+  uploadId: 608094

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 562dd8db497994340ac3b078834c6fde
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/08_Hit/02_Hit_Combat/02_Hit_Combat_Air/Hit_Combat_Air_R.anim
+  uploadId: 608094

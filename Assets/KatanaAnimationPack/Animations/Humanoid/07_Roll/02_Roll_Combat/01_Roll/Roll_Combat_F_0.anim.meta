@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e4412489b06fee34a825805a0cf7462c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/07_Roll/02_Roll_Combat/01_Roll/Roll_Combat_F_0.anim
+  uploadId: 608094

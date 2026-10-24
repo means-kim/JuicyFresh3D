@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f4561f9b14540454a8c1681ce9c98813
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/07_Roll/02_Roll_Combat/01_Roll/Roll_Combat_B_R_45.anim
+  uploadId: 608094

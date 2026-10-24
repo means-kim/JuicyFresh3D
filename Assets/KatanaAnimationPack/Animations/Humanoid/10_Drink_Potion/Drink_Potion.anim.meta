@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 73d79036b160cca4d8cd62ba58f521f1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 257235
+  packageName: Katana Sword Animation Pack
+  packageVersion: 1.0.2
+  assetPath: Assets/KatanaAnimationPack/Animations/Humanoid/10_Drink_Potion/Drink_Potion.anim
+  uploadId: 608094
