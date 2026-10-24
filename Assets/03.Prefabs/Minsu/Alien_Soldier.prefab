@@ -10100,12 +10100,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAnimation_s
   _animator: {fileID: 4625083322341807714}
-  _firstChainTime: 0.45
-  _secondChainTime: 0.5
-  _crossFadeDuration: 0.03
-  _firstDamageWindow: {x: 0.16, y: 0.44}
-  _secondDamageWindow: {x: 0.32, y: 0.49}
-  _thirdDamageWindow: {x: 0.2, y: 0.5}
+  _firstChainTime: 0.32
+  _secondChainTime: 0.34
+  _thirdChainTime: 0.36
+  _crossFadeDuration: 0.025
+  _firstDamageWindow: {x: 0.025, y: 0.12}
+  _secondDamageWindow: {x: 0.025, y: 0.17}
+  _thirdDamageWindow: {x: 0.025, y: 0.27}
+  _fourthDamageWindow: {x: 0.025, y: 0.27}
 --- !u!114 &4755603681579394268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10230,11 +10232,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4706228179528617145, guid: 4340f4c2a8d13cf4b82d9438b74c6a67, type: 3}
       propertyPath: m_Mesh
-      value:
+      value: 
       objectReference: {fileID: 4300000, guid: 26efa5e623f9e45fc92665f5beb33196, type: 2}
     - target: {fileID: 7398031903324665971, guid: 4340f4c2a8d13cf4b82d9438b74c6a67, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: bd6fc909679c246a8926827a20d81176, type: 2}
     - target: {fileID: 8565910320893362972, guid: 4340f4c2a8d13cf4b82d9438b74c6a67, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10369,6 +10371,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _damage: {x: 20, y: 25, z: 35}
+  _fourthDamage: 45
 --- !u!4 &3378153724589073996 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8565910320893362972, guid: 4340f4c2a8d13cf4b82d9438b74c6a67, type: 3}

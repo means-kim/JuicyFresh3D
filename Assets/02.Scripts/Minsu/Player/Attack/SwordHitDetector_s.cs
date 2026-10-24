@@ -10,6 +10,7 @@ public class SwordHitDetector_s : MonoBehaviour
     [SerializeField] private Transform _owner;
     [SerializeField] private LayerMask _targetLayers = ~0;
     [SerializeField] private Vector3 _damage = new Vector3(20f, 25f, 35f);
+    [SerializeField, Min(0)] private int _fourthDamage = 45;
     private readonly HashSet<Health_s> _hitTargets = new HashSet<Health_s>();
     private int _swing = -1;
     private int _step;
@@ -104,6 +105,7 @@ public class SwordHitDetector_s : MonoBehaviour
         var health = other.GetComponentInParent<Health_s>();
         if (!health || _hitTargets.Contains(health)) return;
         int damage = _skillSwing ? _skillDamage
+            : _step == 4 ? _fourthDamage
             : Mathf.RoundToInt(_step == 1 ? _damage.x : _step == 2 ? _damage.y : _damage.z);
         // 피해 콜백이 대상을 제거하거나 공격 상태를 바꾸기 전에 명중 정보를 보관한다.
         Vector3 point = other.ClosestPoint(_hitbox.bounds.center);

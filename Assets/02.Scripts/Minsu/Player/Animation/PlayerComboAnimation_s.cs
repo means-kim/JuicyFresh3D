@@ -11,7 +11,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
     {
         Animator.StringToHash("Base Layer.Attack1"),
         Animator.StringToHash("Base Layer.Attack2"),
-        Animator.StringToHash("Base Layer.Attack3")
+        Animator.StringToHash("Base Layer.Attack3"),
+        Animator.StringToHash("Base Layer.Attack4")
     };
 
     [SerializeField] private Animator _animator;
@@ -20,12 +21,15 @@ public class PlayerComboAnimation_s : MonoBehaviour
     [SerializeField, Range(0.1f, 0.95f)] private float _firstChainTime = 0.45f;
 
     [SerializeField, Range(0.1f, 0.95f)] private float _secondChainTime = 0.5f;
+    [SerializeField, Range(0.1f, 0.95f)] private float _thirdChainTime = 0.36f;
+    [Tooltip("공격 전환 시간(초)")]
     [SerializeField, Range(0f, 0.2f)] private float _crossFadeDuration = 0.05f;
 
     [Header("타격 구간 (정규화된 재생 시간)")]
     [SerializeField] private Vector2 _firstDamageWindow = new Vector2(0.16f, 0.44f);
     [SerializeField] private Vector2 _secondDamageWindow = new Vector2(0.32f, 0.49f);
     [SerializeField] private Vector2 _thirdDamageWindow = new Vector2(0.2f, 0.5f);
+    [SerializeField] private Vector2 _fourthDamageWindow = new Vector2(0.025f, 0.27f);
     private int _swingSequence;
     public event System.Action DamageWindowClosed;
 
@@ -36,7 +40,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
         var state = _animator.GetCurrentAnimatorStateInfo(0);
         if (state.fullPathHash != AttackStates[_step] || _animator.IsInTransition(0)) return false;
         time = state.normalizedTime;
-        window = _step == 0 ? _firstDamageWindow : _step == 1 ? _secondDamageWindow : _thirdDamageWindow;
+        window = _step == 0 ? _firstDamageWindow : _step == 1 ? _secondDamageWindow
+            : _step == 2 ? _thirdDamageWindow : _fourthDamageWindow;
         return true;
     }
 
@@ -125,7 +130,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
         if (!currentStepActive || _animator.IsInTransition(0)) return;
 
         float chainTime = _step == 0 ? Mathf.Max(_firstChainTime, _firstDamageWindow.y)
-            : Mathf.Max(_secondChainTime, _secondDamageWindow.y);
+            : _step == 1 ? Mathf.Max(_secondChainTime, _secondDamageWindow.y)
+            : Mathf.Max(_thirdChainTime, _thirdDamageWindow.y);
         if (_nextAttackQueued && _step < AttackStates.Length - 1 && state.normalizedTime >= chainTime)
         {
             PlayStep(_step + 1);
@@ -144,7 +150,7 @@ public class PlayerComboAnimation_s : MonoBehaviour
         _swingSequence++;
         _step = step;
         _nextAttackQueued = false;
-        _animator.CrossFade(AttackStates[step], _crossFadeDuration, 0, 0f);
+        _animator.CrossFadeInFixedTime(AttackStates[step], _crossFadeDuration, 0, 0f);
     }
 
     public void EndCombo()
@@ -156,7 +162,7 @@ public class PlayerComboAnimation_s : MonoBehaviour
         if (wasPlaying && _animator != null && _animator.isActiveAndEnabled
             && _animator.runtimeAnimatorController != null && _animator.HasState(0, Locomotion))
         {
-            _animator.CrossFade(Locomotion, _crossFadeDuration, 0, 0f);
+            _animator.CrossFadeInFixedTime(Locomotion, _crossFadeDuration, 0, 0f);
         }
     }
 
