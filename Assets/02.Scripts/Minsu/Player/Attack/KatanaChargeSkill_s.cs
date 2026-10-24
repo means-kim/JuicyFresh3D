@@ -7,13 +7,15 @@ using UnityEngine;
 public class KatanaChargeSkill_s : MonoBehaviour
 {
     private static readonly int Charging = Animator.StringToHash("Base Layer.Charging");
+    private static readonly int ChargePoseTime = Animator.StringToHash("ChargePoseTime");
     private static readonly int Drawing = Animator.StringToHash("Base Layer.ChargeDraw");
     private static readonly int Dashing = Animator.StringToHash("Base Layer.ChargingAttack");
     [SerializeField] private Animator _animator;
     [SerializeField, Min(0.01f)] private float _partialChargeTime = 0.6f;
     [SerializeField, Min(0.02f)] private float _maxChargeTime = 1.5f;
     [SerializeField] private Vector3 _damage = new Vector3(30f, 50f, 80f);
-    [SerializeField, Min(0f)] private float _holdTime = 1f / 60f;
+    [SerializeField] private AnimationClip _drawClip;
+    [SerializeField, Min(0f)] private float _holdTime = 6f / 60f;
     [SerializeField, Min(0f)] private float _minimumPreparation = 0.12f;
     [SerializeField, Range(0.01f, 1f)] private float _drawEndTime = 0.1714286f;
     [SerializeField] private Vector2 _dashWindow = new Vector2(0f, 0.22f);
@@ -75,6 +77,9 @@ public class KatanaChargeSkill_s : MonoBehaviour
         if (IsCharging)
         {
             _preparationTime += Mathf.Max(0f, deltaTime);
+            // 이 상태의 재생 시간만 제어해 저프레임에서도 발도 구간을 넘어가지 않는다.
+            float preparation = Mathf.Clamp01(_preparationTime / Mathf.Max(0.01f, _minimumPreparation));
+            _animator.SetFloat(ChargePoseTime, preparation * _holdTime / _drawClip.length);
             if (held && !_releaseQueued)
             {
                 int previousStage = ChargeStage;
@@ -107,6 +112,7 @@ public class KatanaChargeSkill_s : MonoBehaviour
     public bool TryBeginCharge()
     {
         if (!isActiveAndEnabled || _active || _animator == null || !_animator.isActiveAndEnabled
+            || _drawClip == null || _drawClip.length <= 0f
             || _dash == null || !_dash.isActiveAndEnabled || !_animator.HasState(0, Charging)
             || !_animator.HasState(0, Drawing) || !_animator.HasState(0, Dashing)
             || !_movement.TryBeginCharging())
@@ -119,7 +125,8 @@ public class KatanaChargeSkill_s : MonoBehaviour
         _releaseQueued = false;
         _step = -1;
         ReleasedStage = 0;
-        _animator.CrossFadeInFixedTime(Charging, 0.08f, 0, _holdTime);
+        _animator.SetFloat(ChargePoseTime, 0f);
+        _animator.CrossFadeInFixedTime(Charging, 0.08f, 0, 0f);
         ChargeStarted?.Invoke();
         ChargeProgressChanged?.Invoke(0f);
         return true;

@@ -5272,6 +5272,8 @@ MonoBehaviour:
   _partialChargeTime: 0.6
   _maxChargeTime: 1.5
   _damage: {x: 30, y: 50, z: 80}
+  _drawClip: {fileID: 7400000, guid: c8f5abca1c81b44f2923c8804d247259, type: 2}
+  _holdTime: 0.1
   _minimumPreparation: 0.12
   _drawEndTime: 0.1714286
   _dashWindow: {x: 0, y: 0.22}
