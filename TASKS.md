@@ -2,36 +2,29 @@
 
 ## 현재 목표
 
-- 기준 씬: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`.
-- 기준 프리팹: `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
-- 동작1 준비 → 납도 차징 유지 → 해제 시 발도 → 동작2와 코드 돌진.
+- 테스트 씬: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`.
+- 프리팹: `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
+- 카타나 기본 콤보·차징 돌진의 실제 명중에 공격당 한 번, 기본 0.05초 히트스톱 적용.
+- 테스트는 사용자가 직접 담당한다. 앞으로 Codex는 명시적인 테스트 지시가 있을 때만 해당 범위의 테스트·검증을 실행한다(AGENTS.md 반영).
 
 ## 완료 사항
 
-- [x] VFX 프리팹화: `Assets/03.Prefabs/Minsu/VFX/`에 KatanaChargeVFX, BodyLightning, BladeLightning, SwordLightningTrail, LightningImpact 프리팹 생성.
-- [x] KatanaChargeVFX는 Converge/StageFlash를 포함한 중첩 프리팹으로 카타나 검 아래 기존 위치/스케일을 유지하고 참조를 다시 연결했다. 본체 프리팹에서 제거된 약 9,700줄은 파티클 직렬화 데이터가 별도 프리팹으로 이동한 것이다.
-- [x] PlayerLightningVFX_s는 4종 LineRenderer 프리팹을 복제한다. 프리팹 참조가 없는 기존 에이리언은 종전 코드 생성 경로를 유지한다. 효과의 위치/색/크기/활성 시간은 기존 코드와 플레이어 설정이 계속 제어하며 프리팹에서 머터리얼/선 모양을 편집할 수 있다.
-- [x] Unity 에디터 초기화 검증: LineRenderer 124개 생성, 머터리얼 누락 0, 큰 명중 효과 24개 선(16본선+8가지) 활성 확인. 파티클 참조·위치·스케일 보존 확인. 지정 dotnet format 종료 코드 0(작업 영역 로드 경고 있음). 이번 프리팹화 이후 실제 입력 플레이 테스트는 미실행.
-
-
-- [x] 독립 KatanaChargeSkill_s / PlayerDash_s 사용. 기존 에이리언 PlayerChargeSkill_s와 외부 원본 에셋은 보존한다.
-- [x] 동작2 납도 방향 수정: 배포된 Humanoid Combo_Attack_02_04.anim에는 검·검집 Transform 곡선이 누락되어 있었다. 같은 동작의 원본 FBX 내 Combo_Attack_02_04 클립에서 검·검집 위치/회전 14곡선(각 171키, 총 2,394키)을 KatanaChargeDash에 그대로 복원했다. 임의 고정 회전/보정은 없다. 몸의 130곡선은 수평 RootT.x/z 외에 Humanoid 원본과 동일하다.
-- [x] 복원한 2,394키의 시간·값·접선·가중치가 FBX 원본과 정확히 일치한다. Animator의 0/80/110/130/150/169프레임에서 FBX 무기 값과 최대 오차 약 0.0000011. 110/130/150/169프레임 프리뷰로 회전→납도→손을 놓는 자세 확인.
-- [x] 이번 수정은 KatanaChargeDash.anim만 변경했다(문서 제외). C#·동작1·원본 FBX·원본 Humanoid 클립·GUID는 보존했다. Unity 직렬화 차이가 큰 이유는 Transform 곡선 추가에 따른 곡선/바인딩 재직렬화이며, API로 기존 몸 곡선이 보존됨을 검증했다. 이번에는 C# 변경이 없어 dotnet format을 재실행하지 않았다. 납도 검증은 에디터 Animator 평가/프리뷰이며 새 플레이 모드 실입력 검사는 하지 않았다.
-- [x] 동작1을 분할하지 않고 Charging 상태의 ChargePoseTime 파라미터로 재생 시점을 제어한다. 0.12초 동안 0→6프레임 준비 후 6프레임 납도 자세에서 유지한다. 해제하면 동일 클립의 6프레임부터 ChargeDraw에서 재생하여 약 12프레임에 동작2로 전환한다.
-- [x] 프리팹에 준비 클립과 유지 시점 0.1초(60fps의 6프레임)를 명시 연결했다. 전체 Animator 속도는 정지시키지 않는다.
-- [x] Animator 평가에서 0→3→6프레임 자세 변화 및 6프레임 유지 확인. 당시 기본 검 회전만 확인하여 후반 납도 곡선 누락을 놓쳤으며, 이번 FBX 곡선 복원으로 정정했다. 차징 런타임 화면 및 순차 Animator 평가 프리뷰로 발도 후 검·검집 파지를 확인했다.
-- [x] 플레이 모드 재검증: 짧은 클릭/2단계/3단계/0.25초 프레임 간격에서 6m 돌진, 두 대상에 각각 30/50/80 피해 1회. 벽 앞 약 2.045m에서 정지하고 벽 뒤 피해 없음. 낭떠러지 약 3.992m에서 정지. 종료 후 충돌 무시 복원 정상.
-- [x] 지정 dotnet format 기본 명령 종료 코드 0(기존 MSBuild IPC 제한 때문에 승인된 환경에서 실행). 작업 영역 로드 경고는 있으나 스타일 오류 없음. Unity 컴파일 및 플레이 모드 테스트 성공. 검증 후 플레이 모드 종료.
+- [x] 기존 차징/발도/돌진, 납도 애니메이션 곡선 복원, VFX 프리팹 분리 완료. 차징 0.6/1.5초, 피해 30/50/80, 거리 6m.
+- [x] 실제 사용자 입력으로 최대 차징/해제와 4단 콤보 확인. 종료 후 VFX·히트박스·충돌 무시 정리 확인. 적 손의 OnTriggerEnter→TryHit 경로로 돌진 피격 시 충돌 복원 확인. 증거: `Library/KatanaValidation/real-input-results.json`, `real-max-charge.png`.
+- [x] HitStop_s 추가: 인스펙터 `_hitStopDuration` 기본 0.05초, WaitForSecondsRealtime 코루틴, 기존 배율 복원, 비활성화/제거 시 복구. 같은 공격 ID와 공격 종류를 기억해 정지 종료 후 다른 대상을 맞혀도 재발동하지 않는다. 이미 timeScale=0이면 정지를 새로 소유하지 않는다.
+- [x] SwordHitDetector_s에서 TakeDamage 성공 후 연결. 콤보는 각 타격당 한 번, 카타나 돌진은 공격 전체에서 한 번. Katana_Reference 루트에 컴포넌트 연결. 기존 에이리언 프리팹과 원본 에셋 미변경.
+- [x] Unity 컴파일 및 플레이 검증: 콤보 첫 명중 HP100→80/timeScale0, 약 0.056초 후 기존 0.5배속 복원. 같은 공격의 두 번째 대상 피해 적용/재정지 없음, 같은 대상 중복 피해 없음, 새 공격 재발동 확인.
+- [x] 차징 돌진 SweepDash 경로: 첫 대상 피해30/timeScale0, 코루틴 종료 후 timeScale1, 두 번째 대상 피해30/timeScale1 유지. 비활성화/제거 시 0.3배속 복원, 기존 timeScale0 보존 확인. 테스트 대상 및 공격 구간을 제어한 플레이 검증이며 이번 히트스톱 변경 뒤 실제 마우스 체감 검증은 미실행.
+- [x] 검증 종료 후 플레이 모드 종료, 테스트용 Application.runInBackground 설정 복원. 코드 2개(신규 HitStop_s 및 기존 SwordHitDetector_s), 신규 meta, 카타나 프리팹, TASKS.md 변경.
+- [x] 지정 dotnet format `.sln` 명령은 파일 부재로 실패(현재 `.slnx` 존재). `.slnx` 대체 검사는 샌드박스 복원 실패, --no-restore는 MSBuild 파이프 권한 실패. 승인된 환경에서 `.slnx` 기본 검사 재실행: 종료 코드0, 작업 영역 로드 경고 있음. 지정 `.sln` 검사가 통과한 것은 아니다. Unity 콘솔에는 기존 NoSubscription 오류만 확인.
 
 ## 남은 문제 / 검증 한계
 
-- [ ] 실제 조작 체감에 맞게 준비 시간, 정지 프레임, 발도→동작2 전환 시간을 조정할 수 있다. 현재 최대 차징 1.5초, 중간 단계 0.6초, 피해 30/50/80, 거리 6m.
-- [ ] 이전 작업의 이동 도중 피격 시 충돌 복원 추가 테스트는 미완료. 차징 중/공격 시작 시 피격·사망 취소와 정상 종료 복원은 확인했다.
-- Unity AI 서비스 NoSubscription 오류는 별도 문제다. MCP는 리로드 후 일시적 지연이 있다.
-- 변경 사항은 미커밋이다.
+- [ ] 이전 실제 반복 돌진에서 약 5.279m 조기 정지 발견. CharacterController.minMoveDistance=0.001이 0.0005m 잔여 이동을 무시하면 PlayerDash_s가 장애물로 오판하는 경로를 비교 재현했다. 이번 히트스톱 작업에서는 수정하지 않았다.
+- 히트스톱 도중 다른 시스템이 timeScale을 계속 0으로 설정하는 별도 일시정지 소유권은 구분할 수 없다. 현재 프로젝트에는 별도 timeScale 제어 코드가 없으며, 향후 일시정지 시스템 추가 시 통합 필요.
+- `.vsconfig`, `JuicyFresh3D.slnx` 미추적 파일은 그대로 유지. 커밋하지 않음.
 
 ## 다음 작업
 
-1. 테스트 씬에서 우클릭 차징/해제와 기본 콤보를 실제 조작해 체감을 확인한다.
-2. 기존 에이리언, 원본 MinSuScene, 외부 원본 에셋은 별도 요청 없이 변경하지 않는다.
+1. 사용자가 직접 0.05초 정지 체감을 확인한다. 이후 조정 요청이 있으면 반영한다.
+2. 돌진 미세 이동 오판은 수정 요청 시 처리하며, 테스트는 별도의 명시적인 지시가 있을 때만 실행한다.

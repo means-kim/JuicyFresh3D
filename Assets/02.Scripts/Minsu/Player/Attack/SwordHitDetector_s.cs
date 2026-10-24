@@ -17,6 +17,7 @@ public class SwordHitDetector_s : MonoBehaviour
     private PlayerChargeSkill_s _charge;
     private KatanaChargeSkill_s _katanaCharge;
     private PlayerLightningVFX_s _lightning;
+    private HitStop_s _hitStop;
     private bool _skillSwing;
     private int _skillDamage;
     public int HitsThisSwing => _hitTargets.Count;
@@ -37,6 +38,7 @@ public class SwordHitDetector_s : MonoBehaviour
     }
     private void Initialize()
     {
+        if (_hitStop == null) _hitStop = GetComponentInParent<HitStop_s>();
         if (_lightning == null) _lightning = GetComponentInParent<PlayerLightningVFX_s>();
         if (_charge == null) _charge = GetComponentInParent<PlayerChargeSkill_s>();
         if (_katanaCharge == null) _katanaCharge = GetComponentInParent<KatanaChargeSkill_s>();
@@ -157,6 +159,8 @@ public class SwordHitDetector_s : MonoBehaviour
         Vector3 point = other.ClosestPoint(_hitbox.bounds.center);
         bool finisher = _skillSwing && (_katanaCharge != null
             ? _katanaCharge.IsFinisher : _charge != null && _charge.AttackStep == 3);
+        int hitSwing = _swing;
+        bool hitSkillSwing = _skillSwing;
         // 피해 이벤트에서 재진입하더라도 중복 적용하지 않는다.
         _hitTargets.Add(health);
         if (!health.TakeDamage(damage))
@@ -165,6 +169,7 @@ public class SwordHitDetector_s : MonoBehaviour
             return;
         }
         if (_lightning != null) _lightning.PlayImpact(point, finisher);
+        if (_hitStop != null) _hitStop.ScreenStop(hitSwing, hitSkillSwing);
     }
 
     public void DisableHitbox()
