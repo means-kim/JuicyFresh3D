@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerChargeVFX_s : MonoBehaviour
 {
     [SerializeField] private PlayerChargeSkill_s _skill;
+    [SerializeField] private KatanaChargeSkill_s _katanaSkill;
     [SerializeField] private ParticleSystem _converge;
     [SerializeField] private ParticleSystem _flash;
     [SerializeField, Min(0.1f)] private float _radius = 0.65f;
@@ -15,6 +16,21 @@ public class PlayerChargeVFX_s : MonoBehaviour
 
     private void OnEnable()
     {
+        if (_katanaSkill == null) _katanaSkill = GetComponent<KatanaChargeSkill_s>();
+        if (_katanaSkill != null)
+        {
+            _katanaSkill.ChargeStarted += Begin;
+            _katanaSkill.ChargeProgressChanged += SetProgress;
+            _katanaSkill.ChargeStageChanged += Flash;
+            _katanaSkill.ChargeStopped += Clear;
+            if (_katanaSkill.IsCharging)
+            {
+                Begin();
+                _progress = _katanaSkill.ChargeProgress;
+                _stage = _katanaSkill.ChargeStage;
+            }
+            return;
+        }
         if (_skill == null) _skill = GetComponent<PlayerChargeSkill_s>();
         if (_skill == null) return;
         _skill.ChargeStarted += Begin;
@@ -96,6 +112,13 @@ public class PlayerChargeVFX_s : MonoBehaviour
 
     private void OnDisable()
     {
+        if (_katanaSkill != null)
+        {
+            _katanaSkill.ChargeStarted -= Begin;
+            _katanaSkill.ChargeProgressChanged -= SetProgress;
+            _katanaSkill.ChargeStageChanged -= Flash;
+            _katanaSkill.ChargeStopped -= Clear;
+        }
         if (_skill != null)
         {
             _skill.ChargeStarted -= Begin;

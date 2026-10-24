@@ -7,11 +7,13 @@ public class PlayerRotate_s : MonoBehaviour
     private PlayerMovement_s _movement;
     private Health_s _health;
     private Camera _camera;
+    private KatanaChargeSkill_s _charge;
     private PlayerLockOn_s _lockOn;
 
     private void Awake()
     {
         _movement = GetComponent<PlayerMovement_s>();
+        _charge = GetComponent<KatanaChargeSkill_s>();
         _health = GetComponent<Health_s>();
         _lockOn = GetComponent<PlayerLockOn_s>();
     }
@@ -35,6 +37,7 @@ public class PlayerRotate_s : MonoBehaviour
     public void FaceWorldPoint(Vector3 point, float deltaTime)
     {
         if (!isActiveAndEnabled || deltaTime <= 0f
+            || (_charge != null && _charge.IsDirectionLocked)
             || (_movement != null && (_movement.IsActionBlocked
                 || _movement.CurrentState == MovementState.ChargingAttack)) || (_health != null && _health.IsDead))
         {

@@ -549,7 +549,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ba1f3f5043b4746ae355922024e62a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeCamera_s
-  _skill: {fileID: 1575054798}
+  _skill: {fileID: 0}
+  _katanaSkill: {fileID: 1575054798}
   _cameras:
   - {fileID: 973715276}
   - {fileID: 986842364}
@@ -1069,15 +1070,15 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: e37ca147a14944adfb80601379847656, type: 3}
 --- !u!114 &1575054798 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8988116045035818456, guid: e37ca147a14944adfb80601379847656, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8425110370611508324, guid: e37ca147a14944adfb80601379847656, type: 3}
   m_PrefabInstance: {fileID: 1575054797}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4000c8f196a5d4ea6d58e7328b8106, type: 3}
+  m_Script: {fileID: 11500000, guid: a7bc0035c07d2485f90094ab3d8d8764, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeSkill_s
+  m_EditorClassIdentifier: Assembly-CSharp::KatanaChargeSkill_s
 --- !u!114 &1575054799 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4493167704707333183, guid: e37ca147a14944adfb80601379847656, type: 3}

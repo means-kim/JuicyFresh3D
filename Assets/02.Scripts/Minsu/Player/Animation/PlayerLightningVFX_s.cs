@@ -48,6 +48,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     [SerializeField, HideInInspector] private float _finisherMultiplier = 2.2f;
 
     private PlayerChargeSkill_s _charge;
+    private KatanaChargeSkill_s _katanaCharge;
     private PlayerComboAnimation_s _combo;
     private PlayerMovement_s _movement;
     private Animator _animator;
@@ -109,6 +110,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private void Awake()
     {
         _charge = GetComponent<PlayerChargeSkill_s>();
+        _katanaCharge = GetComponent<KatanaChargeSkill_s>();
         _combo = GetComponent<PlayerComboAnimation_s>();
         _movement = GetComponent<PlayerMovement_s>();
         _animator = GetComponentInChildren<Animator>();
@@ -189,8 +191,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             branch.enabled = false;
         }
         UpdateImpacts(deltaTime);
-        bool charging = _charge != null && _charge.IsCharging;
-        int stage = charging ? _charge.ChargeStage : Mathf.Max(1, _charge != null ? _charge.ReleasedStage : 1);
+        bool charging = _katanaCharge != null ? _katanaCharge.IsCharging : _charge != null && _charge.IsCharging;
+        int stage = _katanaCharge != null
+            ? (charging ? _katanaCharge.ChargeStage : Mathf.Max(1, _katanaCharge.ReleasedStage))
+            : charging ? _charge.ChargeStage : Mathf.Max(1, _charge != null ? _charge.ReleasedStage : 1);
         ActiveBodyArcs = charging ? (stage == 1 ? 4 : stage == 2 ? 8 : ArcCount) : 0;
         Color color = stage == 3 ? new Color(0.4f, 0.7f, 1f) : new Color(0.15f, 0.65f, 1f);
         for (int i = 0; i < ArcCount; i++)
@@ -210,7 +214,9 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         int step;
         float time = 0f;
         Vector2 window = Vector2.zero;
-        bool skill = _charge != null && _charge.TryGetDamagePhase(out swing, out damage, out time, out window);
+        bool skill = _katanaCharge != null
+            ? _katanaCharge.TryGetDamagePhase(out swing, out damage, out time, out window)
+            : _charge != null && _charge.TryGetDamagePhase(out swing, out damage, out time, out window);
         bool valid = skill || (_combo != null && _combo.TryGetDamagePhase(out swing, out step, out time, out window));
         bool swinging = valid && time >= Mathf.Max(0f, window.x - 0.06f) && time <= window.y + 0.1f;
         Vector3 bladeBase = _sword.TransformPoint(_bladeBase);

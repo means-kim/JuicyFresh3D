@@ -5011,9 +5011,10 @@ GameObject:
   - component: {fileID: 8082266343192879710}
   - component: {fileID: 8865218545171013851}
   - component: {fileID: 4493167704707333183}
-  - component: {fileID: 8988116045035818456}
   - component: {fileID: 7632377454670420061}
   - component: {fileID: 8965229558942355728}
+  - component: {fileID: 1984441729168832387}
+  - component: {fileID: 8425110370611508324}
   m_Layer: 0
   m_Name: Katana_Reference
   m_TagString: Player
@@ -5193,27 +5194,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLockOn_s
   _searchDistance: 12
   _releaseDistance: 15
---- !u!114 &8988116045035818456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 626022022165125785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4000c8f196a5d4ea6d58e7328b8106, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeSkill_s
-  _animator: {fileID: 4781896052676969055}
-  _partialChargeTime: 0.6
-  _maxChargeTime: 1.5
-  _damage: {x: 30, y: 50, z: 80}
-  _damageWindow: {x: 0.35, y: 0.52}
-  _secondDamageWindow: {x: 0.25, y: 0.43}
-  _thirdDamageWindow: {x: 0.35, y: 0.52}
-  _firstChainTime: 0.58
-  _secondChainTime: 0.5
 --- !u!114 &7632377454670420061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5226,7 +5206,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c948f1c72a6816242b60ce2e02b3f6f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeVFX_s
-  _skill: {fileID: 8988116045035818456}
+  _skill: {fileID: 0}
+  _katanaSkill: {fileID: 8425110370611508324}
   _converge: {fileID: 3525272390557418354}
   _flash: {fileID: 2805014710703458234}
   _radius: 3
@@ -5257,6 +5238,43 @@ MonoBehaviour:
   _finisherImpactRadius: 7
   _finisherImpactWidth: 0.1
   _finisherMultiplier: 3
+--- !u!114 &1984441729168832387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e606afd7135482299910828651a034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash_s
+  _distance: 6
+  _hitRadius: 0.7
+  _stepLength: 0.1
+  _environmentLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &8425110370611508324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7bc0035c07d2485f90094ab3d8d8764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KatanaChargeSkill_s
+  _animator: {fileID: 4781896052676969055}
+  _partialChargeTime: 0.6
+  _maxChargeTime: 1.5
+  _damage: {x: 30, y: 50, z: 80}
+  _minimumPreparation: 0.12
+  _drawEndTime: 0.1714286
+  _dashWindow: {x: 0, y: 0.22}
 --- !u!1 &771901796826988475
 GameObject:
   m_ObjectHideFlags: 0

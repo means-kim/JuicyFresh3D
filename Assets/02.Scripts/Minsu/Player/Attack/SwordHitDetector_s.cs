@@ -15,6 +15,7 @@ public class SwordHitDetector_s : MonoBehaviour
     private int _swing = -1;
     private int _step;
     private PlayerChargeSkill_s _charge;
+    private KatanaChargeSkill_s _katanaCharge;
     private PlayerLightningVFX_s _lightning;
     private bool _skillSwing;
     private int _skillDamage;
@@ -32,11 +33,13 @@ public class SwordHitDetector_s : MonoBehaviour
         DisableHitbox();
         if (_combo != null) _combo.DamageWindowClosed += DisableHitbox;
         if (_charge != null) _charge.DamageWindowClosed += DisableHitbox;
+        if (_katanaCharge != null) _katanaCharge.DamageWindowClosed += DisableHitbox;
     }
     private void Initialize()
     {
         if (_lightning == null) _lightning = GetComponentInParent<PlayerLightningVFX_s>();
         if (_charge == null) _charge = GetComponentInParent<PlayerChargeSkill_s>();
+        if (_katanaCharge == null) _katanaCharge = GetComponentInParent<KatanaChargeSkill_s>();
         if (_hitbox == null)
         {
             _hitbox = GetComponent<BoxCollider>();
@@ -67,7 +70,9 @@ public class SwordHitDetector_s : MonoBehaviour
         int step = 0;
         float time = 0f;
         Vector2 window = Vector2.zero;
-        bool skill = _charge != null && _charge.TryGetDamagePhase(out swing, out _skillDamage, out time, out window);
+        bool skill = _katanaCharge != null
+            ? _katanaCharge.TryGetDamagePhase(out swing, out _skillDamage, out time, out window)
+            : _charge != null && _charge.TryGetDamagePhase(out swing, out _skillDamage, out time, out window);
         bool valid = skill || (_combo != null && _combo.TryGetDamagePhase(out swing, out step, out time, out window));
         if (!isActiveAndEnabled || _hitbox == null || !valid)
         {
@@ -94,22 +99,64 @@ public class SwordHitDetector_s : MonoBehaviour
         TryHit(other);
     }
 
+    public void SweepDash(Vector3 start, Vector3 end, float radius)
+    {
+        if (!isActiveAndEnabled || _katanaCharge == null) return;
+        foreach (var other in Physics.OverlapCapsule(start, end, radius, _targetLayers,
+                     QueryTriggerInteraction.Ignore))
+        {
+            // 폭이 있는 판정이 벽 모서리 너머의 적에게 닿는 것도 차단한다.
+            Vector3 segment = end - start;
+            float t = segment.sqrMagnitude > 0.000001f
+                ? Mathf.Clamp01(Vector3.Dot(other.bounds.center - start, segment) / segment.sqrMagnitude) : 0f;
+            Vector3 origin = start + segment * t;
+            Vector3 offset = other.bounds.center - origin;
+            bool blocked = false;
+            foreach (var hit in Physics.RaycastAll(origin, offset.normalized, offset.magnitude,
+                         Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                if ((_owner && hit.transform.IsChildOf(_owner)) || hit.collider.GetComponentInParent<Health_s>() != null) continue;
+                blocked = true;
+                break;
+            }
+            if (!blocked) ApplyHit(other, true);
+        }
+    }
+
     private void TryHit(Collider other)
     {
+        ApplyHit(other, false);
+    }
+
+    private void ApplyHit(Collider other, bool swept)
+    {
         RefreshHitbox(); // 취소/전환 직후 도착한 물리 콜백도 무시한다.
-        if (!IsHitboxActive || other.isTrigger || (_owner && other.transform.IsChildOf(_owner))
+        bool sweptSkill = swept && _katanaCharge != null
+            && _katanaCharge.TryGetDamagePhase(out _, out _, out _, out _);
+        if ((!IsHitboxActive && !sweptSkill) || other == null || other.isTrigger || (_owner && other.transform.IsChildOf(_owner))
             || (_targetLayers.value & (1 << other.gameObject.layer)) == 0)
         {
             return;
         }
         var health = other.GetComponentInParent<Health_s>();
         if (!health || _hitTargets.Contains(health)) return;
+        if (_katanaCharge != null && _skillSwing && _owner != null)
+        {
+            Vector3 origin = _owner.position + Vector3.up;
+            Vector3 offset = other.bounds.center - origin;
+            foreach (var hit in Physics.RaycastAll(origin, offset.normalized, offset.magnitude,
+                         Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                if (!hit.transform.IsChildOf(_owner) && hit.collider.GetComponentInParent<Health_s>() == null) return;
+            }
+        }
         int damage = _skillSwing ? _skillDamage
             : _step == 4 ? _fourthDamage
             : Mathf.RoundToInt(_step == 1 ? _damage.x : _step == 2 ? _damage.y : _damage.z);
         // 피해 콜백이 대상을 제거하거나 공격 상태를 바꾸기 전에 명중 정보를 보관한다.
         Vector3 point = other.ClosestPoint(_hitbox.bounds.center);
-        bool finisher = _skillSwing && _charge != null && _charge.AttackStep == 3;
+        bool finisher = _skillSwing && (_katanaCharge != null
+            ? _katanaCharge.IsFinisher : _charge != null && _charge.AttackStep == 3);
         // 피해 이벤트에서 재진입하더라도 중복 적용하지 않는다.
         _hitTargets.Add(health);
         if (!health.TakeDamage(damage))
@@ -130,6 +177,7 @@ public class SwordHitDetector_s : MonoBehaviour
     private void OnDisable()
     {
         if (_charge != null) _charge.DamageWindowClosed -= DisableHitbox;
+        if (_katanaCharge != null) _katanaCharge.DamageWindowClosed -= DisableHitbox;
         if (_combo != null)
         {
             _combo.DamageWindowClosed -= DisableHitbox;

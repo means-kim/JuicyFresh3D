@@ -5,6 +5,7 @@ using Unity.Cinemachine;
 public class PlayerChargeCamera_s : MonoBehaviour
 {
     [SerializeField] private PlayerChargeSkill_s _skill;
+    [SerializeField] private KatanaChargeSkill_s _katanaSkill;
     [SerializeField] private CinemachineCamera[] _cameras;
     [SerializeField, Range(0f, 15f)] private float _maxFovReduction = 6f;
     [SerializeField, Min(0.01f)] private float _smoothTime = 0.18f;
@@ -20,6 +21,13 @@ public class PlayerChargeCamera_s : MonoBehaviour
         for (int i = 0; i < _cameras.Length; i++)
         {
             if (_cameras[i] != null) _baseFovs[i] = _cameras[i].Lens.FieldOfView;
+        }
+        if (_katanaSkill != null)
+        {
+            _katanaSkill.ChargeProgressChanged += SetProgress;
+            _katanaSkill.ChargeStopped += Restore;
+            if (_katanaSkill.IsCharging) SetProgress(_katanaSkill.ChargeProgress);
+            return;
         }
         if (_skill == null) return;
         _skill.ChargeProgressChanged += SetProgress;
@@ -44,7 +52,10 @@ public class PlayerChargeCamera_s : MonoBehaviour
 
     public void TickCamera(float deltaTime)
     {
-        if (_skill == null || !_skill.isActiveAndEnabled || !_skill.IsCharging) Restore();
+        bool charging = _katanaSkill != null
+            ? _katanaSkill.isActiveAndEnabled && _katanaSkill.IsCharging
+            : _skill != null && _skill.isActiveAndEnabled && _skill.IsCharging;
+        if (!charging) Restore();
         _reduction = Mathf.SmoothDamp(_reduction, _targetReduction, ref _velocity,
             _smoothTime, Mathf.Infinity, Mathf.Max(0f, deltaTime));
         ApplyFov();
@@ -64,6 +75,11 @@ public class PlayerChargeCamera_s : MonoBehaviour
 
     private void OnDisable()
     {
+        if (_katanaSkill != null)
+        {
+            _katanaSkill.ChargeProgressChanged -= SetProgress;
+            _katanaSkill.ChargeStopped -= Restore;
+        }
         if (_skill != null)
         {
             _skill.ChargeProgressChanged -= SetProgress;

@@ -2,34 +2,30 @@
 
 ## 현재 목표
 
-- 앞으로의 작업 기준은 `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`와 `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`이다. 사용자 요청에 따라 이 씬과 프리팹에서 기능을 이어서 개발한다. 기존 에이리언은 보관용이다.
+- 작업 기준: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`, `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
+- 우클릭 유지 시 납도 차징, 해제 시 Combo_Attack_02_01 발도 → Combo_Attack_02_04와 코드 돌진.
 
 ## 완료 사항
 
-- [x] Katana_Reference의 원본 검·검집 메시에 기존 Edge_Sword / Edge_Scabbard 머터리얼을 적용했다. EdgeTextures의 BaseColor·MetallicSmoothness·Emission 연결과 테스트 씬 반영을 확인하고 프리뷰로 외형 검증했다. 뼈대·무기 Transform·애니메이션·외부 원본 에셋은 변경하지 않았다.
-
-- [x] 테스트 씬 참조 점검: Ground의 비어 있던 NavMeshSurface 데이터에 `Assets/01.Scenes/MinSu/Navigation/MinSuScene_NavMesh.asset`을 연결하고 MonsterMovement_s의 추적 대상을 Katana_Reference로 명시했다. 카메라·HUD·프리팹 내부 공격/VFX 참조 및 씬·프리팹·컨트롤러의 에셋 GUID 연결을 점검했다. 비교용 프리팹 내부 참조는 정상이라 변경하지 않았다. 플레이 모드에서 몬스터의 NavMesh 등록, 추적 대상, 카메라와 HUD의 Katana_Reference 연결을 확인했다. 참조 관련 콘솔 오류는 없고 기존 NoSubscription 오류만 남았다.
-
-- [x] 원인 확인: 이전 보정은 납도 자세로 시작하는 1타와 파지 자세로 시작하는 2~4타를 각각 같은 소켓 기본 자세에 맞췄다. 1타→2타 연결에서 소켓 로컬 위치 0.685073, 회전 140.107도 차이가 발생하며 1타에서 검이 손을 벗어났다.
-- [x] `Assets/03.Prefabs/Minsu/Katana_Reference.prefab` 생성. 9CG_Katana의 원본 뼈대·메시·검·검집과 Avatar를 사용한다. 기존 이동·4타 콤보·피해·차징 컴포넌트를 복사하고 검 충돌/VFX 참조를 새 무기에 연결했다.
-- [x] `Assets/07.Animations/Minsu/KatanaReference/`에 전용 `KatanaReferenceAC.controller`와 `KatanaReferenceAttack1.anim`~`KatanaReferenceAttack4.anim` 생성. 원본 VERSION1 Combo01을 복사하고 반복 재생만 해제했다. 모든 애니메이션 곡선이 원본과 동일하며 Transform 경로 누락이 없는 것을 검증했다. 재생 속도 1.3, 기존 연결 시점 0.32/0.34/0.36과 전환 시간 0.025초 유지.
-- [x] `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity` 생성. 기존 씬의 복사본에서 비교용 플레이어를 활성화하고 에이리언을 비활성화했다. 카메라 등의 외부 참조 4개를 비교용 플레이어로 연결했다.
-- [x] 임시 프리뷰에서 1타 10%의 손잡이 파지 및 4타 98%의 납도 외형 확인. 이전 1타의 검 이탈 현상이 비교용 모델에서 나타나지 않았다.
-- [x] 비교용 씬 플레이 모드에서 입력 시뮬레이션으로 1~4회 클릭의 단계 연결, 종료 후 Locomotion 복귀, 히트박스 비활성화, 피격·사망 취소 확인.
-- [x] 피해 20/25/35/45와 중복 피해 방지 확인. 이 검사는 TryHit 직접 호출을 포함하며 실제 물리 접촉 검증과 구분한다.
-- [x] 기존 에이리언·보정 클립·MinSuScene·외부 원본 에셋을 보존했다. 테스트 후 플레이 모드를 종료하고 이전 플레이 시작 씬 설정을 복원했다. 해당 검증 당시 MinSuScene의 저장되지 않은 변경을 보존했다. 현재 작업 씬은 KatanaReferenceTest이다.
+- [x] 독립 `KatanaChargeSkill_s.cs`와 `PlayerDash_s.cs` 추가. 기존 에이리언 `PlayerChargeSkill_s.cs`는 변경하지 않았다.
+- [x] 비교용 프리팹의 차징 컴포넌트 교체 및 테스트 씬 카메라 연결. 공통 이동/회전/검 판정/VFX/카메라에 새 스킬 연동을 추가하고 기존 스킬 분기는 보존했다.
+- [x] 전용 KatanaChargeDraw/Dash 클립 생성. 원본 클립은 보존하고 복사본의 RootT XZ 이동을 제거했다. 동작2에 동작1 발도 완료 시점의 무기 파지 Transform을 유지했다.
+- [x] Charging(동작1 1프레임 고정) → ChargeDraw(약 12프레임까지) → ChargingAttack(동작2, 속도 1.8) 연결. 최대 차징 1.5초, 중간 단계 0.6초, 피해 30/50/80, 돌진 6m. Inspector에서 조정 가능.
+- [x] 지상 시작, 짧은 클릭 준비 보장, 해제 방향 고정, 벽/낭떠러지 정지, 실제 이동 경로 피해 및 대상당 1회 피해, 피격/사망/비활성화 취소 구현.
+- [x] Unity 플레이 모드 입력 시뮬레이션: 짧은 클릭/2단계/3단계 모두 6m 이동, 두 대상에 각각 30/50/80 피해 1회. 0.25초 프레임 간격에서도 6m 및 80 피해 확인.
+- [x] 벽 테스트 약 2.045m에서 정지하고 벽 뒤 두 대상 피해 없음. 낭떠러지 약 3.992m에서 정지. 차징 중 및 공격 시작 시 피격/사망 취소 확인. 정상 종료 후 적 충돌 무시 복원 확인.
+- [x] 납도/발도/돌진 핵심 자세 프리뷰 확인. 기존 기본 4타 콤보 클립과 외부 원본 에셋은 보존했다.
+- [x] 지정 `dotnet format JuicyFresh3D.sln --verify-no-changes --severity warn --include Assets/02.Scripts/` 종료 코드 0. 초기 샌드박스 복원/IPC 실패 후 승인된 환경에서 기본 명령 재실행. 작업 영역 로드 경고는 있었지만 스타일 오류는 없다. Unity 컴파일 후 런타임 테스트 실행 성공.
 
 ## 남은 문제 / 검증 한계
 
-- [ ] 사용자가 KatanaReferenceTest 씬에서 실제 좌클릭 조작과 적 접촉을 확인한다. 이동·점프·차징 컴포넌트는 유지했지만 새 모델에서 해당 동작 전체를 시각 검증하지 않았다.
-- [x] 사용자가 테스트 씬과 비교용 프리팹을 향후 작업 기준으로 지정했다. 에이리언 외형 리깅은 현재 요청 범위가 아니다.
-- 기존 에이리언의 `KatanaAttack1.anim`~`KatanaAttack4.anim` 보정 문제는 비교를 위해 그대로 남아 있다. 비교용 컨트롤러는 이 보정본을 사용하지 않는다.
-- Unity 콘솔의 기존 AI 서비스 NoSubscription 오류는 남아 있다. 이번 작업에서 C# 파일은 변경하지 않아 dotnet format은 재실행하지 않았다. 이전 C# 변경 당시 지정 검사는 종료 코드 0이었다.
-- git diff --check는 이전 에이리언 프리팹/컨트롤러의 Unity YAML 빈 값 뒤 공백을 보고한다. 관련 없는 기존 변경은 수정하지 않았다.
-- 변경 사항은 미커밋이며 AGENTS.md에 사용자 변경이 있다.
+- [ ] 실제 마우스 조작의 체감, 차징 자세와 발도 연결, 돌진 거리/후딜 밸런스 최종 확인. 현재 차징은 원본의 발도 전 초반 자세를 고정하며 GIF의 깊게 숙인 자세를 새로 제작한 것은 아니다.
+- [ ] 이동 도중 피격 시 충돌 복원 추가 테스트는 MCP 응답 실패로 확인하지 못했다. 코드상 CancelCharge → Dash.Stop으로 복원한다.
+- Unity MCP는 스크립트/플레이 리로드 후 일시적으로 연결이 끊어지거나 장시간 응답 지연이 발생했다.
+- 기존 Unity AI 서비스 NoSubscription 오류는 별도 문제다. git diff --check는 Unity가 생성한 YAML 빈 값 뒤 공백을 보고하며 C# 공백 오류는 없다.
+- 변경 사항은 미커밋이다.
 
 ## 다음 작업
 
-1. AGENTS.md와 git status를 확인하고 사용자 요청을 따른다.
-2. 테스트 씬: Assets/01.Scenes/MinSu/KatanaReferenceTest.unity. 원본 MinSuScene의 저장되지 않은 변경을 임의로 버리거나 덮어쓰지 않는다.
-3. 기능 수정은 Katana_Reference 프리팹과 KatanaReferenceAC를 우선한다. 별도 요청 없이 기존 에이리언 보정본이나 원본 외부 에셋을 변경하지 않는다.
+1. 테스트 씬에서 우클릭 차징/해제와 기본 좌클릭 콤보를 실제 조작하여 체감을 확인한다.
+2. 변경은 비교용 프리팹과 KatanaReferenceAC를 기준으로 한다. 기존 에이리언, 원본 MinSuScene, 외부 원본 에셋을 임의 변경하지 않는다.

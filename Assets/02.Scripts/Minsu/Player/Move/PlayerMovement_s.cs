@@ -21,6 +21,7 @@ public class PlayerMovement_s : MonoBehaviour
     private ReactionState_s _dead;
     private Health_s _health;
     private PlayerChargeSkill_s _charge;
+    private KatanaChargeSkill_s _katanaCharge;
     private SkillState_s _charging;
     private SkillState_s _chargingAttack;
     public bool IsUsingChargeSkill => CurrentState == MovementState.Charging
@@ -54,6 +55,7 @@ public class PlayerMovement_s : MonoBehaviour
         if (_combat == null) _combat = GetComponent<PlayerAttack_s>();
         _health = GetComponent<Health_s>();
         _charge = GetComponent<PlayerChargeSkill_s>();
+        _katanaCharge = GetComponent<KatanaChargeSkill_s>();
         _charging = new SkillState_s(this, MovementState.Charging);
         _chargingAttack = new SkillState_s(this, MovementState.ChargingAttack);
         _idle = new GroundedState_s(this, MovementState.Idle);
@@ -77,6 +79,7 @@ public class PlayerMovement_s : MonoBehaviour
     private void OnDisable()
     {
         _charge?.CancelCharge();
+        _katanaCharge?.CancelCharge();
         if (_health == null) return;
         _health.Damaged -= OnDamaged;
         _health.Died -= OnDied;
@@ -244,6 +247,7 @@ public class PlayerMovement_s : MonoBehaviour
         {
             Player._combat?.EndAttack();
             Player._charge?.CancelCharge(false);
+            Player._katanaCharge?.CancelCharge(false);
             Player._yVelocity = Mathf.Min(Player._yVelocity, 0f);
             Player._animation?.PlayReaction(Kind);
         }
@@ -272,7 +276,11 @@ public class PlayerMovement_s : MonoBehaviour
         {
             Player._yVelocity = Player._characterController.isGrounded ? -1f
                 : Player._yVelocity + Gravity * deltaTime;
-            Player._characterController.Move(Vector3.up * (Player._yVelocity * deltaTime));
+            float verticalDisplacement = Player._yVelocity * deltaTime;
+            if (Player._katanaCharge == null || !Player._katanaCharge.MoveDash(verticalDisplacement))
+            {
+                Player._characterController.Move(Vector3.up * verticalDisplacement);
+            }
         }
     }
 
