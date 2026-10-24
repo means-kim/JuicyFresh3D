@@ -23,6 +23,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private static readonly int[] Ends = { 6, 7, 3, 4, 5, 2, 8, 9, 10, 11, 12, 13, 1, 1 };
 
     [SerializeField] private Material _material;
+    [SerializeField] private LineRenderer _bodyPrefab;
+    [SerializeField] private LineRenderer _bladePrefab;
+    [SerializeField] private LineRenderer _trailPrefab;
+    [SerializeField] private LineRenderer _impactPrefab;
     [SerializeField] private Transform _sword;
     [SerializeField] private Vector3 _bladeBase = new Vector3(0f, 0.16f, 0f);
     [SerializeField] private Vector3 _bladeTip = new Vector3(0f, 1.04f, 0f);
@@ -123,50 +127,60 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         _root.transform.SetParent(transform, false);
         for (int i = 0; i < ArcCount; i++)
         {
-            _arcs[i] = CreateLine("Body Arc " + i, i % 2 == 0);
+            _arcs[i] = CreateLine("Body Arc " + i, i % 2 == 0, _bodyPrefab);
         }
         for (int i = 0; i < _bladeArcs.Length; i++)
         {
-            _bladeArcs[i] = CreateLine("Blade Arc " + i, true);
+            _bladeArcs[i] = CreateLine("Blade Arc " + i, true, _bladePrefab);
         }
         for (int i = 0; i < _trails.Length; i++)
         {
-            _trails[i] = CreateLine("Lightning Wake " + i);
+            _trails[i] = CreateLine("Lightning Wake " + i, false, _trailPrefab);
             var gradient = new Gradient();
             gradient.SetKeys(new[]
             {
                 new GradientColorKey(new Color(0.55f, 0.9f, 1f), 0f),
                 new GradientColorKey(new Color(0.1f, 0.35f, 1f), 1f)
             }, new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
-            _trails[i].colorGradient = gradient;
+            if (_trailPrefab == null) _trails[i].colorGradient = gradient;
         }
         for (int slot = 0; slot < ImpactSlots; slot++)
         {
             for (int ray = 0; ray < ImpactRays; ray++)
             {
-                _impacts[slot, ray] = CreateLine("Impact " + slot + " Spark " + ray, ray % 2 == 0);
+                _impacts[slot, ray] = CreateLine("Impact " + slot + " Spark " + ray, ray % 2 == 0, _impactPrefab);
             }
         }
     }
 
-    private LineRenderer CreateLine(string label, bool withBranch = false)
+    private LineRenderer CreateLine(string label, bool withBranch = false, LineRenderer template = null)
     {
-        var lineObject = new GameObject(label);
-        lineObject.layer = gameObject.layer;
-        lineObject.transform.SetParent(_root.transform, false);
-        var line = lineObject.AddComponent<LineRenderer>();
-        line.sharedMaterial = _material;
+        LineRenderer line;
+        if (template != null)
+        {
+            line = Instantiate(template, _root.transform, false);
+            line.gameObject.name = label;
+        }
+        else
+        {
+            // 기존 에이리언은 프리팹 참조 없이도 이전 생성 방식을 유지한다.
+            var lineObject = new GameObject(label);
+            lineObject.transform.SetParent(_root.transform, false);
+            line = lineObject.AddComponent<LineRenderer>();
+            line.sharedMaterial = _material;
+            line.shadowCastingMode = ShadowCastingMode.Off;
+            line.receiveShadows = false;
+            line.numCornerVertices = 1;
+            line.numCapVertices = 0;
+            line.widthCurve = new AnimationCurve(new Keyframe(0f, 0.7f), new Keyframe(0.12f, 1f),
+                new Keyframe(0.55f, 0.55f), new Keyframe(1f, 0.015f));
+        }
+        line.gameObject.layer = gameObject.layer;
         line.useWorldSpace = true;
-        line.shadowCastingMode = ShadowCastingMode.Off;
-        line.receiveShadows = false;
-        line.numCornerVertices = 1;
-        line.numCapVertices = 0;
-        line.widthCurve = new AnimationCurve(new Keyframe(0f, 0.7f), new Keyframe(0.12f, 1f),
-            new Keyframe(0.55f, 0.55f), new Keyframe(1f, 0.015f));
         line.enabled = false;
         if (withBranch)
         {
-            _branches.Add(line, CreateLine(label + " Branch"));
+            _branches.Add(line, CreateLine(label + " Branch", false, template));
         }
         return line;
     }

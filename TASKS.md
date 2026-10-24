@@ -8,6 +8,12 @@
 
 ## 완료 사항
 
+- [x] VFX 프리팹화: `Assets/03.Prefabs/Minsu/VFX/`에 KatanaChargeVFX, BodyLightning, BladeLightning, SwordLightningTrail, LightningImpact 프리팹 생성.
+- [x] KatanaChargeVFX는 Converge/StageFlash를 포함한 중첩 프리팹으로 카타나 검 아래 기존 위치/스케일을 유지하고 참조를 다시 연결했다. 본체 프리팹에서 제거된 약 9,700줄은 파티클 직렬화 데이터가 별도 프리팹으로 이동한 것이다.
+- [x] PlayerLightningVFX_s는 4종 LineRenderer 프리팹을 복제한다. 프리팹 참조가 없는 기존 에이리언은 종전 코드 생성 경로를 유지한다. 효과의 위치/색/크기/활성 시간은 기존 코드와 플레이어 설정이 계속 제어하며 프리팹에서 머터리얼/선 모양을 편집할 수 있다.
+- [x] Unity 에디터 초기화 검증: LineRenderer 124개 생성, 머터리얼 누락 0, 큰 명중 효과 24개 선(16본선+8가지) 활성 확인. 파티클 참조·위치·스케일 보존 확인. 지정 dotnet format 종료 코드 0(작업 영역 로드 경고 있음). 이번 프리팹화 이후 실제 입력 플레이 테스트는 미실행.
+
+
 - [x] 독립 KatanaChargeSkill_s / PlayerDash_s 사용. 기존 에이리언 PlayerChargeSkill_s와 외부 원본 에셋은 보존한다.
 - [x] 동작2 납도 방향 수정: 배포된 Humanoid Combo_Attack_02_04.anim에는 검·검집 Transform 곡선이 누락되어 있었다. 같은 동작의 원본 FBX 내 Combo_Attack_02_04 클립에서 검·검집 위치/회전 14곡선(각 171키, 총 2,394키)을 KatanaChargeDash에 그대로 복원했다. 임의 고정 회전/보정은 없다. 몸의 130곡선은 수평 RootT.x/z 외에 Humanoid 원본과 동일하다.
 - [x] 복원한 2,394키의 시간·값·접선·가중치가 FBX 원본과 정확히 일치한다. Animator의 0/80/110/130/150/169프레임에서 FBX 무기 값과 최대 오차 약 0.0000011. 110/130/150/169프레임 프리뷰로 회전→납도→손을 놓는 자세 확인.
