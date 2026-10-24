@@ -541,6 +541,37 @@ Transform:
   - {fileID: 3306180608705404841}
   m_Father: {fileID: 4475401843223949827}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2419669539763425164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4935281940288085550}
+  m_Layer: 0
+  m_Name: FocusTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4935281940288085550
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419669539763425164}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4329750253024872555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2442330289205586699
 GameObject:
   m_ObjectHideFlags: 0
@@ -2273,13 +2304,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4329750253024872555}
   - component: {fileID: 3118520892350985848}
-  - component: {fileID: 6342059721850346011}
-  - component: {fileID: 6342059721850346012}
-  - component: {fileID: 3242454954853373724}
   - component: {fileID: 2273756616619187829}
-  - component: {fileID: 5533532292947389266}
+  - component: {fileID: 7171922623653153219}
+  - component: {fileID: 1055879555390096245}
+  - component: {fileID: 6703836808568044412}
   m_Layer: 0
-  m_Name: PlayerTest
+  m_Name: ParticledPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2301,6 +2331,7 @@ Transform:
   - {fileID: 36630074750141808}
   - {fileID: 834005085621800795}
   - {fileID: 4039004607751181218}
+  - {fileID: 4935281940288085550}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3118520892350985848
@@ -2315,85 +2346,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68f97ebd5bd1c424385582be2938747a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectController_m
-  _effectColor: {r: 0.34901965, g: 0.63096696, b: 1, a: 1}
+  _postProcessManager: {fileID: 0}
+  _target: {fileID: 1055879555390096245}
+  _effectColor: {r: 0.4935883, g: 0.892322, b: 1.4142135, a: 1}
   _stopFadeDuration: 0
-  _crossFlashEffect: {fileID: 6342059721850346011}
-  _silhouetteOutlineEffect: {fileID: 6342059721850346012}
-  _outlineParticleLightEffect: {fileID: 3242454954853373724}
---- !u!114 &6342059721850346011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7213417370336245531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c71a788b2360496aadc4361fc670af58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CrossFlashEffect_m
-  _modelRenderers:
-  - {fileID: 276065158444449434}
-  - {fileID: 8866554457860683310}
-  _effectCamera: {fileID: 0}
-  _flashOrigin: {fileID: 4039004607751181218}
-  _flashMaterial: {fileID: 2100000, guid: 386dd81faac844759d5e34f64cf812e0, type: 2}
-  _flashSize: 1.25
-  _flashEndHorizontalStretch: 3
-  _flashLineWidth: 0.035
-  _flashArmFalloff: 2
-  _flashBrightness: 4
-  _flashDepthOffset: 0.02
-  _flashFadeInDuration: 0.1
-  _flashHoldDuration: 0
-  _flashFadeOutDuration: 1
---- !u!114 &6342059721850346012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7213417370336245531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6de71f3fcad9468bb533b1397429c112, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShilhouetteOutlineEffect_m
-  _modelRenderers:
-  - {fileID: 276065158444449434}
-  - {fileID: 8866554457860683310}
-  _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
-  _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
-  _rimWidth: 2.7
-  _rimBrightness: 3
-  _outlineFadeInDuration: 0.05
-  _outlineFadeOutDuration: 1
---- !u!114 &3242454954853373724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7213417370336245531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63b8ef0763e44eb4e893c89a2aa38395, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OutlineParticleLightEffect_m
-  _modelRenderers:
-  - {fileID: 276065158444449434}
-  - {fileID: 8866554457860683310}
-  _particlePrefab: {fileID: 3175079410127055413, guid: 18627731e625a49449929fd62f5d0f12, type: 3}
-  _particleOrigin: {fileID: 4039004607751181218}
-  _emissionDuration: 1
-  _particleCount: 24
-  _particleSizeRange: {x: 0.025, y: 0.065}
-  _particleSpeedRange: {x: 0.25, y: 0.65}
-  _particleLifetimeRange: {x: 0.65, y: 1.1}
-  _spawnArea: {x: 0.75, y: 0.9, z: 0.5}
-  _gravityModifier: 0.1
-  _noiseStrength: 0.08
-  _particleBrightness: 2.5
+  _crossFlashEffect: {fileID: 1483044308863585899}
+  _silhouetteOutlineEffect: {fileID: 7989090618179757947}
+  _outlineParticleLightEffect: {fileID: 7278901390345345314}
 --- !u!143 &2273756616619187829
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2419,7 +2378,29 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.6, z: 0}
---- !u!114 &5533532292947389266
+--- !u!95 &7171922623653153219
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 4750df1601ad2034fa32c7a07b5aa10f, type: 3}
+  m_Controller: {fileID: 9100000, guid: 943f4b2c24760a54ba29ff6207c41baf, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1055879555390096245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2428,12 +2409,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 7213417370336245531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd1daf1bb8009404882273ffa72782ef, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f6dcc9987d59ab478e146b8acf928e6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimalCharacterController_m
-  _moveSpeed: 5
-  _characterController: {fileID: 0}
-  _playerEffectController: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  _moveSpeed: 3
+  _rotationSmoothTime: 0.1
+  _gravity: -20
+  _cameraTransform: {fileID: 0}
+  _rollDistance: 3
+  _rollDuration: 0.6
+  _rollClip: {fileID: 7400000, guid: 2b3e7b11ea5023249aa68b0b3a4b0317, type: 3}
+  _dashDistance: 4
+  _dashDuration: 0.3
+  _dashClip: {fileID: 7400000, guid: a1c595f7b742e174cbd81d7061b3bd10, type: 3}
+--- !u!114 &6703836808568044412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f889c6ea944bcb812c5787ab729c66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  _comboClips:
+  - {fileID: 7400000, guid: 1a6bb1a104b9b8f45a6fc802c1e10350, type: 3}
+  - {fileID: 7400000, guid: d659f1b9a6359834f85c69380fe47981, type: 3}
+  - {fileID: 7400000, guid: 8e301c0f0227da74ba23b190106eed83, type: 3}
+  - {fileID: 7400000, guid: a496f14f74dc2ec47afa7a3c317da22a, type: 3}
+  - {fileID: 7400000, guid: 53995e9c6193f2a49ad790f4779f5d32, type: 3}
+  _comboDelay01: 2.2
+  _comboDelay02: 2.3
+  _comboDelay03: 2.2
+  _comboDelay04: 2.5
+  _comboDelay05: 2.6
+  _inputBufferTime: 0.2
+  _comboBlendDuration: 0.08
+  _combo45StartOffset: 0.1
+  _combo45BlendDuration: 0.04
 --- !u!1 &7404618803377014162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2728,7 +2743,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 36630074750141808}
-  - component: {fileID: 3562677445714505424}
+  - component: {fileID: 1483044308863585899}
+  - component: {fileID: 7989090618179757947}
+  - component: {fileID: 7278901390345345314}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -2754,28 +2771,80 @@ Transform:
   - {fileID: 3630791609089571231}
   m_Father: {fileID: 4329750253024872555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &3562677445714505424
-Animator:
-  serializedVersion: 7
+--- !u!114 &1483044308863585899
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8661829458560147186}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 4750df1601ad2034fa32c7a07b5aa10f, type: 3}
-  m_Controller: {fileID: 9100000, guid: 183df93d6a900a34d937e691fe72da71, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c71a788b2360496aadc4361fc670af58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CrossFlashEffect_m
+  _modelRenderers:
+  - {fileID: 276065158444449434}
+  - {fileID: 8866554457860683310}
+  _effectCamera: {fileID: 0}
+  _flashOrigin: {fileID: 4039004607751181218}
+  _flashMaterial: {fileID: 2100000, guid: 386dd81faac844759d5e34f64cf812e0, type: 2}
+  _flashSize: 1.25
+  _flashEndHorizontalStretch: 3
+  _flashLineWidth: 0.035
+  _flashArmFalloff: 2
+  _flashBrightness: 4
+  _flashDepthOffset: 0.02
+  _flashFadeInDuration: 0.1
+  _flashHoldDuration: 0
+  _flashFadeOutDuration: 1
+--- !u!114 &7989090618179757947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661829458560147186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de71f3fcad9468bb533b1397429c112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShilhouetteOutlineEffect_m
+  _modelRenderers:
+  - {fileID: 276065158444449434}
+  - {fileID: 8866554457860683310}
+  _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
+  _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
+  _rimWidth: 2.7
+  _rimBrightness: 3
+  _outlineFadeInDuration: 0.05
+  _outlineFadeOutDuration: 1
+--- !u!114 &7278901390345345314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661829458560147186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63b8ef0763e44eb4e893c89a2aa38395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineParticleLightEffect_m
+  _modelRenderers:
+  - {fileID: 276065158444449434}
+  - {fileID: 8866554457860683310}
+  _particlePrefab: {fileID: 3175079410127055413, guid: 18627731e625a49449929fd62f5d0f12, type: 3}
+  _particleOrigin: {fileID: 4039004607751181218}
+  _emissionDuration: 1
+  _particleCount: 48
+  _particleSizeRange: {x: 0.025, y: 0.065}
+  _particleSpeedRange: {x: 0.25, y: 0.65}
+  _particleLifetimeRange: {x: 0.65, y: 1.1}
+  _spawnArea: {x: 0.75, y: 0.9, z: 0.5}
+  _gravityModifier: 0.1
+  _noiseStrength: 0.86
+  _particleBrightness: 4.98
 --- !u!1 &8683742917807725138
 GameObject:
   m_ObjectHideFlags: 0
