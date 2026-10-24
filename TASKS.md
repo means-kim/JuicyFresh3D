@@ -5,10 +5,15 @@
 - 테스트 씬: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`.
 - 프리팹: `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
 - 카타나 기본 콤보·차징 돌진의 실제 명중에 공격당 한 번, 기본 0.05초 히트스톱 적용.
+- Cinemachine 차징 단계별 Noise와 실제 명중 시 공격당 한 번의 Impulse 연결.
 - 테스트는 사용자가 직접 담당한다. 앞으로 Codex는 명시적인 테스트 지시가 있을 때만 해당 범위의 테스트·검증을 실행한다(AGENTS.md 반영).
 
 ## 완료 사항
 
+- [x] CinemachineCamera와 LockOnCamera의 6D Shake/Impulse Listener(채널1, Gain1)를 MCP로 조회 확인. 두 카메라의 평상시 Amplitude Gain을 0으로 설정하고 테스트 씬 저장.
+- [x] PlayerChargeCamera_s에 차징 1/2/3단계 강도 0.1/0.2/0.35 및 전환 시간 0.1초 추가(Inspector 조절). 기존 두 카메라 참조와 FOV 연출 유지. 해제·취소 시 강도0으로 감쇠, 컴포넌트 비활성화 시 즉시0.
+- [x] SwordHitDetector_s에 부모 Impulse Source 자동 연결과 Hit Impulse Force(기본0.1) 추가. 실제 피해 성공 후 콤보 각 타격/차징 돌진 공격당 한 번 발생. Impulse 시간은 unscaled로 진행하여 히트스톱 중에도 재생.
+- 이번 카메라 연결 변경은 사용자 지시에 따라 테스트·플레이 모드·검증용 컴파일·스타일 검사를 실행하지 않았다. 아래 검증 기록은 이전 히트스톱 작업의 결과다.
 - [x] 기존 차징/발도/돌진, 납도 애니메이션 곡선 복원, VFX 프리팹 분리 완료. 차징 0.6/1.5초, 피해 30/50/80, 거리 6m.
 - [x] 실제 사용자 입력으로 최대 차징/해제와 4단 콤보 확인. 종료 후 VFX·히트박스·충돌 무시 정리 확인. 적 손의 OnTriggerEnter→TryHit 경로로 돌진 피격 시 충돌 복원 확인. 증거: `Library/KatanaValidation/real-input-results.json`, `real-max-charge.png`.
 - [x] HitStop_s 추가: 인스펙터 `_hitStopDuration` 기본 0.05초, WaitForSecondsRealtime 코루틴, 기존 배율 복원, 비활성화/제거 시 복구. 같은 공격 ID와 공격 종류를 기억해 정지 종료 후 다른 대상을 맞혀도 재발동하지 않는다. 이미 timeScale=0이면 정지를 새로 소유하지 않는다.
@@ -26,5 +31,5 @@
 
 ## 다음 작업
 
-1. 사용자가 직접 0.05초 정지 체감을 확인한다. 이후 조정 요청이 있으면 반영한다.
+1. 사용자가 기본/락온 카메라의 단계별 차징 흔들림, 해제·취소 복귀, 실제 명중의 히트스톱+Impulse를 직접 확인한다. 강도는 PlayerChargeCamera_s의 단계별 Amplitude와 SwordHitDetector_s의 Hit Impulse Force에서 조절한다.
 2. 돌진 미세 이동 오판은 수정 요청 시 처리하며, 테스트는 별도의 명시적인 지시가 있을 때만 실행한다.

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Cinemachine;
 
 [DisallowMultipleComponent]
 
@@ -11,6 +12,11 @@ public class SwordHitDetector_s : MonoBehaviour
     [SerializeField] private LayerMask _targetLayers = ~0;
     [SerializeField] private Vector3 _damage = new Vector3(20f, 25f, 35f);
     [SerializeField, Min(0)] private int _fourthDamage = 45;
+    [Header("명중 카메라 충격")]
+    [SerializeField] private CinemachineImpulseSource _impulseSource;
+    [SerializeField, Min(0f)] private float _hitImpulseForce = 0.1f;
+    private int _lastImpulseSwing = -1;
+    private bool _lastImpulseSkillSwing;
     private readonly HashSet<Health_s> _hitTargets = new HashSet<Health_s>();
     private int _swing = -1;
     private int _step;
@@ -38,6 +44,7 @@ public class SwordHitDetector_s : MonoBehaviour
     }
     private void Initialize()
     {
+        if (_impulseSource == null) _impulseSource = GetComponentInParent<CinemachineImpulseSource>();
         if (_hitStop == null) _hitStop = GetComponentInParent<HitStop_s>();
         if (_lightning == null) _lightning = GetComponentInParent<PlayerLightningVFX_s>();
         if (_charge == null) _charge = GetComponentInParent<PlayerChargeSkill_s>();
@@ -170,6 +177,21 @@ public class SwordHitDetector_s : MonoBehaviour
         }
         if (_lightning != null) _lightning.PlayImpact(point, finisher);
         if (_hitStop != null) _hitStop.ScreenStop(hitSwing, hitSkillSwing);
+        PlayHitImpulse(hitSwing, hitSkillSwing);
+    }
+
+    private void PlayHitImpulse(int swing, bool skillSwing)
+    {
+        if (!isActiveAndEnabled || _impulseSource == null || !_impulseSource.isActiveAndEnabled
+            || _hitImpulseForce <= 0f || (_lastImpulseSwing == swing && _lastImpulseSkillSwing == skillSwing))
+        {
+            return;
+        }
+        // 정지가 끝난 뒤 다른 적을 맞히더라도 같은 공격에서는 한 번만 발생한다.
+        _lastImpulseSwing = swing;
+        _lastImpulseSkillSwing = skillSwing;
+        CinemachineImpulseManager.Instance.IgnoreTimeScale = true;
+        _impulseSource.GenerateImpulseWithForce(_hitImpulseForce);
     }
 
     public void DisableHitbox()
