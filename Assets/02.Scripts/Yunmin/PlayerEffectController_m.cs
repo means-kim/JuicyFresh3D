@@ -1,9 +1,13 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-[RequireComponent(typeof(CrossFlashEffect_m), typeof(ShilhouetteOutlineEffect_m), typeof(OutlineParticleLightEffect_m))]
 public sealed class PlayerEffectController_m : MonoBehaviour
 {
+
+    [Header("References")]
+    [SerializeField] private PostProcessEffectController_m _postProcessManager;
+    [SerializeField] private PlayerMove _target;
+
     [Header("Shared Settings")]
     [SerializeField, ColorUsage(true, true)]
     private Color _effectColor = new Color(0.35f, 1f, 0.85f, 1f);
@@ -18,10 +22,12 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     public Color EffectColor => _effectColor;
 
-    public void PlayEffect()
+    public void PlayEffect(PlayerMove player)
     {
-        if (!Application.isPlaying || !isActiveAndEnabled) return;
+        // A null player is the manual preview path used by AnimalCharacterController_m.
+        if (!Application.isPlaying || !isActiveAndEnabled || (player != null && !player.IsRolling)) return;
 
+        ResolveReferences();
         ApplySharedSettings();
 
         if (_silhouetteOutlineEffect != null)
@@ -38,6 +44,8 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         {
             _crossFlashEffect.PlayEffect();
         }
+
+        _postProcessManager?.PlayDodgeEffect();
     }
 
     public void StopEffect()
@@ -68,12 +76,15 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     private void Awake()
     {
+        ResolveReferences();
         ResolveComponents();
         ApplySharedSettings();
     }
 
     private void OnEnable()
     {
+        ResolveReferences();
+        SubscribeEvents();
         ApplySharedSettings();
     }
 
@@ -90,24 +101,54 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         if (_outlineParticleLightEffect != null) _outlineParticleLightEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
     }
 
+    private void ResolveReferences()
+    {
+        if (_target == null)
+        {
+            _target = GetComponent<PlayerMove>();
+        }
+        if (_postProcessManager == null)
+        {
+            _postProcessManager = FindAnyObjectByType<PostProcessEffectController_m>();
+        }
+    }
+
+    private void SubscribeEvents()
+    {
+        if (_target != null)
+        {
+            _target.RollStarted -= PlayEffect;
+            _target.RollStarted += PlayEffect;
+        }
+    }
+
+    private void UnsubscribeEvents()
+    {
+        if (_target != null)
+        {
+            _target.RollStarted -= PlayEffect;
+        }
+    }
+
     private void ResolveComponents()
     {
         if (_crossFlashEffect == null)
         {
-            _crossFlashEffect = GetComponent<CrossFlashEffect_m>();
+            _crossFlashEffect = GetComponentInChildren<CrossFlashEffect_m>();
         }
         if (_silhouetteOutlineEffect == null)
         {
-            _silhouetteOutlineEffect = GetComponent<ShilhouetteOutlineEffect_m>();
+            _silhouetteOutlineEffect = GetComponentInChildren<ShilhouetteOutlineEffect_m>();
         }
         if (_outlineParticleLightEffect == null)
         {
-            _outlineParticleLightEffect = GetComponent<OutlineParticleLightEffect_m>();
+            _outlineParticleLightEffect = GetComponentInChildren<OutlineParticleLightEffect_m>();
         }
     }
 
     private void OnDisable()
     {
+        UnsubscribeEvents();
         ResolveComponents();
         if (_crossFlashEffect != null)
         {

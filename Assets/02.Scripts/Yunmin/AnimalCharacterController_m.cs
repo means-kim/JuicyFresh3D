@@ -37,8 +37,14 @@ public class AnimalCharacterController_m : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _playerEffectController.PlayEffect();
-            _postProcessEffectController.PlayEffect();
+            if (_playerEffectController != null)
+            {
+                _playerEffectController.PlayEffect(null);
+            }
+            else
+            {
+                _postProcessEffectController?.PlayDodgeEffect();
+            }
         }
     }
 }

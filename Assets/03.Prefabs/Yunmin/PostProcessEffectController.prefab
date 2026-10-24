@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _effectCamera: {fileID: 0}
   _fadeInDuration: 0.4
-  _holdDuration: 2
+  _holdDuration: 0.5
   _fadeOutDuration: 0.8
 --- !u!114 &7026601502967191767
 MonoBehaviour:

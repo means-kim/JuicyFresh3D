@@ -30,7 +30,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     public float CurrentStrength => _strength;
 
     [ContextMenu("연출 재생")]
-    public void PlayEffect()
+    public void PlayDodgeEffect()
     {
         if (!Application.isPlaying || !isActiveAndEnabled)
             return;
@@ -47,26 +47,30 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         _phase = _strength >= 1f ? Phase.Hold : Phase.FadeIn;
 
         AdvanceTime(0f);
-        ApplyEffects();
+        ApplyDodgeEffects();
     }
 
     [ContextMenu("연출 정지")]
-    public void StopEffect()
+    public void StopDodgeEffect()
     {
         if (!Application.isPlaying || !isActiveAndEnabled || !IsPlaying || _phase == Phase.FadeOut)
+        {
             return;
+        }
 
         _phaseStartStrength = _strength;
         _phaseElapsed = 0f;
         _phase = Phase.FadeOut;
         AdvanceTime(0f);
-        ApplyEffects();
+        ApplyDodgeEffects();
     }
 
     private void OnEnable()
     {
         if (!Application.isPlaying)
+        {
             return;
+        }
 
         ResolveComponents();
         Clear();
@@ -75,9 +79,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!IsPlaying)
-            return;
-
+        if (!IsPlaying) return;
         if (!EnsureInitialized())
         {
             Clear();
@@ -85,7 +87,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         }
 
         AdvanceTime(Time.deltaTime);
-        ApplyEffects();
+        ApplyDodgeEffects();
     }
 
     private void AdvanceTime(float deltaTime)
@@ -185,7 +187,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         }
     }
 
-    private void ApplyEffects()
+    private void ApplyDodgeEffects()
     {
         if (_runtimeProfile == null || _volume == null) return;
 
