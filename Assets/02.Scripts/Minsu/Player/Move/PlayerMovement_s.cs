@@ -182,7 +182,7 @@ public class PlayerMovement_s : MonoBehaviour
         _yVelocity = _jumpPower;
         _jumpCount++;
         ChangeState(_airborne);
-        _animation?.PlayJump();
+        _animation?.PlayJump(_jumpCount);
         return true;
     }
 
@@ -206,7 +206,7 @@ public class PlayerMovement_s : MonoBehaviour
 
         if (_animation != null)
         {
-            _animation.UpdateAirborne(CurrentState == MovementState.Airborne, _yVelocity, _jumpPower, deltaTime);
+            _animation.UpdateAirborne(CurrentState == MovementState.Airborne);
             _animation.UpdateLocomotion(_characterController.velocity, speed,
                 CurrentState == MovementState.Sprint, deltaTime);
         }

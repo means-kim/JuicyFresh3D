@@ -11,9 +11,9 @@ public class PlayerAnimation_s : MonoBehaviour
     private static readonly int Locomotion = Animator.StringToHash("Base Layer.Locomotion");
     private static readonly int Jump = Animator.StringToHash("Base Layer.Jump");
     private static readonly int Land = Animator.StringToHash("Base Layer.Land");
-    private static readonly int JumpTime = Animator.StringToHash("JumpTime");
+    private static readonly int DoubleJump = Animator.StringToHash("Base Layer.DoubleJump");
+    private static readonly int Fall = Animator.StringToHash("Base Layer.Fall");
     private bool _airborne;
-    private float _jumpProgress;
 
     [SerializeField] private Animator _animator;
     [SerializeField, Min(0f)] private float _dampTime = 0.1f;
@@ -65,34 +65,43 @@ public class PlayerAnimation_s : MonoBehaviour
         }
     }
 
-    public void PlayJump()
+    public void PlayJump(int jumpCount)
     {
         Initialize();
-        if (_animator == null || !_animator.HasState(0, Jump)) return;
+        int jumpState = jumpCount > 1 ? DoubleJump : Jump;
+        if (_animator == null || !_animator.HasState(0, jumpState)) return;
         _airborne = true;
-        _jumpProgress = 0.12f;
-        _animator.SetFloat(JumpTime, _jumpProgress);
-        _animator.CrossFadeInFixedTime(Jump, 0.06f, 0, 0f);
+        _animator.CrossFadeInFixedTime(jumpState, 0.06f, 0, 0f);
     }
 
-    public void UpdateAirborne(bool airborne, float verticalVelocity, float jumpPower, float deltaTime)
+    public void UpdateAirborne(bool airborne)
     {
         Initialize();
         if (_animator == null || !_animator.HasState(0, Jump)) return;
         if (airborne)
         {
-            if (!_airborne) PlayJump();
-            float target = Mathf.Lerp(0.12f, 0.7f,
-                Mathf.InverseLerp(jumpPower, -jumpPower, verticalVelocity));
-            _jumpProgress = Mathf.MoveTowards(_jumpProgress, target, deltaTime * 1.5f);
-            _animator.SetFloat(JumpTime, _jumpProgress);
+            // 발판에서 떨어질 때는 도약 동작 없이 공중 유지 자세로 전환한다.
+            if (!_airborne)
+            {
+                _airborne = true;
+                _animator.CrossFadeInFixedTime(Fall, 0.06f, 0, 0f);
+            }
+            else if (!_animator.IsInTransition(0))
+            {
+                var state = _animator.GetCurrentAnimatorStateInfo(0);
+                if ((state.fullPathHash == Jump || state.fullPathHash == DoubleJump)
+                    && state.normalizedTime >= 0.95f)
+                {
+                    _animator.CrossFadeInFixedTime(Fall, 0.06f, 0, 0f);
+                }
+            }
         }
         else if (_airborne)
         {
             _airborne = false;
             if (_animator.HasState(0, Land))
             {
-                _animator.CrossFadeInFixedTime(Land, 0.08f, 0, 1f);
+                _animator.CrossFadeInFixedTime(Land, 0.08f, 0, 0f);
             }
             else
             {
