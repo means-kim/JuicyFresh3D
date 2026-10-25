@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 138e7a33b7fbeef4bb09f7fd0fcb48f6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249364
+  packageName: 'UNI VFX: Missiles & Explosions for Visual Effect Graph'
+  packageVersion: 1.0
+  assetPath: Assets/UNI VFX/Common/Materials/UNI-Ground-quarter.mat
+  uploadId: 717178

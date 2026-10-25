@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e45f5534391ab8e4592e0e762a45f0e3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249364
+  packageName: 'UNI VFX: Missiles & Explosions for Visual Effect Graph'
+  packageVersion: 1.0
+  assetPath: Assets/UNI VFX/Common/Scripts/VFX_UNI_Rotate.cs
+  uploadId: 717178

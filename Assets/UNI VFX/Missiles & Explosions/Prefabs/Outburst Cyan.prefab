@@ -1,0 +1,373 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9107222490530531045
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9107222490530531046}
+  - component: {fileID: 9107222490530531064}
+  - component: {fileID: 9107222490530531047}
+  m_Layer: 0
+  m_Name: Outburst Cyan
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9107222490530531046
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107222490530531045}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &9107222490530531064
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107222490530531045}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 420e2e532583d654dbb67e8dca44857f, type: 3}
+  m_InitialEventName: create
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 8
+        m_Name: SparkSpawnRate
+        m_Overridden: 1
+      - m_Value: 9
+        m_Name: RibbonLengthMultiplier
+        m_Overridden: 1
+      - m_Value: 0.3
+        m_Name: DotsMaxSize
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: DotsSpawnRate
+        m_Overridden: 0
+      - m_Value: 0.75
+        m_Name: ExplosionSizeMultiplier
+        m_Overridden: 1
+      - m_Value: 16
+        m_Name: ExplosionTrailsSpawnRate
+        m_Overridden: 1
+      - m_Value: 16
+        m_Name: ExplosionSweetenerSpawnRate
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: OutDuration
+        m_Overridden: 1
+      - m_Value: 6
+        m_Name: RingsSpawnRate
+        m_Overridden: 1
+      - m_Value: 64
+        m_Name: RingsCircularRotationMultiplier
+        m_Overridden: 0
+      - m_Value: 24
+        m_Name: RingsSidewayRotationMultiplier
+        m_Overridden: 0
+      - m_Value: 16
+        m_Name: WallsSpawnRate
+        m_Overridden: 0
+      - m_Value: 24
+        m_Name: HitTrailsCount
+        m_Overridden: 0
+      - m_Value: 12
+        m_Name: MushroomCount
+        m_Overridden: 0
+      - m_Value: 8
+        m_Name: TrailsSpawnRate
+        m_Overridden: 0
+      - m_Value: 0.05
+        m_Name: RibbonAlphaMultiplier
+        m_Overridden: 1
+      - m_Value: 12
+        m_Name: TrailSpawnRate
+        m_Overridden: 1
+      - m_Value: 64
+        m_Name: SparksSpawnRate
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: CreateSparksSpawnRate
+        m_Overridden: 1
+      - m_Value: 48
+        m_Name: CreateSpikesSpawnRate
+        m_Overridden: 1
+      - m_Value: 3.5
+        m_Name: CreateLineSize
+        m_Overridden: 1
+      - m_Value: 0.65
+        m_Name: CreateLineLifetime
+        m_Overridden: 1
+      - m_Value: 16
+        m_Name: HitMushroomSpawnCount
+        m_Overridden: 0
+      - m_Value: 48
+        m_Name: HitSparksCount
+        m_Overridden: 1
+      - m_Value: 96
+        m_Name: HitSmokeSpawnCount
+        m_Overridden: 1
+      - m_Value: 128
+        m_Name: HitCoreSpawnRate
+        m_Overridden: 1
+      - m_Value: 0.9
+        m_Name: HitRingTopStartPositionY
+        m_Overridden: 1
+      - m_Value: 1.75
+        m_Name: HitRingTopLifetime
+        m_Overridden: 1
+      - m_Value: 0.35
+        m_Name: HitRingCenterAlpha
+        m_Overridden: 1
+      - m_Value: 80
+        m_Name: HitSpikesSpawnCount
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 0.8, y: 1.6}
+        m_Name: CenterSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.6, y: 1.2}
+        m_Name: DotsLifetimeMinMax
+        m_Overridden: 0
+      - m_Value: {x: -1, y: 1}
+        m_Name: TrailsSpawnHeightMinMax
+        m_Overridden: 0
+      - m_Value: {x: 0.2, y: 0.6}
+        m_Name: LinesAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.4, y: 0.6}
+        m_Name: RingsLifetimeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.65, y: 1}
+        m_Name: RingsAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.75, y: 1.25}
+        m_Name: RingsSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.4, y: 0.8}
+        m_Name: TrailLifetimeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.05, y: 0.15}
+        m_Name: SparksSecondarySizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.15, y: 0.5}
+        m_Name: SparksSecondaryAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.02, y: 0.08}
+        m_Name: TrailAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.7, y: 1}
+        m_Name: TrailSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.3, y: 0.7}
+        m_Name: CreateSpikesSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.2, y: 0.8}
+        m_Name: CreateSpikesAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.1, y: 0.5}
+        m_Name: HitMushroomAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.1, y: 0.1}
+        m_Name: HitCoreAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: -300, y: 300}
+        m_Name: HitCoreAngularVelocityMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.05, y: 0.15}
+        m_Name: HitSparksSecondarySizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.15, y: 0.5}
+        m_Name: HitSparksSecondaryAlphaMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.4, y: 0.8}
+        m_Name: HitCoreSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.8, y: 1.2}
+        m_Name: HitSmokeSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.25, y: 1.25}
+        m_Name: HitSpikesSizeMinMax
+        m_Overridden: 1
+      - m_Value: {x: 0.1, y: 0.3}
+        m_Name: HitSpikesAlphaMinMax
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 12, y: 6, z: 6}
+        m_Name: Bounds_size
+        m_Overridden: 0
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0, y: 2.7607844, z: 47.937256, w: 0}
+        m_Name: Color
+        m_Overridden: 1
+      - m_Value: {x: 0.17254904, y: 0.23549862, z: 0.44313726, w: 1}
+        m_Name: SecondaryColor
+        m_Overridden: 1
+      - m_Value: {x: 12.226416, y: 10.470216, z: 8.477751, w: 0}
+        m_Name: CenterColor
+        m_Overridden: 1
+      - m_Value: {x: 0.029681385, y: 0.049749225, z: 0.21698111, w: 0}
+        m_Name: HitSmokeColor
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.3372549, g: 0.81198394, b: 0.8392157, a: 1}
+          key1: {r: 8.094118, g: 11.423773, b: 11.984314, a: 1}
+          key2: {r: 0, g: 35.388237, b: 47.937256, a: 0}
+          key3: {r: 0.16128388, g: 1.1154242, b: 3.699233, a: 0}
+          key4: {r: 0.08627451, g: 0.24313726, b: 1.4980392, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 16384
+          ctime2: 26214
+          ctime3: 39321
+          ctime4: 58982
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 5
+          m_NumAlphaKeys: 2
+        m_Name: ColorOverLife
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 1, g: 1, b: 1, a: 0}
+          key1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0.8}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 6554
+          atime2: 52428
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 4
+        m_Name: SecondaryGradient
+        m_Overridden: 0
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: d74b02add2f6c034aa96aae3c72f632f, type: 3}
+        m_Name: DotsTexture
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 861981488de1c9843855b00275026f63, type: 3}
+        m_Name: RingsMaskTexture
+        m_Overridden: 0
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &9107222490530531047
+VFXRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107222490530531045}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0

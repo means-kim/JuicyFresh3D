@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0511a3dab8642824098b449b69ab1ad7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 249364
+  packageName: 'UNI VFX: Missiles & Explosions for Visual Effect Graph'
+  packageVersion: 1.0
+  assetPath: Assets/UNI VFX/Missiles & Explosions/ScenesURP/DemoLightingSettings.lighting
+  uploadId: 717178
