@@ -31,3 +31,7 @@ MonoBehaviour:
   _sheatheTurnVolume: 0.65
   _sheatheClip: {fileID: 8300000, guid: cc22815f0642f4041b833bf177ab549f, type: 3}
   _sheatheVolume: 0.5
+  _chargeLoopClip: {fileID: 8300000, guid: 9dfa77f2fde8f4aa78d0291d9d4b6499, type: 3}
+  _chargeLoopVolume: 0.4
+  _chargeCompleteClip: {fileID: 8300000, guid: d4357dc80e0b9674d86ee50f24a54308, type: 3}
+  _chargeCompleteVolume: 0.75

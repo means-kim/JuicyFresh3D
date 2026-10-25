@@ -10,6 +10,8 @@
 
 ## 완료 사항
 
+- [x] 차징 오디오 연결: virtual_vibes-electric-spark-zap-423424를 차징 시작부터 해제/취소까지 반복 재생(기본 볼륨 0.4). 최대 단계 3 진입 시 Cinematic_Impact_Hard_01을 차징당 한 번 재생(0.75). 별도 AudioSource로 완료음과 루프를 분리하고, 최대 충전 후에도 누르고 있으면 루프를 유지한다. 비활성화 시 모두 정지. 프로필의 Charge Loop/Complete Clip 및 Volume에서 조절한다. 사용자 명중음 선택/납도 타이밍은 유지. 플레이·청취·컴파일·스타일 검사는 미실행.
+
 - [x] KatanaAudio_s / KatanaSoundProfile_s 및 KatanaSoundProfile.asset 추가. 휘두르기·명중·납도 클립 배열과 개별 볼륨, 캐릭터 전체 Volume / Spatial Blend / 선택적 AudioMixerGroup Output 지원. 명중음은 Attack 1~4 Hit Clip/Volume 및 Charge Hit Clip/Volume으로 분리했다. 초기값은 모두 기존 첫 명중 클립과 볼륨을 복사했으며 각 슬롯에서 고정 재생한다. 빈 슬롯은 무음이다. HitConfirmed가 피해 적용 전 저장한 타수를 전달해 공격별로 선택한다. 공격 1~4는 Whoosh_02 / Combo_01 / Combo_02 / Combo_05로 고정하고 차징 돌진은 1타를 공유한다. 칼 돌리기는 Combo_02, 검집 삽입 클립은 사용자가 변경한 현재 참조를 유지한다. 원본 SFX는 미수정.
 - [x] Katana_Reference 프리팹에 연결(테스트 씬 인스턴스가 상속). 일반 공격 1~4와 차징 돌진 전용 클립에 PlayKatanaSwing / PlayKatanaSheathe 이벤트만 추가. 기존 곡선 보존. 공격 이벤트는 기존 4%를 유지하고 납도는 PlayKatanaSheatheTurn / PlayKatanaSheathe로 분리했다. 납도 이벤트 타이밍은 사용자가 직접 수정한 현재 값을 유지한다. 이번 명중음 분리 작업에서는 애니메이션 파일을 수정하지 않았다. 삽입음 재생 시 회전음 종료. Animation 창에서 이벤트 위치 조절 가능.
 - [x] SwordHitDetector_s에 실제 TakeDamage 성공 후 HitConfirmed 알림 추가. 카타나 오디오만 구독하고 공격당 명중음 한 번 재생. 동작/명중 AudioSource를 런타임에 분리 생성하고 공격 종료·취소 시 동작음 정지. 전역 매니저와 Mixer 자산은 아직 만들지 않았으며 Output 미지정 시 기본 출력 사용.

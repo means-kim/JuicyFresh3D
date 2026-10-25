@@ -25,6 +25,12 @@ public class KatanaSoundProfile_s : ScriptableObject
     [Header("차징 공격 명중 (공격당 한 번)")]
     [SerializeField] private AudioClip _chargeHitClip;
     [SerializeField, Range(0f, 1f)] private float _chargeHitVolume = 0.75f;
+    [Header("차징 유지음")]
+    [SerializeField] private AudioClip _chargeLoopClip;
+    [SerializeField, Range(0f, 1f)] private float _chargeLoopVolume = 0.4f;
+    [Header("최대 차징 완료음")]
+    [SerializeField] private AudioClip _chargeCompleteClip;
+    [SerializeField, Range(0f, 1f)] private float _chargeCompleteVolume = 0.75f;
     [Header("납도 전 칼 돌리기")]
     [SerializeField] private AudioClip _sheatheTurnClip;
     [SerializeField, Range(0f, 1f)] private float _sheatheTurnVolume = 0.65f;
@@ -78,6 +84,10 @@ public class KatanaSoundProfile_s : ScriptableObject
         }
     }
 
+    public AudioClip ChargeLoopClip => _chargeLoopClip;
+    public float ChargeLoopVolume => _chargeLoopVolume;
+    public AudioClip ChargeCompleteClip => _chargeCompleteClip;
+    public float ChargeCompleteVolume => _chargeCompleteVolume;
     public AudioClip SheatheClip => _sheatheClip;
     public float SwingVolume => _swingVolume;
     public float SheatheVolume => _sheatheVolume;

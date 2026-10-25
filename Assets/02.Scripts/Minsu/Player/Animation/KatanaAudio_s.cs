@@ -13,6 +13,9 @@ public class KatanaAudio_s : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float _spatialBlend = 0f;
     private AudioSource _motionSource;
     private AudioSource _hitSource;
+    private AudioSource _chargeLoopSource;
+    private AudioSource _chargeCompleteSource;
+    private bool _chargeCompletePlayed;
     private PlayerComboAnimation_s _combo;
     private KatanaChargeSkill_s _charge;
     private SwordHitDetector_s _detector;
@@ -26,6 +29,9 @@ public class KatanaAudio_s : MonoBehaviour
         _detector = GetComponentInChildren<SwordHitDetector_s>(true);
         _motionSource = CreateSource("Katana Motion Audio");
         _hitSource = CreateSource("Katana Hit Audio");
+        _chargeLoopSource = CreateSource("Katana Charge Loop Audio");
+        _chargeLoopSource.loop = true;
+        _chargeCompleteSource = CreateSource("Katana Charge Complete Audio");
     }
 
     private AudioSource CreateSource(string sourceName)
@@ -54,7 +60,42 @@ public class KatanaAudio_s : MonoBehaviour
         if (_charge != null)
         {
             _charge.DamageWindowClosed += StopMotion;
+            _charge.ChargeStarted += BeginChargeAudio;
+            _charge.ChargeStageChanged += OnChargeStageChanged;
+            _charge.ChargeStopped += StopChargeLoop;
+            if (_charge.IsCharging)
+            {
+                BeginChargeAudio();
+                OnChargeStageChanged(_charge.ChargeStage);
+            }
         }
+    }
+
+    private void BeginChargeAudio()
+    {
+        StopChargeLoop();
+        _chargeCompleteSource.Stop();
+        _chargeCompletePlayed = false;
+        if (_profile == null || _profile.ChargeLoopClip == null) return;
+        _chargeLoopSource.outputAudioMixerGroup = _output;
+        _chargeLoopSource.spatialBlend = _spatialBlend;
+        _chargeLoopSource.volume = Mathf.Clamp01(_volume) * Mathf.Clamp01(_profile.ChargeLoopVolume);
+        _chargeLoopSource.clip = _profile.ChargeLoopClip;
+        _chargeLoopSource.Play();
+    }
+
+    private void OnChargeStageChanged(int stage)
+    {
+        if (!isActiveAndEnabled || _profile == null || stage < 3 || _chargeCompletePlayed) return;
+        _chargeCompletePlayed = true;
+        Play(_chargeCompleteSource, _profile.ChargeCompleteClip, _profile.ChargeCompleteVolume);
+    }
+
+    private void StopChargeLoop()
+    {
+        if (_chargeLoopSource == null) return;
+        _chargeLoopSource.Stop();
+        _chargeLoopSource.clip = null;
     }
 
     // 전용 클립 이벤트 값: 일반 콤보 1~4, 차징 돌진 5.
@@ -128,6 +169,9 @@ public class KatanaAudio_s : MonoBehaviour
         if (_charge != null)
         {
             _charge.DamageWindowClosed -= StopMotion;
+            _charge.ChargeStarted -= BeginChargeAudio;
+            _charge.ChargeStageChanged -= OnChargeStageChanged;
+            _charge.ChargeStopped -= StopChargeLoop;
         }
 
         if (_motionSource != null)
@@ -140,6 +184,9 @@ public class KatanaAudio_s : MonoBehaviour
             _hitSource.Stop();
         }
 
+        StopChargeLoop();
+        if (_chargeCompleteSource != null) _chargeCompleteSource.Stop();
+        _chargeCompletePlayed = false;
         _lastHitSwing = -1;
     }
 }
