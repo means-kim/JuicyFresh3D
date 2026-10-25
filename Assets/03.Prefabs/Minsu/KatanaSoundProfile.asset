@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63bae13b215489bbeb26570789d9aba, type: 3}
+  m_Name: KatanaSoundProfile
+  m_EditorClassIdentifier: 
+  _attack1Clip: {fileID: 8300000, guid: 17a4614740221fb4aa4e1bef1fa8fc37, type: 3}
+  _attack2Clip: {fileID: 8300000, guid: 9e6759f123aa15d42a35d91caaa273f2, type: 3}
+  _attack3Clip: {fileID: 8300000, guid: a902473be96accc4eb466210f4198db6, type: 3}
+  _attack4Clip: {fileID: 8300000, guid: 100c7b7601b400049a8c78c6ff3cc04d, type: 3}
+  _swingVolume: 0.65
+  _attack1HitClip: {fileID: 8300000, guid: 931bbee637f065c448623bb86c8a857d, type: 3}
+  _attack1HitVolume: 0.75
+  _attack2HitClip: {fileID: 8300000, guid: f4c1614840727b042b1b08782a9ebfc3, type: 3}
+  _attack2HitVolume: 0.75
+  _attack3HitClip: {fileID: 8300000, guid: b5b0a564fcb844d479546e3642f08a27, type: 3}
+  _attack3HitVolume: 0.75
+  _attack4HitClip: {fileID: 8300000, guid: bc1dfd8984f60e243ae322a50e746450, type: 3}
+  _attack4HitVolume: 0.75
+  _chargeHitClip: {fileID: 8300000, guid: 3fad5d34fe2a2c145bc6e27484ddde7e, type: 3}
+  _chargeHitVolume: 0.75
+  _sheatheTurnClip: {fileID: 8300000, guid: a902473be96accc4eb466210f4198db6, type: 3}
+  _sheatheTurnVolume: 0.65
+  _sheatheClip: {fileID: 8300000, guid: cc22815f0642f4041b833bf177ab549f, type: 3}
+  _sheatheVolume: 0.5

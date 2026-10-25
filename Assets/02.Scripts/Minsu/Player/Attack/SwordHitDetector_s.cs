@@ -26,6 +26,7 @@ public class SwordHitDetector_s : MonoBehaviour
     private HitStop_s _hitStop;
     private bool _skillSwing;
     private int _skillDamage;
+    public event System.Action<int, bool, int> HitConfirmed;
     public int HitsThisSwing => _hitTargets.Count;
     public bool IsHitboxActive => _hitbox != null && _hitbox.enabled;
 
@@ -166,6 +167,7 @@ public class SwordHitDetector_s : MonoBehaviour
         Vector3 point = other.ClosestPoint(_hitbox.bounds.center);
         bool finisher = _skillSwing && (_katanaCharge != null
             ? _katanaCharge.IsFinisher : _charge != null && _charge.AttackStep == 3);
+        int hitStep = _step;
         int hitSwing = _swing;
         bool hitSkillSwing = _skillSwing;
         // 피해 이벤트에서 재진입하더라도 중복 적용하지 않는다.
@@ -178,6 +180,7 @@ public class SwordHitDetector_s : MonoBehaviour
         if (_lightning != null) _lightning.PlayImpact(point, finisher);
         if (_hitStop != null) _hitStop.ScreenStop(hitSwing, hitSkillSwing);
         PlayHitImpulse(hitSwing, hitSkillSwing);
+        HitConfirmed?.Invoke(hitSwing, hitSkillSwing, hitStep);
     }
 
     private void PlayHitImpulse(int swing, bool skillSwing)

@@ -2,11 +2,17 @@
 
 ## 현재 목표
 
+- 카타나 휘두르기·실제 명중·납도 SFX 연결 및 Inspector 조절.
+
 - 기준: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`, `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
 - 우클릭 차징 VFX를 Original/Uni/Both 선택형으로 구성. 현재 카타나는 Both로 설정. 몸 번개와 기존 VFX 자산은 보존한다.
 - 테스트는 사용자가 담당한다. 명시적 요청 없이 플레이/시뮬레이션/검증용 컴파일·빌드/스타일 검사를 실행하지 않는다.
 
 ## 완료 사항
+
+- [x] KatanaAudio_s / KatanaSoundProfile_s 및 KatanaSoundProfile.asset 추가. 휘두르기·명중·납도 클립 배열과 개별 볼륨, 캐릭터 전체 Volume / Spatial Blend / 선택적 AudioMixerGroup Output 지원. 명중음은 Attack 1~4 Hit Clip/Volume 및 Charge Hit Clip/Volume으로 분리했다. 초기값은 모두 기존 첫 명중 클립과 볼륨을 복사했으며 각 슬롯에서 고정 재생한다. 빈 슬롯은 무음이다. HitConfirmed가 피해 적용 전 저장한 타수를 전달해 공격별로 선택한다. 공격 1~4는 Whoosh_02 / Combo_01 / Combo_02 / Combo_05로 고정하고 차징 돌진은 1타를 공유한다. 칼 돌리기는 Combo_02, 검집 삽입 클립은 사용자가 변경한 현재 참조를 유지한다. 원본 SFX는 미수정.
+- [x] Katana_Reference 프리팹에 연결(테스트 씬 인스턴스가 상속). 일반 공격 1~4와 차징 돌진 전용 클립에 PlayKatanaSwing / PlayKatanaSheathe 이벤트만 추가. 기존 곡선 보존. 공격 이벤트는 기존 4%를 유지하고 납도는 PlayKatanaSheatheTurn / PlayKatanaSheathe로 분리했다. 납도 이벤트 타이밍은 사용자가 직접 수정한 현재 값을 유지한다. 이번 명중음 분리 작업에서는 애니메이션 파일을 수정하지 않았다. 삽입음 재생 시 회전음 종료. Animation 창에서 이벤트 위치 조절 가능.
+- [x] SwordHitDetector_s에 실제 TakeDamage 성공 후 HitConfirmed 알림 추가. 카타나 오디오만 구독하고 공격당 명중음 한 번 재생. 동작/명중 AudioSource를 런타임에 분리 생성하고 공격 종료·취소 시 동작음 정지. 전역 매니저와 Mixer 자산은 아직 만들지 않았으며 Output 미지정 시 기본 출력 사용.
 
 - [x] PlayerLightningVFX_s의 차징 몸 전기 항목에 Body Size / Body Spread 추가(기본값 각각 1). Size는 골반·가슴 중간점을 중심으로 몸 전기 배치를 확대하고, Spread는 몸 전기의 지그재그 퍼짐만 조절한다. 기존 굵기 계산·칼날 번개·궤적·명중 효과는 유지했다. 사용자 지침에 따라 이번 변경의 테스트/컴파일/스타일 검사는 미실행.
 
@@ -20,6 +26,8 @@
 
 ## 남은 문제 / 검증 한계
 
+- [ ] 이번 오디오 연결은 플레이·청취·컴파일·빌드·스타일 검사 미실행. 사용자가 클립 선택/음량과 특히 납도 이벤트 위치를 직접 조정해야 한다. 공격/납도 클립은 사용자가 지정한 파일로 연결했으며 청취 평가하지 않았다.
+
 - [ ] UNI 연결 및 Both 추가는 사용자 지침에 따라 플레이·시뮬레이션·컴파일/빌드·스타일 검사·시각 검증 모두 미실행. Unity에서 패키지 의존성 해결 및 임포트가 필요하며, 실제 그래프 크기/색/지면 회전은 사용자 확인 후 조정한다.
 - [ ] Inspector: PlayerChargeVFXController_s의 Style을 Original로 바꾸면 기존 효과로 복귀. PlayerUniChargeVFX_s의 Use Ground Onslaught을 끄면 바닥만 제외.
 - [ ] 기존 돌진 조기 정지 문제: CharacterController.minMoveDistance=0.001이 미세 잔여 이동을 무시하면 장애물로 오판하여 약 5.279m에서 멈출 수 있다. 이번 범위에서 미수정.
@@ -27,6 +35,8 @@
 - 변경 사항은 미커밋이다.
 
 ## 다음 작업
+
+- 사용자가 KatanaSoundProfile.asset의 클립/볼륨 및 전용 클립의 이벤트 타이밍을 확인한다. 이후 차징 루프와 발도/임팩트 추가 여부를 결정한다.
 
 1. 사용자가 Both 모드의 중첩 차징 효과를 직접 확인한다. 기존 크기·밝기·방출량은 유지했으며 필요 시 조정한다. 별도 테스트 요청 없이 Codex가 테스트하지 않는다.
 2. UNI 크기/위치/잔광을 조정하거나 Style을 Original로 되돌릴 수 있다. 원본 UNI와 보관 중인 기존 VFX는 유지한다.

@@ -183,6 +183,7 @@ GameObject:
   - component: {fileID: 8879718190356453937}
   - component: {fileID: 8879718190356453941}
   - component: {fileID: 8879718190356453942}
+  - component: {fileID: 8879718190356453943}
   m_Layer: 0
   m_Name: Katana_Reference
   m_TagString: Player
@@ -3225,3 +3226,19 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 8162761846603798473, guid: 5ff868458b2224f0ba6a349850fcb64f, type: 3}
   m_PrefabInstance: {fileID: 811721933838538885}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8879718190356453943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 802d7ed10af54eeb9fc672d31cb83fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _profile: {fileID: 11400000, guid: 7ffb0fa1e99a47aebc02ab9edfd56bc8, type: 2}
+  _output: {fileID: 0}
+  _volume: 1
+  _spatialBlend: 0
