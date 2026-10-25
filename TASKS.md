@@ -2,34 +2,29 @@
 
 ## 현재 목표
 
-- 테스트 씬: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`.
-- 프리팹: `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
-- 카타나 기본 콤보·차징 돌진의 실제 명중에 공격당 한 번, 기본 0.05초 히트스톱 적용.
-- Cinemachine 차징 단계별 Noise와 실제 명중 시 공격당 한 번의 Impulse 연결.
-- 테스트는 사용자가 직접 담당한다. 앞으로 Codex는 명시적인 테스트 지시가 있을 때만 해당 범위의 테스트·검증을 실행한다(AGENTS.md 반영).
+- 기준: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`, `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
+- 우클릭 차징 VFX를 기존/UNI 선택형으로 구성. 몸 번개와 기존 VFX 자산은 보존한다.
+- 테스트는 사용자가 담당한다. 명시적 요청 없이 플레이/시뮬레이션/검증용 컴파일·빌드/스타일 검사를 실행하지 않는다.
 
 ## 완료 사항
 
-- [x] CinemachineCamera와 LockOnCamera의 6D Shake/Impulse Listener(채널1, Gain1)를 MCP로 조회 확인. 두 카메라의 평상시 Amplitude Gain을 0으로 설정하고 테스트 씬 저장.
-- [x] PlayerChargeCamera_s에 차징 1/2/3단계 강도 0.1/0.2/0.35 및 전환 시간 0.1초 추가(Inspector 조절). 기존 두 카메라 참조와 FOV 연출 유지. 해제·취소 시 강도0으로 감쇠, 컴포넌트 비활성화 시 즉시0.
-- [x] SwordHitDetector_s에 부모 Impulse Source 자동 연결과 Hit Impulse Force(기본0.1) 추가. 실제 피해 성공 후 콤보 각 타격/차징 돌진 공격당 한 번 발생. Impulse 시간은 unscaled로 진행하여 히트스톱 중에도 재생.
-- 이번 카메라 연결 변경은 사용자 지시에 따라 테스트·플레이 모드·검증용 컴파일·스타일 검사를 실행하지 않았다. 아래 검증 기록은 이전 히트스톱 작업의 결과다.
-- [x] 기존 차징/발도/돌진, 납도 애니메이션 곡선 복원, VFX 프리팹 분리 완료. 차징 0.6/1.5초, 피해 30/50/80, 거리 6m.
-- [x] 실제 사용자 입력으로 최대 차징/해제와 4단 콤보 확인. 종료 후 VFX·히트박스·충돌 무시 정리 확인. 적 손의 OnTriggerEnter→TryHit 경로로 돌진 피격 시 충돌 복원 확인. 증거: `Library/KatanaValidation/real-input-results.json`, `real-max-charge.png`.
-- [x] HitStop_s 추가: 인스펙터 `_hitStopDuration` 기본 0.05초, WaitForSecondsRealtime 코루틴, 기존 배율 복원, 비활성화/제거 시 복구. 같은 공격 ID와 공격 종류를 기억해 정지 종료 후 다른 대상을 맞혀도 재발동하지 않는다. 이미 timeScale=0이면 정지를 새로 소유하지 않는다.
-- [x] SwordHitDetector_s에서 TakeDamage 성공 후 연결. 콤보는 각 타격당 한 번, 카타나 돌진은 공격 전체에서 한 번. Katana_Reference 루트에 컴포넌트 연결. 기존 에이리언 프리팹과 원본 에셋 미변경.
-- [x] Unity 컴파일 및 플레이 검증: 콤보 첫 명중 HP100→80/timeScale0, 약 0.056초 후 기존 0.5배속 복원. 같은 공격의 두 번째 대상 피해 적용/재정지 없음, 같은 대상 중복 피해 없음, 새 공격 재발동 확인.
-- [x] 차징 돌진 SweepDash 경로: 첫 대상 피해30/timeScale0, 코루틴 종료 후 timeScale1, 두 번째 대상 피해30/timeScale1 유지. 비활성화/제거 시 0.3배속 복원, 기존 timeScale0 보존 확인. 테스트 대상 및 공격 구간을 제어한 플레이 검증이며 이번 히트스톱 변경 뒤 실제 마우스 체감 검증은 미실행.
-- [x] 검증 종료 후 플레이 모드 종료, 테스트용 Application.runInBackground 설정 복원. 코드 2개(신규 HitStop_s 및 기존 SwordHitDetector_s), 신규 meta, 카타나 프리팹, TASKS.md 변경.
-- [x] 지정 dotnet format `.sln` 명령은 파일 부재로 실패(현재 `.slnx` 존재). `.slnx` 대체 검사는 샌드박스 복원 실패, --no-restore는 MSBuild 파이프 권한 실패. 승인된 환경에서 `.slnx` 기본 검사 재실행: 종료 코드0, 작업 영역 로드 경고 있음. 지정 `.sln` 검사가 통과한 것은 아니다. Unity 콘솔에는 기존 NoSubscription 오류만 확인.
+- [x] PlayerChargeVFXController_s 추가. 카타나 차징 이벤트를 한 곳에서 받아 Original/Uni 중 선택한 효과만 실행한다. Inspector Style 기본값 Uni. 선택 변경 시 이전 효과를 정리하고 차징 중이면 새 효과를 시작한다.
+- [x] PlayerChargeVFX_s는 컨트롤러가 있으면 자체 이벤트 구독을 하지 않고 컨트롤러의 호출을 받는다. 컨트롤러가 없는 기존 에이리언은 종전 동작을 유지한다.
+- [x] PlayerUniChargeVFX_s 추가. 검 근처 Lightning Spear buildup과 지면 Onslaught buildup을 제어한다. Use Ground Onslaught 옵션, 검 위치 오프셋, 크기, 지면 레이어/높이/회전 오프셋, 청백색/청색 HDR 색, 종료 잔광 시간을 제공한다.
+- [x] 차징 시작 시 buildup, 해제·취소 시 stop만 전달한다. 초기 이벤트 Manual 및 비활성 프리팹으로 자동 발사/폭발을 막는다. 비활성화/모드 변경 시 즉시 숨기며, 일반 종료 시 0.4초 후 숨긴다. 바닥 잔광은 마지막 지면 위치에 남긴다.
+- [x] `Assets/03.Prefabs/Minsu/VFX/KatanaLightningSpearBuildup.prefab`, `KatanaOnslaughtBlue.prefab` 생성. UNI 원본과 기존 VFX 프리팹은 수정/삭제하지 않았다. 카타나 프리팹에 스크립트/참조를 연결했다. 몸 번개 및 검 궤적/명중 효과 코드는 변경하지 않았다.
+- [x] manifest에 URP 17.3과 맞춘 `com.unity.visualeffectgraph: 17.3.0` 추가. 기존에는 VFX Graph 패키지가 manifest/lock에 없었다. 패키지 설치/그래프 마이그레이션 완료 여부는 이번 작업에서 검증하지 않았다.
+- [x] 앞선 작업: 카타나 차징/발도/코드 돌진/원본 FBX 납도 곡선 복원, VFX 프리팹화, 공격당 0.05초 히트스톱, 차징 단계별 카메라 Noise 및 명중 Impulse 연결 완료.
 
 ## 남은 문제 / 검증 한계
 
-- [ ] 이전 실제 반복 돌진에서 약 5.279m 조기 정지 발견. CharacterController.minMoveDistance=0.001이 0.0005m 잔여 이동을 무시하면 PlayerDash_s가 장애물로 오판하는 경로를 비교 재현했다. 이번 히트스톱 작업에서는 수정하지 않았다.
-- 히트스톱 도중 다른 시스템이 timeScale을 계속 0으로 설정하는 별도 일시정지 소유권은 구분할 수 없다. 현재 프로젝트에는 별도 timeScale 제어 코드가 없으며, 향후 일시정지 시스템 추가 시 통합 필요.
-- `.vsconfig`, `JuicyFresh3D.slnx` 미추적 파일은 그대로 유지. 커밋하지 않음.
+- [ ] 이번 UNI 변경은 사용자 지침에 따라 플레이·시뮬레이션·컴파일/빌드·스타일 검사·시각 검증 모두 미실행. Unity에서 패키지 의존성 해결 및 임포트가 필요하며, 실제 그래프 크기/색/지면 회전은 사용자 확인 후 조정한다.
+- [ ] Inspector: PlayerChargeVFXController_s의 Style을 Original로 바꾸면 기존 효과로 복귀. PlayerUniChargeVFX_s의 Use Ground Onslaught을 끄면 바닥만 제외.
+- [ ] 기존 돌진 조기 정지 문제: CharacterController.minMoveDistance=0.001이 미세 잔여 이동을 무시하면 장애물로 오판하여 약 5.279m에서 멈출 수 있다. 이번 범위에서 미수정.
+- [ ] 히트스톱과 향후 별도 timeScale 일시정지 시스템의 소유권 통합은 추후 필요.
+- 변경 사항은 미커밋이다.
 
 ## 다음 작업
 
-1. 사용자가 기본/락온 카메라의 단계별 차징 흔들림, 해제·취소 복귀, 실제 명중의 히트스톱+Impulse를 직접 확인한다. 강도는 PlayerChargeCamera_s의 단계별 Amplitude와 SwordHitDetector_s의 Hit Impulse Force에서 조절한다.
-2. 돌진 미세 이동 오판은 수정 요청 시 처리하며, 테스트는 별도의 명시적인 지시가 있을 때만 실행한다.
+1. 사용자가 Unity 패키지 임포트 후 차징 효과를 직접 확인한다. 별도 테스트 요청 없이 Codex가 테스트하지 않는다.
+2. UNI 크기/위치/잔광을 조정하거나 Style을 Original로 되돌릴 수 있다. 원본 UNI와 보관 중인 기존 VFX는 유지한다.

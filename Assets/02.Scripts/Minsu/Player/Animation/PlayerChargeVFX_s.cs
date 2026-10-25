@@ -16,6 +16,8 @@ public class PlayerChargeVFX_s : MonoBehaviour
 
     private void OnEnable()
     {
+        // 컨트롤러가 있는 카타나는 한 곳에서만 차징 이벤트를 구독한다.
+        if (GetComponent<PlayerChargeVFXController_s>() != null) return;
         if (_katanaSkill == null) _katanaSkill = GetComponent<KatanaChargeSkill_s>();
         if (_katanaSkill != null)
         {
@@ -45,7 +47,7 @@ public class PlayerChargeVFX_s : MonoBehaviour
         }
     }
 
-    private void Begin()
+    public void Begin()
     {
         Clear();
         _charging = true;
@@ -53,7 +55,7 @@ public class PlayerChargeVFX_s : MonoBehaviour
         if (_converge != null) _converge.Play();
     }
 
-    private void SetProgress(float progress)
+    public void SetProgress(float progress)
     {
         _progress = progress;
     }
@@ -61,7 +63,7 @@ public class PlayerChargeVFX_s : MonoBehaviour
     private Color StageColor => _stage == 1 ? new Color(0.15f, 0.65f, 1f)
         : _stage == 2 ? new Color(0.4f, 1f, 1f) : new Color(0.65f, 0.75f, 1f);
 
-    private void Flash(int stage)
+    public void Flash(int stage)
     {
         _stage = stage;
         if (_flash == null) return;
@@ -101,7 +103,7 @@ public class PlayerChargeVFX_s : MonoBehaviour
         }
     }
 
-    private void Clear()
+    public void Clear()
     {
         _charging = false;
         _progress = 0f;
