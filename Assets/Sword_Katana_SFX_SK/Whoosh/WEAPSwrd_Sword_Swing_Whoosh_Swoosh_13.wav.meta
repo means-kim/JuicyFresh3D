@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: a658043d10bc79a49934e148dd63278f
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 285758
+  packageName: Sword Sound Effect Vol.1
+  packageVersion: 1.2
+  assetPath: Assets/Sword_Katana_SFX_SK/Whoosh/WEAPSwrd_Sword_Swing_Whoosh_Swoosh_13.wav
+  uploadId: 734897
