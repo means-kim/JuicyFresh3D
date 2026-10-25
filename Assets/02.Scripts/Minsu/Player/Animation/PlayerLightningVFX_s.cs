@@ -39,6 +39,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     [SerializeField, Min(0.001f)] private float _trailSecondaryWidth = 0.016f;
     [SerializeField, Range(0.05f, 0.4f)] private float _trailLifetime = 0.14f;
     [Header("차징 몸 전기")]
+    [Tooltip("골반과 가슴 사이를 중심으로 몸 전기 배치를 확대합니다. 1은 기존 크기이며 굵기는 바꾸지 않습니다.")]
+    [SerializeField, Min(0.01f)] private float _bodySize = 1f;
+    [Tooltip("몸 전기의 지그재그 퍼짐 배율입니다. 1은 기존 퍼짐이며 굵기는 바꾸지 않습니다.")]
+    [SerializeField, Min(0f)] private float _bodySpread = 1f;
     [SerializeField, Range(0.01f, 0.1f)] private float _bodyWidth = 0.018f;
     [Header("일반 명중 · 차징 1/2타")]
     [InspectorName("Normal Impact Radius")]
@@ -95,6 +99,8 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     {
         InitializeImpactSettings();
         _trailSize = Mathf.Max(0.01f, _trailSize);
+        _bodySize = Mathf.Max(0.01f, _bodySize);
+        _bodySpread = Mathf.Max(0f, _bodySpread);
         _trailWidth = Mathf.Max(0.001f, _trailWidth);
         _trailSecondaryWidth = Mathf.Max(0.001f, _trailSecondaryWidth);
     }
@@ -211,6 +217,11 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             : charging ? _charge.ChargeStage : Mathf.Max(1, _charge != null ? _charge.ReleasedStage : 1);
         ActiveBodyArcs = charging ? (stage == 1 ? 4 : stage == 2 ? 8 : ArcCount) : 0;
         Color color = stage == 3 ? new Color(0.4f, 0.7f, 1f) : new Color(0.15f, 0.65f, 1f);
+        Vector3 bodyCenter = _bones[0] != null ? _bones[0].position : transform.position;
+        if (_bones[0] != null && _bones[1] != null)
+        {
+            bodyCenter = (_bones[0].position + _bones[1].position) * 0.5f;
+        }
         for (int i = 0; i < ArcCount; i++)
         {
             var start = _bones[Starts[i]];
@@ -219,8 +230,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             _arcs[i].enabled = visible;
             if (!visible) continue;
             Vector3 offset = transform.forward * (i % 2 == 0 ? 0.12f : -0.12f);
-            DrawArc(_arcs[i], start.position + offset, end.position + offset,
-                i, _bodyWidth * (0.6f + stage * 0.3f), 0.025f + stage * 0.012f, color);
+            Vector3 arcStart = bodyCenter + (start.position + offset - bodyCenter) * _bodySize;
+            Vector3 arcEnd = bodyCenter + (end.position + offset - bodyCenter) * _bodySize;
+            DrawArc(_arcs[i], arcStart, arcEnd,
+                i, _bodyWidth * (0.6f + stage * 0.3f), (0.025f + stage * 0.012f) * _bodySpread, color);
         }
 
         int swing = 0;

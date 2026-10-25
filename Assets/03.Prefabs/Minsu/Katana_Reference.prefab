@@ -404,7 +404,9 @@ MonoBehaviour:
   _trailWidth: 0.1
   _trailSecondaryWidth: 0.07
   _trailLifetime: 0.3
-  _bodyWidth: 0.018
+  _bodySize: 1.5
+  _bodySpread: 1.5
+  _bodyWidth: 0.1
   _impactRadius: 5
   _normalImpactWidth: 0.07
   _finisherImpactRadius: 7
@@ -515,6 +517,49 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &8879718190356453941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f8648b3722e477c919fd0ee75edf4a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeVFXController_s
+  _style: 2
+  _skill: {fileID: 8425110370611508324}
+  _original: {fileID: 7632377454670420061}
+  _uni: {fileID: 8879718190356453942}
+--- !u!114 &8879718190356453942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a075d59e7cd49c9996030a7b3cc6f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUniChargeVFX_s
+  _buildupPrefab: {fileID: 2757333217754994132, guid: e2f3b2b49b8f4851b9944486ddb50219, type: 3}
+  _groundPrefab: {fileID: 5861408975432239825, guid: 8645bc6255fa4dc19d4f42455e1dcf31, type: 3}
+  _swordAnchor: {fileID: 1688559866991534843}
+  _swordOffset: {x: 0, y: 0, z: 0.1}
+  _buildupScale: 1
+  _useGroundOnslaught: 1
+  _groundScale: 1
+  _groundEulerOffset: {x: 0, y: 0, z: 0}
+  _groundLift: 0.03
+  _groundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _fadeOutTime: 0.4
+  _coreColor: {r: 1.5, g: 3, b: 4, a: 1}
+  _edgeColor: {r: 0.05, g: 0.4, b: 2, a: 1}
 --- !u!1 &771901796826988475
 GameObject:
   m_ObjectHideFlags: 0
@@ -1763,6 +1808,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   _damage: {x: 20, y: 25, z: 35}
   _fourthDamage: 45
+  _impulseSource: {fileID: 0}
+  _hitImpulseForce: 0.1
 --- !u!1 &4378163209709932017
 GameObject:
   m_ObjectHideFlags: 0
@@ -3178,46 +3225,3 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 8162761846603798473, guid: 5ff868458b2224f0ba6a349850fcb64f, type: 3}
   m_PrefabInstance: {fileID: 811721933838538885}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8879718190356453941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 626022022165125785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f8648b3722e477c919fd0ee75edf4a4, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeVFXController_s
-  _style: 1
-  _skill: {fileID: 8425110370611508324}
-  _original: {fileID: 7632377454670420061}
-  _uni: {fileID: 8879718190356453942}
---- !u!114 &8879718190356453942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 626022022165125785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a075d59e7cd49c9996030a7b3cc6f6b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUniChargeVFX_s
-  _buildupPrefab: {fileID: 2757333217754994132, guid: e2f3b2b49b8f4851b9944486ddb50219, type: 3}
-  _groundPrefab: {fileID: 5861408975432239825, guid: 8645bc6255fa4dc19d4f42455e1dcf31, type: 3}
-  _swordAnchor: {fileID: 1688559866991534843}
-  _swordOffset: {x: 0, y: 0, z: 0.1}
-  _buildupScale: 0.65
-  _useGroundOnslaught: 1
-  _groundScale: 0.65
-  _groundEulerOffset: {x: 0, y: 0, z: 0}
-  _groundLift: 0.03
-  _groundLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  _fadeOutTime: 0.4
-  _coreColor: {r: 1.5, g: 3, b: 4, a: 1}
-  _edgeColor: {r: 0.05, g: 0.4, b: 2, a: 1}

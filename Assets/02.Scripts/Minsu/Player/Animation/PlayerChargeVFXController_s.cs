@@ -2,18 +2,21 @@ using UnityEngine;
 
 public enum ChargeVFXStyle
 {
-    Original,
-    Uni
+    Original = 0,
+    Uni = 1,
+    Both = 2
 }
 
 [DisallowMultipleComponent]
 public class PlayerChargeVFXController_s : MonoBehaviour
 {
-    [SerializeField] private ChargeVFXStyle _style = ChargeVFXStyle.Uni;
+    [SerializeField] private ChargeVFXStyle _style = ChargeVFXStyle.Both;
     [SerializeField] private KatanaChargeSkill_s _skill;
     [SerializeField] private PlayerChargeVFX_s _original;
     [SerializeField] private PlayerUniChargeVFX_s _uni;
     private ChargeVFXStyle _activeStyle;
+    private bool UsesOriginal => _activeStyle == ChargeVFXStyle.Original || _activeStyle == ChargeVFXStyle.Both;
+    private bool UsesUni => _activeStyle == ChargeVFXStyle.Uni || _activeStyle == ChargeVFXStyle.Both;
 
     private void OnEnable()
     {
@@ -42,11 +45,11 @@ public class PlayerChargeVFXController_s : MonoBehaviour
     {
         StopEffects(true);
         _activeStyle = _style;
-        if (_activeStyle == ChargeVFXStyle.Original)
+        if (UsesOriginal)
         {
             if (_original != null && _original.isActiveAndEnabled) _original.Begin();
         }
-        else if (_uni != null && _uni.isActiveAndEnabled)
+        if (UsesUni && _uni != null && _uni.isActiveAndEnabled)
         {
             _uni.Begin();
         }
@@ -57,12 +60,12 @@ public class PlayerChargeVFXController_s : MonoBehaviour
 
     private void SetProgress(float progress)
     {
-        if (_activeStyle == ChargeVFXStyle.Original) _original?.SetProgress(progress);
+        if (UsesOriginal) _original?.SetProgress(progress);
     }
 
     private void SetStage(int stage)
     {
-        if (_activeStyle == ChargeVFXStyle.Original) _original?.Flash(stage);
+        if (UsesOriginal) _original?.Flash(stage);
     }
 
     private void Stop()
