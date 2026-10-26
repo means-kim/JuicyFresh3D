@@ -43,6 +43,9 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     [SerializeField, Range(0f, 1f)] private float _trailPathSmoothing = 0.75f;
     [Tooltip("곡선 보간 전 위치를 평활화하는 횟수입니다. 높을수록 부드러워지지만 궤적이 안쪽으로 좁아질 수 있습니다.")]
     [SerializeField, Range(1, 6)] private int _trailSmoothingPasses = 3;
+    [Header("납도 궤적")]
+    [SerializeField, Range(0f, 2f)] private float _sheatheTrailWidthMultiplier = 0.65f;
+    [SerializeField, Range(0.05f, 0.4f)] private float _sheatheTrailLifetime = 0.18f;
     [Header("차징 몸 전기")]
     [Tooltip("골반과 가슴 사이를 중심으로 몸 전기 배치를 확대합니다. 1은 기존 크기이며 굵기는 바꾸지 않습니다.")]
     [SerializeField, Min(0.01f)] private float _bodySize = 1f;
@@ -79,6 +82,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private int _count;
     private int _lastSwing = -1;
     private bool _lastSkill;
+    private bool _sheatheTrailActive;
+    private bool _sheatheTrailStyle;
+    private int _sheathePhase;
+    private int _sheatheSwing;
     private float _clock;
     private readonly LineRenderer[,] _impacts = new LineRenderer[ImpactSlots, ImpactRays];
     private readonly Vector3[] _impactPositions = new Vector3[ImpactSlots];
@@ -253,6 +260,19 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             : _charge != null && _charge.TryGetDamagePhase(out swing, out damage, out time, out window);
         bool valid = skill || (_combo != null && _combo.TryGetDamagePhase(out swing, out step, out time, out window));
         bool swinging = valid && time >= Mathf.Max(0f, window.x - 0.06f) && time <= window.y + 0.1f;
+        if (_sheatheTrailActive && (!TryGetSheatheSwing(_sheathePhase, out int currentSwing)
+            || currentSwing != _sheatheSwing))
+        {
+            _sheatheTrailActive = false;
+        }
+        bool emittingTrail = swinging || _sheatheTrailActive;
+        if (emittingTrail && (_sheatheTrailStyle != _sheatheTrailActive
+            || _lastSwing != swing || _lastSkill != skill))
+        {
+            _count = 0;
+            _sheatheTrailStyle = _sheatheTrailActive;
+        }
+        float trailLifetime = Mathf.Max(0.01f, _sheatheTrailStyle ? _sheatheTrailLifetime : _trailLifetime);
         Vector3 bladeBase = _sword.TransformPoint(_bladeBase);
         Vector3 bladeTip = _sword.TransformPoint(_bladeTip);
         for (int i = 0; i < _bladeArcs.Length; i++)
@@ -268,11 +288,11 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         {
             _ages[i] += deltaTime;
         }
-        while (_count > 0 && _ages[_count - 1] > _trailLifetime)
+        while (_count > 0 && _ages[_count - 1] > trailLifetime)
         {
             _count--;
         }
-        if (swinging)
+        if (emittingTrail)
         {
             if (_lastSwing != swing || _lastSkill != skill)
             {
@@ -296,8 +316,9 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             var line = _trails[rail];
             line.enabled = _count > 1;
             line.positionCount = _count > 1 ? (_count - 1) * TrailSubdivisions + 1 : 0;
-            float fade = _count == 0 ? 0f : 1f - Mathf.Clamp01(_ages[0] / _trailLifetime);
-            line.widthMultiplier = (rail == 0 ? _trailWidth : _trailSecondaryWidth) * fade * (0.8f + stage * 0.2f);
+            float fade = _count == 0 ? 0f : 1f - Mathf.Clamp01(_ages[0] / trailLifetime);
+            float widthScale = _sheatheTrailStyle ? _sheatheTrailWidthMultiplier : 0.8f + stage * 0.2f;
+            line.widthMultiplier = (rail == 0 ? _trailWidth : _trailSecondaryWidth) * fade * widthScale;
             for (int i = 0; i < _count; i++)
             {
                 Vector3 position = Vector3.LerpUnclamped(_bases[i], _tips[i], (1f - rail * 0.24f) * _trailSize);
@@ -328,6 +349,35 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
             }
             if (_count > 1) line.SetPosition(line.positionCount - 1, _trailControlPoints[_count - 1]);
         }
+    }
+
+    // 납도 전용 애니메이션 이벤트. 공격 판정은 열지 않는다.
+    public void BeginKatanaSheatheTrail(int phase)
+    {
+        if (!isActiveAndEnabled || !TryGetSheatheSwing(phase, out int swing)) return;
+        _sheathePhase = phase;
+        _sheatheSwing = swing;
+        _sheatheTrailActive = true;
+        _sheatheTrailStyle = true;
+        _count = 0;
+    }
+
+    public void EndKatanaSheatheTrail(int phase)
+    {
+        if (_sheathePhase != phase || !TryGetSheatheSwing(phase, out int swing) || swing != _sheatheSwing) return;
+        _sheatheTrailActive = false;
+    }
+
+    private bool TryGetSheatheSwing(int phase, out int swing)
+    {
+        swing = 0;
+        if (phase == 5)
+        {
+            return _katanaCharge != null
+                && _katanaCharge.TryGetDamagePhase(out swing, out _, out _, out _);
+        }
+        return _combo != null && _combo.TryGetDamagePhase(out swing, out int step, out _, out _)
+            && step == phase;
     }
 
     private void SmoothTrailPath()
@@ -455,6 +505,8 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
 
     private void Clear()
     {
+        _sheatheTrailActive = false;
+        _sheatheTrailStyle = false;
         ActiveBodyArcs = 0;
         _count = 0;
         _lastSwing = -1;

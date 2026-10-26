@@ -10,6 +10,8 @@
 
 ## 완료 사항
 
+- [x] 납도 트레일 추가: PlayerLightningVFX_s의 BeginKatanaSheatheTrail/EndKatanaSheatheTrail 이벤트를 일반 공격 1~4 및 KatanaChargeDash 전용 클립의 기존 칼 돌리기/검집 삽입 SFX 시점에 추가했다. 기존 이벤트·곡선·GUID는 유지한다. 기존 3줄/평활화/20분할을 재사용하며 Sheathe Trail Width Multiplier(0.65), Sheathe Trail Lifetime(0.18초)로 조절한다. 공격 판정은 변경하지 않았다. 시작 시 기록 초기화, 정상 종료 후 잔상 소멸, 상태 전환/취소 시 생성 중단, 비활성화/행동 차단 시 정리를 적용했다. 플레이·시각 확인·컴파일·빌드·스타일 검사는 미실행. 사용자가 Animation 창에서 시작/종료 이벤트의 실제 시점을 확인·조절한다.
+
 - [x] 검 궤적 3줄의 Hermite 보간 전에 위치 기록의 가중 평균 평활화 추가. Inspector의 Trail Path Smoothing(기본 0.75), Trail Smoothing Passes(기본 3)로 조절한다. 양 끝 위치와 원본 기록은 보존하고 매 프레임 다시 계산해 누적 수축을 방지한다. 사용자가 변경한 20분할과 기존 크기·굵기·색·수명·공격 전환 초기화는 유지한다. 주 선의 지그재그 제거 및 보조선 흔들림 축소 유지. 플레이·시각 확인·컴파일·빌드·스타일 검사는 미실행. 다음 확인은 사용자 플레이에서 꺾임 완화와 궤적이 안쪽으로 좁아지는 정도 확인.
 
 - [x] 차징 오디오 연결: virtual_vibes-electric-spark-zap-423424를 차징 시작부터 해제/취소까지 반복 재생(기본 볼륨 0.4). 최대 단계 3 진입 시 Cinematic_Impact_Hard_01을 차징당 한 번 재생(0.75). 별도 AudioSource로 완료음과 루프를 분리하고, 최대 충전 후에도 누르고 있으면 루프를 유지한다. 비활성화 시 모두 정지. 프로필의 Charge Loop/Complete Clip 및 Volume에서 조절한다. 사용자 명중음 선택/납도 타이밍은 유지. 플레이·청취·컴파일·스타일 검사는 미실행.

@@ -441735,8 +441735,22 @@ AnimationClip:
     floatParameter: 0
     intParameter: 2
     messageOptions: 0
+  - time: 1.1333333
+    functionName: BeginKatanaSheatheTrail
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 2
+    messageOptions: 0
   - time: 1.85
     functionName: PlayKatanaSheathe
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 2
+    messageOptions: 0
+  - time: 1.85
+    functionName: EndKatanaSheatheTrail
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
