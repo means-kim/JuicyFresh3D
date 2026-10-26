@@ -554,11 +554,11 @@ MonoBehaviour:
   _cameras:
   - {fileID: 973715276}
   - {fileID: 986842364}
-  _maxFovReduction: 6
+  _maxFovReduction: 10
   _smoothTime: 0.18
-  _stageOneAmplitude: 0.1
-  _stageTwoAmplitude: 0.2
-  _stageThreeAmplitude: 0.35
+  _stageOneAmplitude: 0.3
+  _stageTwoAmplitude: 0.4
+  _stageThreeAmplitude: 0.6
   _shakeSmoothTime: 0.1
 --- !u!1 &973715274
 GameObject:
