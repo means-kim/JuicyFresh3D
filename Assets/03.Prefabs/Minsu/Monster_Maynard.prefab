@@ -842,6 +842,9 @@ PrefabInstance:
       addedObject: {fileID: 8351042073968210041}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 8351042073968210042}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5666929155073816900}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
@@ -984,6 +987,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterHitStun_s
   _hitStunDuration: 0.8
+--- !u!114 &8351042073968210042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643361297610178989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3466fdb082a42bb810d0981c792b1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterKnockback_s
+  _normalDistance: 0.15
+  _normalDuration: 0.12
+  _fourthDistance: 0.6
+  _fourthDuration: 0.2
+  _chargeDistances: {x: 0.45, y: 0.75, z: 1.1}
+  _chargeDurations: {x: 0.18, y: 0.24, z: 0.28}
+  _obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  _skin: 0.02
 --- !u!195 &5666929155073816900
 NavMeshAgent:
   m_ObjectHideFlags: 0

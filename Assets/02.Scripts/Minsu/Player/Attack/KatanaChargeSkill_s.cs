@@ -29,6 +29,7 @@ public class KatanaChargeSkill_s : MonoBehaviour
     private bool _releaseQueued;
     private Vector3 _releaseDirection;
     public int ReleasedStage { get; private set; }
+    public Vector3 ReleaseDirection => _releaseDirection;
     public int AttackStep => _step + 1;
     public float ChargeTime => _chargeTime;
     public int ChargeStage => _chargeTime >= _maxChargeTime ? 3 : _chargeTime >= _partialChargeTime ? 2 : 1;

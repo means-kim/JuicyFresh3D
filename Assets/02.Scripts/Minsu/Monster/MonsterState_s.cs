@@ -3,6 +3,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Health_s), typeof(MonsterAnimation_s))]
 [RequireComponent(typeof(MonsterHitStun_s))]
+[RequireComponent(typeof(MonsterKnockback_s))]
 public class MonsterState_s : MonoBehaviour
 {
     [SerializeField] private Health_s _health;
@@ -11,6 +12,7 @@ public class MonsterState_s : MonoBehaviour
     [SerializeField] private MonsterMovement_s _movement;
     [SerializeField] private MonsterAttack_s _attack;
     private MonsterHitStun_s _hitStun;
+    private MonsterKnockback_s _knockback;
     private State_s _state;
     private State_s _idle;
     private State_s _hit;
@@ -28,6 +30,7 @@ public class MonsterState_s : MonoBehaviour
         if (_movement == null) _movement = GetComponent<MonsterMovement_s>();
         if (_attack == null) _attack = GetComponent<MonsterAttack_s>();
         _hitStun = GetComponent<MonsterHitStun_s>();
+        _knockback = GetComponent<MonsterKnockback_s>();
         _idle = new State_s(this, MonsterStateType_s.Idle);
         _hit = new State_s(this, MonsterStateType_s.Hit);
         _dead = new State_s(this, MonsterStateType_s.Dead);
@@ -47,13 +50,21 @@ public class MonsterState_s : MonoBehaviour
 
     private void Update()
     {
-        if (_state == _hit) _hitStun.TickHitStun(Time.deltaTime);
-        else _state?.Tick();
+        if (_state == _hit)
+        {
+            _knockback.TickKnockback(Time.deltaTime);
+            _hitStun.TickHitStun(Time.deltaTime);
+        }
+        else
+        {
+            _state?.Tick();
+        }
     }
 
     private void OnDisable()
     {
         _health.Died -= OnDied;
+        _knockback.CancelKnockback();
         _hitStun.CancelHitStun();
         EndHit();
         _movement?.Stop();
@@ -70,11 +81,13 @@ public class MonsterState_s : MonoBehaviour
     public void EndHit()
     {
         if (_state != _hit || _health.IsDead) return;
+        _knockback.CancelKnockback();
         ChangeState(_idle);
     }
 
     private void OnDied()
     {
+        _knockback.CancelKnockback();
         _hitStun.CancelHitStun();
         ChangeState(_dead);
     }

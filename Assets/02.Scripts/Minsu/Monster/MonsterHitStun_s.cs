@@ -40,6 +40,11 @@ public class MonsterHitStun_s : MonoBehaviour
         _remainingTime = 0f;
     }
 
+    public void ExtendHitStun(float duration)
+    {
+        _remainingTime = Mathf.Max(_remainingTime, duration);
+    }
+
     private void OnDisable()
     {
         _health.Damaged -= OnDamaged;

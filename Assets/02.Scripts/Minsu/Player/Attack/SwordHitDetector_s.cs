@@ -170,6 +170,13 @@ public class SwordHitDetector_s : MonoBehaviour
         int hitStep = _step;
         int hitSwing = _swing;
         bool hitSkillSwing = _skillSwing;
+        var knockback = health.GetComponent<MonsterKnockback_s>();
+        Vector3 hitDirection = _owner != null ? health.transform.position - _owner.position : transform.forward;
+        if (hitSkillSwing && _katanaCharge != null) hitDirection = _katanaCharge.ReleaseDirection;
+        hitDirection.y = 0f;
+        if (hitDirection.sqrMagnitude < 0.000001f) hitDirection = _owner != null ? _owner.forward : transform.forward;
+        int chargeStage = _katanaCharge != null ? _katanaCharge.ReleasedStage
+            : _charge != null ? _charge.ReleasedStage : 1;
         // 피해 이벤트에서 재진입하더라도 중복 적용하지 않는다.
         _hitTargets.Add(health);
         if (!health.TakeDamage(damage))
@@ -177,6 +184,7 @@ public class SwordHitDetector_s : MonoBehaviour
             _hitTargets.Remove(health);
             return;
         }
+        if (knockback != null) knockback.ApplyHit(hitDirection, _owner, hitStep, hitSkillSwing, chargeStage);
         if (_lightning != null) _lightning.PlayImpact(point, finisher);
         if (_hitStop != null) _hitStop.ScreenStop(hitSwing, hitSkillSwing);
         PlayHitImpulse(hitSwing, hitSkillSwing);

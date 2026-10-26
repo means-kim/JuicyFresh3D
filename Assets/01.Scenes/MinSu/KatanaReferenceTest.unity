@@ -1796,6 +1796,14 @@ PrefabInstance:
       propertyPath: _target
       value: 
       objectReference: {fileID: 1575054801}
+    - target: {fileID: 8351042073968210042, guid: b8d4270f4bf291c49b7b098ab6bb1847, type: 3}
+      propertyPath: _normalDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351042073968210042, guid: b8d4270f4bf291c49b7b098ab6bb1847, type: 3}
+      propertyPath: _obstacleLayers.m_Bits
+      value: 51
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
