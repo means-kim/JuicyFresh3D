@@ -2,6 +2,8 @@
 
 ## 현재 목표
 
+- 몬스터 피격 처리를 MonsterHitStun_s로 분리하고 기존 Hit 상태에 시간 기반 경직 적용.
+
 - 카타나 휘두르기·실제 명중·납도 SFX 연결 및 Inspector 조절.
 
 - 기준: `Assets/01.Scenes/MinSu/KatanaReferenceTest.unity`, `Assets/03.Prefabs/Minsu/Katana_Reference.prefab`.
@@ -9,6 +11,8 @@
 - 테스트는 사용자가 담당한다. 명시적 요청 없이 플레이/시뮬레이션/검증용 컴파일·빌드/스타일 검사를 실행하지 않는다.
 
 ## 완료 사항
+
+- [x] MonsterHitStun_s 및 meta 추가: Damaged 이벤트와 경직 타이머를 분리. MonsterState_s는 Hit 진입/복귀와 상태 전환을 담당하며 기존 내부 HitState_s를 제거했다. Monster_Maynard 프리팹에 연결하고 Hit Stun Duration 기본값 0.3초 적용. 재피격 시 남은 시간과 설정값 중 큰 값으로 갱신하고 Hit 애니메이션을 다시 재생한다. Time.deltaTime으로 히트스톱 중 경직 타이머도 정지하며 사망/비활성화 시 정리한다. 넉백은 추가하지 않았다. 플레이·컴파일·빌드·스타일 검사는 미실행. 사용자 확인: 피격 시 이동/공격 중단, 경직 만료 복귀, 재피격 및 사망 전환.
 
 - [x] 납도 트레일 추가: PlayerLightningVFX_s의 BeginKatanaSheatheTrail/EndKatanaSheatheTrail 이벤트를 일반 공격 1~4 및 KatanaChargeDash 전용 클립의 기존 칼 돌리기/검집 삽입 SFX 시점에 추가했다. 기존 이벤트·곡선·GUID는 유지한다. 기존 3줄/평활화/20분할을 재사용하며 Sheathe Trail Width Multiplier(0.65), Sheathe Trail Lifetime(0.18초)로 조절한다. 공격 판정은 변경하지 않았다. 시작 시 기록 초기화, 정상 종료 후 잔상 소멸, 상태 전환/취소 시 생성 중단, 비활성화/행동 차단 시 정리를 적용했다. 플레이·시각 확인·컴파일·빌드·스타일 검사는 미실행. 사용자가 Animation 창에서 시작/종료 이벤트의 실제 시점을 확인·조절한다.
 

@@ -839,6 +839,9 @@ PrefabInstance:
       addedObject: {fileID: 6433207532337762568}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 8351042073968210041}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5666929155073816900}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
@@ -968,6 +971,19 @@ MonoBehaviour:
   _bodyCollider: {fileID: 7799494949153351035}
   _movement: {fileID: 7987544258900823789}
   _attack: {fileID: 7542882902122677376}
+--- !u!114 &8351042073968210041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643361297610178989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e036cd52f8184dc68c590fb0353df941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterHitStun_s
+  _hitStunDuration: 0.8
 --- !u!195 &5666929155073816900
 NavMeshAgent:
   m_ObjectHideFlags: 0

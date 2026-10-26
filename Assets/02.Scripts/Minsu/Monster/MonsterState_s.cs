@@ -2,6 +2,7 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Health_s), typeof(MonsterAnimation_s))]
+[RequireComponent(typeof(MonsterHitStun_s))]
 public class MonsterState_s : MonoBehaviour
 {
     [SerializeField] private Health_s _health;
@@ -9,6 +10,7 @@ public class MonsterState_s : MonoBehaviour
     [SerializeField] private Collider _bodyCollider;
     [SerializeField] private MonsterMovement_s _movement;
     [SerializeField] private MonsterAttack_s _attack;
+    private MonsterHitStun_s _hitStun;
     private State_s _state;
     private State_s _idle;
     private State_s _hit;
@@ -25,8 +27,9 @@ public class MonsterState_s : MonoBehaviour
         if (_bodyCollider == null) _bodyCollider = GetComponent<Collider>();
         if (_movement == null) _movement = GetComponent<MonsterMovement_s>();
         if (_attack == null) _attack = GetComponent<MonsterAttack_s>();
+        _hitStun = GetComponent<MonsterHitStun_s>();
         _idle = new State_s(this, MonsterStateType_s.Idle);
-        _hit = new HitState_s(this);
+        _hit = new State_s(this, MonsterStateType_s.Hit);
         _dead = new State_s(this, MonsterStateType_s.Dead);
         _walk = new WalkState_s(this);
         _attacking = new AttackState_s(this);
@@ -34,7 +37,6 @@ public class MonsterState_s : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.Damaged += OnDamaged;
         _health.Died += OnDied;
     }
 
@@ -45,26 +47,35 @@ public class MonsterState_s : MonoBehaviour
 
     private void Update()
     {
-        _state?.Tick();
+        if (_state == _hit) _hitStun.TickHitStun(Time.deltaTime);
+        else _state?.Tick();
     }
 
     private void OnDisable()
     {
-        _health.Damaged -= OnDamaged;
         _health.Died -= OnDied;
+        _hitStun.CancelHitStun();
+        EndHit();
         _movement?.Stop();
         _attack?.CancelAttack();
     }
 
-    private void OnDamaged(int damage)
+    public void EnterHit()
     {
-        if (_health.IsDead || CurrentStateTypeS == MonsterStateType_s.Dead) return;
+        if (!isActiveAndEnabled || _health.IsDead || CurrentStateTypeS == MonsterStateType_s.Dead) return;
         if (_state == _hit) _hit.Enter();
         else ChangeState(_hit);
     }
 
+    public void EndHit()
+    {
+        if (_state != _hit || _health.IsDead) return;
+        ChangeState(_idle);
+    }
+
     private void OnDied()
     {
+        _hitStun.CancelHitStun();
         ChangeState(_dead);
     }
 
@@ -165,15 +176,4 @@ public class MonsterState_s : MonoBehaviour
         }
     }
 
-    private sealed class HitState_s : State_s
-    {
-        public HitState_s(MonsterState_s monster) : base(monster, MonsterStateType_s.Hit)
-        {
-        }
-
-        public override void Tick()
-        {
-            if (Monster._animation.IsHitFinished) Monster.ChangeState(Monster._idle);
-        }
-    }
 }
