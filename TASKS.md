@@ -10,6 +10,8 @@
 
 ## 완료 사항
 
+- [x] 검 궤적 3줄의 Hermite 보간 전에 위치 기록의 가중 평균 평활화 추가. Inspector의 Trail Path Smoothing(기본 0.75), Trail Smoothing Passes(기본 3)로 조절한다. 양 끝 위치와 원본 기록은 보존하고 매 프레임 다시 계산해 누적 수축을 방지한다. 사용자가 변경한 20분할과 기존 크기·굵기·색·수명·공격 전환 초기화는 유지한다. 주 선의 지그재그 제거 및 보조선 흔들림 축소 유지. 플레이·시각 확인·컴파일·빌드·스타일 검사는 미실행. 다음 확인은 사용자 플레이에서 꺾임 완화와 궤적이 안쪽으로 좁아지는 정도 확인.
+
 - [x] 차징 오디오 연결: virtual_vibes-electric-spark-zap-423424를 차징 시작부터 해제/취소까지 반복 재생(기본 볼륨 0.4). 최대 단계 3 진입 시 Cinematic_Impact_Hard_01을 차징당 한 번 재생(0.75). 별도 AudioSource로 완료음과 루프를 분리하고, 최대 충전 후에도 누르고 있으면 루프를 유지한다. 비활성화 시 모두 정지. 프로필의 Charge Loop/Complete Clip 및 Volume에서 조절한다. 사용자 명중음 선택/납도 타이밍은 유지. 플레이·청취·컴파일·스타일 검사는 미실행.
 
 - [x] KatanaAudio_s / KatanaSoundProfile_s 및 KatanaSoundProfile.asset 추가. 휘두르기·명중·납도 클립 배열과 개별 볼륨, 캐릭터 전체 Volume / Spatial Blend / 선택적 AudioMixerGroup Output 지원. 명중음은 Attack 1~4 Hit Clip/Volume 및 Charge Hit Clip/Volume으로 분리했다. 초기값은 모두 기존 첫 명중 클립과 볼륨을 복사했으며 각 슬롯에서 고정 재생한다. 빈 슬롯은 무음이다. HitConfirmed가 피해 적용 전 저장한 타수를 전달해 공격별로 선택한다. 공격 1~4는 Whoosh_02 / Combo_01 / Combo_02 / Combo_05로 고정하고 차징 돌진은 1타를 공유한다. 칼 돌리기는 Combo_02, 검집 삽입 클립은 사용자가 변경한 현재 참조를 유지한다. 원본 SFX는 미수정.

@@ -9,6 +9,7 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private const int ArcCount = 14;
     private const int ArcPoints = 9;
     private const int TrailPoints = 20;
+    private const int TrailSubdivisions = 20;
     private const int ImpactSlots = 4;
     private const int ImpactRays = 16;
     private static readonly HumanBodyBones[] Bones =
@@ -38,6 +39,10 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     [Tooltip("두 보조 번개 궤적의 굵기입니다.")]
     [SerializeField, Min(0.001f)] private float _trailSecondaryWidth = 0.016f;
     [SerializeField, Range(0.05f, 0.4f)] private float _trailLifetime = 0.14f;
+    [Tooltip("기록된 궤적의 꺾임을 완화합니다. 0은 원래 경로, 1은 가장 강한 평활화입니다. 양 끝 위치는 유지합니다.")]
+    [SerializeField, Range(0f, 1f)] private float _trailPathSmoothing = 0.75f;
+    [Tooltip("곡선 보간 전 위치를 평활화하는 횟수입니다. 높을수록 부드러워지지만 궤적이 안쪽으로 좁아질 수 있습니다.")]
+    [SerializeField, Range(1, 6)] private int _trailSmoothingPasses = 3;
     [Header("차징 몸 전기")]
     [Tooltip("골반과 가슴 사이를 중심으로 몸 전기 배치를 확대합니다. 1은 기존 크기이며 굵기는 바꾸지 않습니다.")]
     [SerializeField, Min(0.01f)] private float _bodySize = 1f;
@@ -69,6 +74,8 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
     private readonly Vector3[] _tips = new Vector3[TrailPoints];
     private readonly Vector3[] _bases = new Vector3[TrailPoints];
     private readonly float[] _ages = new float[TrailPoints];
+    private readonly Vector3[] _trailControlPoints = new Vector3[TrailPoints];
+    private readonly Vector3[] _trailSmoothingBuffer = new Vector3[TrailPoints];
     private int _count;
     private int _lastSwing = -1;
     private bool _lastSkill;
@@ -288,19 +295,74 @@ public class PlayerLightningVFX_s : MonoBehaviour, ISerializationCallbackReceive
         {
             var line = _trails[rail];
             line.enabled = _count > 1;
-            line.positionCount = _count;
+            line.positionCount = _count > 1 ? (_count - 1) * TrailSubdivisions + 1 : 0;
             float fade = _count == 0 ? 0f : 1f - Mathf.Clamp01(_ages[0] / _trailLifetime);
             line.widthMultiplier = (rail == 0 ? _trailWidth : _trailSecondaryWidth) * fade * (0.8f + stage * 0.2f);
             for (int i = 0; i < _count; i++)
             {
                 Vector3 position = Vector3.LerpUnclamped(_bases[i], _tips[i], (1f - rail * 0.24f) * _trailSize);
-                if (i > 0 && i < _count - 1)
+                if (rail > 0 && i > 0 && i < _count - 1)
                 {
-                    position += Jitter(i + rail * 17) * (0.045f * _trailSize);
+                    position += Jitter(i + rail * 17) * (0.006f * _trailSize);
                 }
-                line.SetPosition(i, position);
+                _trailControlPoints[i] = position;
+            }
+            SmoothTrailPath();
+            for (int i = 0; i < _count - 1; i++)
+            {
+                Vector3 start = _trailControlPoints[i];
+                Vector3 end = _trailControlPoints[i + 1];
+                Vector3 startTangent = GetTrailTangent(i);
+                Vector3 endTangent = GetTrailTangent(i + 1);
+                for (int sample = 0; sample < TrailSubdivisions; sample++)
+                {
+                    float t = (float)sample / TrailSubdivisions;
+                    float t2 = t * t;
+                    float t3 = t2 * t;
+                    Vector3 position = (2f * t3 - 3f * t2 + 1f) * start
+                        + (t3 - 2f * t2 + t) * startTangent
+                        + (-2f * t3 + 3f * t2) * end
+                        + (t3 - t2) * endTangent;
+                    line.SetPosition(i * TrailSubdivisions + sample, position);
+                }
+            }
+            if (_count > 1) line.SetPosition(line.positionCount - 1, _trailControlPoints[_count - 1]);
+        }
+    }
+
+    private void SmoothTrailPath()
+    {
+        float strength = Mathf.Clamp01(_trailPathSmoothing);
+        if (_count < 3 || strength <= 0f) return;
+
+        int passes = Mathf.Clamp(_trailSmoothingPasses, 1, 6);
+        // 원본 위치 기록은 보존한다. 매 프레임 원본에서 다시 계산해 잔상이 계속 수축하지 않게 한다.
+        // 양 끝을 고정하고 이전 패스의 이웃만 사용해 순회 방향에 따른 편향을 막는다.
+        for (int pass = 0; pass < passes; pass++)
+        {
+            for (int i = 1; i < _count - 1; i++)
+            {
+                Vector3 average = (_trailControlPoints[i - 1] + 2f * _trailControlPoints[i]
+                    + _trailControlPoints[i + 1]) * 0.25f;
+                _trailSmoothingBuffer[i] = Vector3.Lerp(_trailControlPoints[i], average, strength);
+            }
+            for (int i = 1; i < _count - 1; i++)
+            {
+                _trailControlPoints[i] = _trailSmoothingBuffer[i];
             }
         }
+    }
+
+    private Vector3 GetTrailTangent(int index)
+    {
+        if (index == 0) return _trailControlPoints[1] - _trailControlPoints[0];
+        if (index == _count - 1) return _trailControlPoints[index] - _trailControlPoints[index - 1];
+
+        Vector3 incoming = _trailControlPoints[index] - _trailControlPoints[index - 1];
+        Vector3 outgoing = _trailControlPoints[index + 1] - _trailControlPoints[index];
+        // 짧거나 겹친 구간에서 접선이 길어져 궤적이 튀는 것을 제한한다.
+        float length = Mathf.Min(incoming.magnitude, outgoing.magnitude);
+        return (incoming.normalized + outgoing.normalized).normalized * length;
     }
 
     private Vector3 Jitter(int seed)
