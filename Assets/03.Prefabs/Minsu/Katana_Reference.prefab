@@ -314,6 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7903568ad14c304b98237e2c072ef2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAnimation_s
+  _useSlashEvents: 1
   _animator: {fileID: 4781896052676969055}
   _firstChainTime: 0.32
   _secondChainTime: 0.34

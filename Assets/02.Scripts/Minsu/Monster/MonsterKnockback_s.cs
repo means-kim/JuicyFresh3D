@@ -41,7 +41,7 @@ public class MonsterKnockback_s : MonoBehaviour
         _hitStun = GetComponent<MonsterHitStun_s>();
     }
 
-    public void ApplyHit(Vector3 direction, Transform attacker, int step, bool charged, int chargeStage)
+    public void ApplyHit(Vector3 direction, Transform attacker, int step, bool charged, int chargeStage, float distanceMultiplier = 1f)
     {
         if (!isActiveAndEnabled || _health == null || _health.IsDead || _state == null || !_state.isActiveAndEnabled || _state.CurrentStateTypeS != MonsterStateType_s.Hit || !_hitStun.isActiveAndEnabled || !CanMove()) return;
 
@@ -50,6 +50,7 @@ public class MonsterKnockback_s : MonoBehaviour
             : step == 4 ? _fourthDistance : _normalDistance);
         float duration = Mathf.Max(0.01f, charged ? _chargeDurations[stage]
             : step == 4 ? _fourthDuration : _normalDuration);
+        distance *= Mathf.Max(0f, distanceMultiplier);
         direction.y = 0f;
         if (distance <= 0f || direction.sqrMagnitude < 0.000001f) return;
         // 약한 재피격은 진행 중인 강한 넉백을 줄이거나 방향을 바꾸지 않는다.

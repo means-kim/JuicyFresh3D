@@ -12,6 +12,12 @@ public class SwordHitDetector_s : MonoBehaviour
     [SerializeField] private LayerMask _targetLayers = ~0;
     [SerializeField] private Vector3 _damage = new Vector3(20f, 25f, 35f);
     [SerializeField, Min(0)] private int _fourthDamage = 45;
+    [Header("일반 콤보 개별 베기")]
+    [Tooltip("1~4타의 베기당 피해 배율입니다. 기본 1은 기존 피해를 각 베기에 적용합니다.")]
+    [SerializeField] private Vector4 _slashDamageMultipliers = Vector4.one;
+    [SerializeField, Range(0f, 1f)] private float _intermediateKnockbackMultiplier = 0.35f;
+    [SerializeField, Range(0f, 1f)] private float _intermediateHitStopMultiplier = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float _intermediateImpulseMultiplier = 0.5f;
     [Header("명중 카메라 충격")]
     [SerializeField] private CinemachineImpulseSource _impulseSource;
     [SerializeField, Min(0f)] private float _hitImpulseForce = 0.1f;
@@ -39,7 +45,12 @@ public class SwordHitDetector_s : MonoBehaviour
     {
         Initialize();
         DisableHitbox();
-        if (_combo != null) _combo.DamageWindowClosed += DisableHitbox;
+        if (_combo != null)
+        {
+            _combo.DamageWindowClosed += DisableHitbox;
+            _combo.SlashOpened += OnSlashOpened;
+            _combo.SlashClosed += DisableHitbox;
+        }
         if (_charge != null) _charge.DamageWindowClosed += DisableHitbox;
         if (_katanaCharge != null) _katanaCharge.DamageWindowClosed += DisableHitbox;
     }
@@ -83,7 +94,7 @@ public class SwordHitDetector_s : MonoBehaviour
         bool skill = _katanaCharge != null
             ? _katanaCharge.TryGetDamagePhase(out swing, out _skillDamage, out time, out window)
             : _charge != null && _charge.TryGetDamagePhase(out swing, out _skillDamage, out time, out window);
-        bool valid = skill || (_combo != null && _combo.TryGetDamagePhase(out swing, out step, out time, out window));
+        bool valid = skill || (_combo != null && _combo.TryGetHitPhase(out swing, out step, out time, out window));
         if (!isActiveAndEnabled || _hitbox == null || !valid)
         {
             DisableHitbox();
@@ -97,6 +108,21 @@ public class SwordHitDetector_s : MonoBehaviour
         _step = step;
         _skillSwing = skill;
         _hitbox.enabled = time >= window.x && time <= window.y;
+    }
+
+    private void OnSlashOpened()
+    {
+        RefreshHitbox();
+        // 짧은 이벤트 구간도 시작 순간 겹친 대상에는 명중한다.
+        if (!IsHitboxActive || !(_hitbox is BoxCollider box)) return;
+        Vector3 scale = box.transform.lossyScale;
+        scale = new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z));
+        foreach (var other in Physics.OverlapBox(box.transform.TransformPoint(box.center),
+                     Vector3.Scale(box.size * 0.5f, scale), box.transform.rotation,
+                     _targetLayers, QueryTriggerInteraction.Ignore))
+        {
+            TryHit(other);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -163,6 +189,8 @@ public class SwordHitDetector_s : MonoBehaviour
         int damage = _skillSwing ? _skillDamage
             : _step == 4 ? _fourthDamage
             : Mathf.RoundToInt(_step == 1 ? _damage.x : _step == 2 ? _damage.y : _damage.z);
+        if (!_skillSwing) damage = Mathf.RoundToInt(damage * Mathf.Max(0f, _slashDamageMultipliers[Mathf.Clamp(_step - 1, 0, 3)]));
+        bool intermediate = !_skillSwing && _combo != null && _combo.IsIntermediateSlash;
         // 피해 콜백이 대상을 제거하거나 공격 상태를 바꾸기 전에 명중 정보를 보관한다.
         Vector3 point = other.ClosestPoint(_hitbox.bounds.center);
         bool finisher = _skillSwing && (_katanaCharge != null
@@ -184,14 +212,14 @@ public class SwordHitDetector_s : MonoBehaviour
             _hitTargets.Remove(health);
             return;
         }
-        if (knockback != null) knockback.ApplyHit(hitDirection, _owner, hitStep, hitSkillSwing, chargeStage);
+        if (knockback != null) knockback.ApplyHit(hitDirection, _owner, hitStep, hitSkillSwing, chargeStage, intermediate ? _intermediateKnockbackMultiplier : 1f);
         if (_lightning != null) _lightning.PlayImpact(point, finisher);
-        if (_hitStop != null) _hitStop.ScreenStop(hitSwing, hitSkillSwing);
-        PlayHitImpulse(hitSwing, hitSkillSwing);
+        if (_hitStop != null) _hitStop.ScreenStop(hitSwing, hitSkillSwing, intermediate ? _intermediateHitStopMultiplier : 1f);
+        PlayHitImpulse(hitSwing, hitSkillSwing, intermediate ? _intermediateImpulseMultiplier : 1f);
         HitConfirmed?.Invoke(hitSwing, hitSkillSwing, hitStep);
     }
 
-    private void PlayHitImpulse(int swing, bool skillSwing)
+    private void PlayHitImpulse(int swing, bool skillSwing, float multiplier)
     {
         if (!isActiveAndEnabled || _impulseSource == null || !_impulseSource.isActiveAndEnabled
             || _hitImpulseForce <= 0f || (_lastImpulseSwing == swing && _lastImpulseSkillSwing == skillSwing))
@@ -202,7 +230,7 @@ public class SwordHitDetector_s : MonoBehaviour
         _lastImpulseSwing = swing;
         _lastImpulseSkillSwing = skillSwing;
         CinemachineImpulseManager.Instance.IgnoreTimeScale = true;
-        _impulseSource.GenerateImpulseWithForce(_hitImpulseForce);
+        _impulseSource.GenerateImpulseWithForce(_hitImpulseForce * multiplier);
     }
 
     public void DisableHitbox()
@@ -219,6 +247,8 @@ public class SwordHitDetector_s : MonoBehaviour
         if (_combo != null)
         {
             _combo.DamageWindowClosed -= DisableHitbox;
+            _combo.SlashOpened -= OnSlashOpened;
+            _combo.SlashClosed -= DisableHitbox;
         }
         DisableHitbox();
         _hitTargets.Clear();

@@ -390601,8 +390601,22 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0.062500
+    functionName: BeginFinalComboSlash
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
   - time: 0.1
     functionName: PlayKatanaSwing
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.300000
+    functionName: EndComboSlash
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

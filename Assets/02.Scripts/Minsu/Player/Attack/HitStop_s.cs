@@ -10,9 +10,9 @@ public class HitStop_s : MonoBehaviour
     private int _lastSwing = -1;
     private bool _lastSkillSwing;
 
-    public void ScreenStop(int swing, bool skillSwing)
+    public void ScreenStop(int swing, bool skillSwing, float durationMultiplier = 1f)
     {
-        if (!isActiveAndEnabled || _hitStopDuration <= 0f
+        if (!isActiveAndEnabled || _hitStopDuration <= 0f || durationMultiplier <= 0f
             || (_lastSwing == swing && _lastSkillSwing == skillSwing))
         {
             return;
@@ -25,12 +25,12 @@ public class HitStop_s : MonoBehaviour
 
         _previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
-        _routine = StartCoroutine(StopRoutine());
+        _routine = StartCoroutine(StopRoutine(_hitStopDuration * durationMultiplier));
     }
 
-    private IEnumerator StopRoutine()
+    private IEnumerator StopRoutine(float duration)
     {
-        yield return new WaitForSecondsRealtime(_hitStopDuration);
+        yield return new WaitForSecondsRealtime(duration);
         RestoreTimeScale();
         _routine = null;
     }

@@ -16,6 +16,15 @@ public class PlayerComboAnimation_s : MonoBehaviour
     };
 
     [SerializeField] private Animator _animator;
+    [Tooltip("활성화하면 BeginComboSlash / BeginFinalComboSlash / EndComboSlash 이벤트로 명중 구간을 제어합니다.")]
+    [SerializeField] private bool _useSlashEvents;
+    private bool _slashOpen;
+    private bool _finalSlash;
+    private bool _slashesFinished;
+    private int _hitSequence;
+    public bool IsIntermediateSlash => _useSlashEvents && !_finalSlash;
+    public event System.Action SlashOpened;
+    public event System.Action SlashClosed;
 
     [Header("정규화된 재생 시간 (0~1)")]
     [SerializeField, Range(0.1f, 0.95f)] private float _firstChainTime = 0.45f;
@@ -46,6 +55,66 @@ public class PlayerComboAnimation_s : MonoBehaviour
     }
 
     private int _step = -1;
+    public bool TryGetHitPhase(out int hit, out int step, out float time, out Vector2 window)
+    {
+        hit = _hitSequence;
+        if (!_useSlashEvents) return TryGetDamagePhase(out _, out step, out time, out window);
+        step = ComboStep;
+        window = new Vector2(0f, 1f);
+        return TryGetSlashTime(step, out time) && _slashOpen;
+    }
+
+    private bool TryGetSlashTime(int step, out float time)
+    {
+        time = 0f;
+        if (!isActiveAndEnabled || !IsPlaying || step != ComboStep || _animator == null || !_animator.isActiveAndEnabled)
+        {
+            return false;
+        }
+        // 크로스페이드 중 들어오는 공격의 초반 이벤트도 받되, 나가는 공격은 무시한다.
+        var state = _animator.IsInTransition(0) ? _animator.GetNextAnimatorStateInfo(0)
+            : _animator.GetCurrentAnimatorStateInfo(0);
+        if (state.fullPathHash != AttackStates[_step]) return false;
+        time = state.normalizedTime;
+        return true;
+    }
+
+    // intParameter는 콤보 타수(1~4). 중간 베기와 마지막 베기를 구분한다.
+    public void BeginComboSlash(int step)
+    {
+        BeginSlash(step, false);
+    }
+
+    public void BeginFinalComboSlash(int step)
+    {
+        BeginSlash(step, true);
+    }
+
+    private void BeginSlash(int step, bool final)
+    {
+        if (!_useSlashEvents || !TryGetSlashTime(step, out _)) return;
+        _hitSequence++;
+        _slashOpen = true;
+        _finalSlash = final;
+        _slashesFinished = false;
+        SlashOpened?.Invoke();
+    }
+
+    public void EndComboSlash(int step)
+    {
+        if (!_useSlashEvents || !TryGetSlashTime(step, out _)) return;
+        if (_slashOpen && _finalSlash) _slashesFinished = true;
+        _slashOpen = false;
+        SlashClosed?.Invoke();
+    }
+
+    private void ResetSlashes()
+    {
+        _slashOpen = false;
+        _finalSlash = false;
+        _slashesFinished = false;
+        SlashClosed?.Invoke();
+    }
     private bool _nextAttackQueued;
     public bool IsPlaying => _step >= 0;
     public int ComboStep => _step + 1;
@@ -132,7 +201,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
         float chainTime = _step == 0 ? Mathf.Max(_firstChainTime, _firstDamageWindow.y)
             : _step == 1 ? Mathf.Max(_secondChainTime, _secondDamageWindow.y)
             : Mathf.Max(_thirdChainTime, _thirdDamageWindow.y);
-        if (_nextAttackQueued && _step < AttackStates.Length - 1 && state.normalizedTime >= chainTime)
+        if (_nextAttackQueued && _step < AttackStates.Length - 1 && state.normalizedTime >= chainTime
+            && (!_useSlashEvents || (_slashesFinished && !_slashOpen)))
         {
             PlayStep(_step + 1);
             return;
@@ -146,6 +216,8 @@ public class PlayerComboAnimation_s : MonoBehaviour
 
     private void PlayStep(int step)
     {
+        ResetSlashes();
+        _hitSequence++;
         DamageWindowClosed?.Invoke();
         _swingSequence++;
         _step = step;
@@ -155,6 +227,7 @@ public class PlayerComboAnimation_s : MonoBehaviour
 
     public void EndCombo()
     {
+        ResetSlashes();
         DamageWindowClosed?.Invoke();
         bool wasPlaying = IsPlaying;
         _step = -1;
