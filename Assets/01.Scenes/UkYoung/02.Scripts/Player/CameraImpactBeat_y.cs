@@ -28,30 +28,5 @@ namespace JuicyFresh3D.Parkour
         public float RiseDuration => _riseDuration;
         public float FallDuration => _fallDuration;
         public bool HasKick => _pitch != 0f || _roll != 0f || _distance != 0f || _fieldOfView != 0f;
-
-        public static CameraImpactBeat_y Create(
-            ParkourSubStateType_y state,
-            float triggerProgress,
-            float trauma,
-            float pitch,
-            float roll,
-            float distance,
-            float fieldOfView,
-            float riseDuration,
-            float fallDuration)
-        {
-            return new CameraImpactBeat_y
-            {
-                _state = state,
-                _triggerProgress = triggerProgress,
-                _trauma = trauma,
-                _pitch = pitch,
-                _roll = roll,
-                _distance = distance,
-                _fieldOfView = fieldOfView,
-                _riseDuration = riseDuration,
-                _fallDuration = fallDuration,
-            };
-        }
     }
 }

@@ -14,20 +14,7 @@ namespace JuicyFresh3D.Parkour
         [SerializeField] private ParkourMotor _motor;
 
         [Header("Beats")]
-        [SerializeField]
-        private CameraImpactBeat_y[] _beats =
-        {
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.CrouchedToSprint, -1f, 0f, 0f, 0f, 0.15f, 3f, 0.08f, 0.3f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.SprintStop, -1f, 0f, 1.5f, 0f, -0.1f, 0f, 0.245f, 0.35f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.JumpFromWall, -1f, 0.25f, 0f, 0f, 0f, 4f, 0.06f, 0.3f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.SprintWallClimb, -1f, 0.3f, -4f, 0f, 0f, 0f, 0.9f, 0.8f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.SprintWallClimb, 0.87f, 0.2f, 0f, 0f, 0f, -2f, 0.05f, 0.3f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.JumpingToHanging, 0.912f, 0.4f, 2f, 0f, 0f, 0f, 0.03f, 0.25f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.BracedHangHopLeft, 0.373f, 0.15f, 0f, 0f, 0f, 0f, 0.04f, 0.25f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.BracedHangHopRight, 0.277f, 0.15f, 0f, 0f, 0f, 0f, 0.04f, 0.25f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.BracedHangToCrouch, 0.87f, 0.2f, 2f, 0f, 0f, 0f, 0.03f, 0.25f),
-            CameraImpactBeat_y.Create(ParkourSubStateType_y.WallRun, -1f, 0.15f, 0f, 0f, 0f, 2f, 0.05f, 0.2f),
-        };
+        [SerializeField] private CameraImpactBeat_y[] _beats;
 
         [Header("Landing")]
         [SerializeField] private float _lightLandingTrauma = 0.1f;
@@ -84,20 +71,6 @@ namespace JuicyFresh3D.Parkour
             UpdateShake(deltaTime);
         }
 
-        private void OnSubStateChanged(ParkourSubStateType_y previousState, ParkourSubStateType_y currentState)
-        {
-            _currentState = currentState;
-            Array.Clear(_hasFiredBeats, 0, _hasFiredBeats.Length);
-
-            foreach (CameraImpactBeat_y beat in _beats)
-            {
-                if (beat.State == currentState && beat.TriggerProgress < 0f)
-                {
-                    FireBeat(beat);
-                }
-            }
-        }
-
         private void OnLanded(float impactSpeed)
         {
             // 슬라이딩 중 단차를 내려가는 것은 충격 사건이 아니므로 흔들지 않는다.
@@ -116,6 +89,20 @@ namespace JuicyFresh3D.Parkour
         private void OnJumped()
         {
             AddKick(0f, 0f, 0f, _jumpFieldOfViewKick, _jumpKickRiseDuration, _jumpKickFallDuration);
+        }
+
+        private void OnSubStateChanged(ParkourSubStateType_y previousState, ParkourSubStateType_y currentState)
+        {
+            _currentState = currentState;
+            Array.Clear(_hasFiredBeats, 0, _hasFiredBeats.Length);
+
+            foreach (CameraImpactBeat_y beat in _beats)
+            {
+                if (beat.State == currentState && beat.TriggerProgress < 0f)
+                {
+                    FireBeat(beat);
+                }
+            }
         }
 
         private void FireProgressBeats()
