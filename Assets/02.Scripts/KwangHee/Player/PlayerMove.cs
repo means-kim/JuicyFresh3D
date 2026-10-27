@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _moveSpeed = 3f;
     [SerializeField][Min(0.01f)] private float _rotationSmoothTime = 0.1f;
     [SerializeField] private float _gravity = -20f;
+    [Tooltip("시점 회전 기준점. 미지정 시 Main Camera의 방향을 사용합니다.")]
     [SerializeField] private Transform _cameraTransform;
 
     [Header("구르기")]
@@ -29,6 +30,7 @@ public class PlayerMove : MonoBehaviour
     private CharacterController _characterController;
     private Animator _animator;
     private PlayerAttack _playerAttack;
+    private PlayerCameraController_k _cameraController;
     private PlayerMoveState _currentState = PlayerMoveState.Locomotion;
     private float _verticalSpeed;
     private Vector3 _moveDirection;
@@ -53,6 +55,7 @@ public class PlayerMove : MonoBehaviour
     public PlayerMoveState CurrentState => _currentState;
     public bool IsRolling => _currentState == PlayerMoveState.Rolling;
     public bool IsDashing => _currentState == PlayerMoveState.Dashing;
+    private bool CanReadGameplayInput => _cameraController == null || _cameraController.CanReadGameplayInput;
     public event System.Action<PlayerMove> RollStarted;
 
     private void Awake()
@@ -68,10 +71,12 @@ public class PlayerMove : MonoBehaviour
 
         if (_cameraTransform == null)
         {
-            Debug.LogError("PlayerMove에 Main Camera의 Transform을 연결하세요.", this);
+            Debug.LogError("PlayerMove에 카메라 기준점 또는 Main Camera의 Transform을 연결하세요.", this);
             enabled = false;
             return;
         }
+
+        _cameraController = _cameraTransform.GetComponent<PlayerCameraController_k>();
 
         if (_animator.runtimeAnimatorController == null || _rollClip == null || _dashClip == null)
         {
@@ -117,7 +122,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 horizontalMovement = Vector3.zero;
 
         // 종료 프레임에도 예약 공격보다 구르기 취소를 먼저 처리합니다.
-        if (_currentState == PlayerMoveState.Locomotion && _playerAttack != null
+        if (CanReadGameplayInput && _currentState == PlayerMoveState.Locomotion && _playerAttack != null
                                                         && _playerAttack.IsAttacking && Input.GetKeyDown(KeyCode.Space))
         {
             ReadMoveDirection();
@@ -163,6 +168,12 @@ public class PlayerMove : MonoBehaviour
     {
         ReadMoveDirection();
 
+        if (!CanReadGameplayInput)
+        {
+            _rotationVelocity = 0f;
+            return Vector3.zero;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && TryStartAction(PlayerMoveState.Rolling))
         {
             return Vector3.zero;
@@ -200,6 +211,12 @@ public class PlayerMove : MonoBehaviour
 
     private void ReadMoveDirection()
     {
+        if (!CanReadGameplayInput)
+        {
+            _moveDirection = Vector3.zero;
+            return;
+        }
+
         Vector2 moveInput = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
         _moveDirection = GetCameraRelativeDirection(moveInput);

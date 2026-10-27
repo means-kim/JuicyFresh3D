@@ -6,7 +6,8 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private PostProcessEffectController_m _postProcessManager;
-    [SerializeField] private PlayerMove _target;
+    //[SerializeField] private PlayerMove _target; 안광희 수정
+    [SerializeField] private BossAttackController _bossAttackController;
 
     [Header("Shared Settings")]
     [SerializeField, ColorUsage(true, true)]
@@ -22,6 +23,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     public Color EffectColor => _effectColor;
 
+    /*
     public void PlayEffect(PlayerMove player)
     {
         // A null player is the manual preview path used by AnimalCharacterController_m.
@@ -47,6 +49,35 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
         _postProcessManager?.PlayDodgeEffect();
     }
+    */
+    public void PlayEffect()
+    {
+        if (!Application.isPlaying || !isActiveAndEnabled)
+        {
+            return;
+        }
+
+        ResolveReferences();
+        ApplySharedSettings();
+
+        if (_silhouetteOutlineEffect != null)
+        {
+            _silhouetteOutlineEffect.PlayEffect();
+        }
+
+        if (_outlineParticleLightEffect != null)
+        {
+            _outlineParticleLightEffect.PlayEffect();
+        }
+
+        if (_crossFlashEffect != null)
+        {
+            _crossFlashEffect.PlayEffect();
+        }
+
+        _postProcessManager?.PlayDodgeEffect();
+    }
+    // 안광희 수정
 
     public void StopEffect()
     {
@@ -103,16 +134,21 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     private void ResolveReferences()
     {
+        /*
         if (_target == null)
         {
             _target = GetComponent<PlayerMove>();
         }
+        */
+        // 안광희 수정
+
         if (_postProcessManager == null)
         {
             _postProcessManager = FindAnyObjectByType<PostProcessEffectController_m>();
         }
     }
 
+    /*
     private void SubscribeEvents()
     {
         if (_target != null)
@@ -129,7 +165,28 @@ public sealed class PlayerEffectController_m : MonoBehaviour
             _target.RollStarted -= PlayEffect;
         }
     }
+    */
+    private void SubscribeEvents()
+    {
+        if (_bossAttackController == null)
+        {
+            return;
+        }
 
+        _bossAttackController.DodgeSucceeded -= PlayEffect;
+        _bossAttackController.DodgeSucceeded += PlayEffect;
+    }
+
+    private void UnsubscribeEvents()
+    {
+        if (_bossAttackController == null)
+        {
+            return;
+        }
+
+        _bossAttackController.DodgeSucceeded -= PlayEffect;
+    }
+    // 안광희 수정
     private void ResolveComponents()
     {
         if (_crossFlashEffect == null)
