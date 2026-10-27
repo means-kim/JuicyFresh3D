@@ -212,7 +212,9 @@ namespace JuicyFresh3D.Editor
             }
 
             Scene activeScene = SceneManager.GetActiveScene();
-            if (activeScene.path != ScenePath || GameObject.Find(SetupVersionMarkerName) != null)
+            if (activeScene.path != ScenePath
+                || GameObject.Find("Urban Parkour Playground") != null
+                || GameObject.Find(SetupVersionMarkerName) != null)
             {
                 return;
             }

@@ -63,6 +63,27 @@ namespace JuicyFresh3D.Parkour
             Subscribe();
         }
 
+        public bool TryGetSprintCyclePhase(out float phase)
+        {
+            phase = 0f;
+            if (_animator == null)
+            {
+                return false;
+            }
+
+            // 전이 중에는 도착 상태를 기준으로 삼아 질주로 들어갈 때 위상이 먼저 따라가게 한다.
+            AnimatorStateInfo destinationInfo = _animator.IsInTransition(0)
+                ? _animator.GetNextAnimatorStateInfo(0)
+                : _animator.GetCurrentAnimatorStateInfo(0);
+            if (destinationInfo.fullPathHash != SprintStateId)
+            {
+                return false;
+            }
+
+            phase = Mathf.Repeat(destinationInfo.normalizedTime, 1f);
+            return true;
+        }
+
         private void OnEnable()
         {
             InitializeHandContact();

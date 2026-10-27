@@ -26,6 +26,8 @@ namespace JuicyFresh3D.Parkour
 
             if (Motor.IsGrounded)
             {
+                float verticalDrop = _airborneState.AirborneStartY - Motor.transform.position.y;
+                Motor.SetLandingFallMetrics(verticalDrop, _airborneState.WasJump);
                 StateMachine.SetRootState(Motor.GroundedState);
                 return;
             }

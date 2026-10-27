@@ -1,0 +1,22 @@
+Source: OwlishMedia Sound Effects Pack
+Author: OwlishMedia
+License: Creative Commons Zero 1.0
+Source page: https://opengameart.org/content/sound-effects-pack
+License page: https://creativecommons.org/publicdomain/zero/1.0/
+
+Imported source files:
+- Footsteps/hard-footstep1.wav
+- Footsteps/hard-footstep2.wav
+- Footsteps/hard-footstep3.wav
+- Footsteps/hard-footstep4.wav
+- Impacts/tap.wav
+- Impacts/slap2.wav
+- Impacts/hit.wav
+- Impacts/scrape1.wav
+- Impacts/scrape2.wav
+- Cloth, Rustle/320144__owlstorm__blanket-movement-6.wav
+
+Modification:
+- Leading silence was removed with an 8 ms pre-roll.
+- Trailing silence was removed with a 60 ms tail.
+- Original sample rate, channel count, sample values, and PCM16 format were preserved.

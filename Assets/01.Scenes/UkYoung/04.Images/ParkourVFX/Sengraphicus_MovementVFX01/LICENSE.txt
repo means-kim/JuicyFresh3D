@@ -1,0 +1,14 @@
+SENGRAPHICUS ASSET LICENSE
+
+The buyer may use and modify these assets in personal or commercial games,
+videos, applications and client projects. Credit is appreciated but not required.
+
+The buyer may not resell, redistribute, share, sublicense or upload the original
+assets, modified assets, PNG frames or sprite sheets as standalone files or as
+part of another asset pack. The assets may not be used to train or build an AI
+model or dataset. The buyer must include the assets only inside a larger end product.
+
+Licence Sengraphicus : l’acheteur peut utiliser et modifier ces éléments dans des
+jeux, vidéos, applications et projets clients, personnels ou commerciaux. Le crédit
+est apprécié mais facultatif. La revente, le partage ou la redistribution des fichiers
+sources, même modifiés, est interdit. Leur utilisation pour entraîner une IA est interdite.

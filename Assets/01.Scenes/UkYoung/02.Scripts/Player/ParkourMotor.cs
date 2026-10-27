@@ -197,6 +197,7 @@ namespace JuicyFresh3D.Parkour
         public bool IsLedgeTraversing => CurrentSubStateType >= ParkourSubStateType_y.JumpingToHanging
                                          && CurrentSubStateType <= ParkourSubStateType_y.JumpFromWall;
         public bool IsClimbMotionComplete => _climbMotion != null && _climbMotion.IsComplete;
+        public float ClimbProgress => _climbMotion != null ? _climbMotion.NormalizedProgress : 0f;
         public Vector3 LedgeLeftHandContactPoint => _climbMotion != null
             ? _climbMotion.LeftContactPoint
             : transform.position;

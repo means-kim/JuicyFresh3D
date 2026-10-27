@@ -18,6 +18,9 @@ namespace JuicyFresh3D.Editor
 
         private static readonly string[] DuplicateRootNames =
         {
+            "Parkour Course",
+            "Sprint Wall Climb Test Setup_y",
+            "Anim_SprintingForwardRoll(Clone)",
             "Entry Bridge",
             "Training Lane",
             "Level 01 Jumping",
@@ -27,7 +30,12 @@ namespace JuicyFresh3D.Editor
             "Level 05 Jump Over 2",
             "Level 06 Jump Over 3",
             "Left Course Guide",
-            "Right Course Guide"
+            "Right Course Guide",
+            "Jump Variety Course",
+            "Ledge Test Setup Version 2_y",
+            "Ledge Test Setup Version 3_y",
+            "Ledge Test Setup Version 4_y",
+            "Ledge Test Setup Version 5_y"
         };
 
         [MenuItem("Tools/JuicyFresh3D/Build Urban Parkour Playground")]
@@ -45,12 +53,13 @@ namespace JuicyFresh3D.Editor
             GameObject playground = new(PlaygroundRootName);
             CreateGround(playground.transform, materials);
             CreateCentralPlaza(playground.transform, materials);
-            CreateEastObstacleAlley(playground.transform, materials, prefabs);
-            CreateWestWallRunAlley(playground.transform, materials, prefabs);
-            CreateNorthServiceYard(playground.transform, materials, prefabs);
-            CreateRooftopCircuit(playground.transform, materials, prefabs);
-            CreateFutureTestYard(playground.transform, materials, prefabs);
+            CreateSection1_VaultStreet(playground.transform, materials, prefabs);
+            CreateSection2_WallRunTower(playground.transform, materials, prefabs);
+            CreateSection3_SkybridgeSlide(playground.transform, materials, prefabs);
+            CreateSection4_RooftopHangAndRoll(playground.transform, materials, prefabs);
             CreateCityBackdrop(playground.transform, materials, prefabs);
+
+            RepositionPlayer();
 
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene, ScenePath))
@@ -61,6 +70,18 @@ namespace JuicyFresh3D.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"Urban parkour playground created. Removed duplicate roots: {removedDuplicateCount}");
+        }
+
+        private static void RepositionPlayer()
+        {
+            GameObject player = GameObject.Find("PF_Player");
+            if (player == null)
+            {
+                return;
+            }
+
+            player.transform.SetPositionAndRotation(new Vector3(0f, 0.04f, -5f), Quaternion.identity);
+            EditorUtility.SetDirty(player.transform);
         }
 
         private static MaterialPalette CreateMaterials()
@@ -152,117 +173,119 @@ namespace JuicyFresh3D.Editor
         private static void CreateGround(Transform parent, MaterialPalette materials)
         {
             Transform root = CreateGroup(parent, "00_Ground");
-            CreateBlock(root, "City Foundation", new Vector3(0f, -1.1f, 35f), new Vector3(90f, 2f, 110f), materials.Asphalt);
-            CreateVisualBlock(root, "Main Loop West", new Vector3(-18f, -0.07f, 36f), new Vector3(0.18f, 0.04f, 82f), materials.PrimaryRoute);
-            CreateVisualBlock(root, "Main Loop East", new Vector3(18f, -0.07f, 36f), new Vector3(0.18f, 0.04f, 82f), materials.PrimaryRoute);
-            CreateVisualBlock(root, "Main Loop North", new Vector3(0f, -0.07f, 77f), new Vector3(36f, 0.04f, 0.18f), materials.PrimaryRoute);
-            CreateVisualBlock(root, "Main Loop South", new Vector3(0f, -0.07f, -5f), new Vector3(36f, 0.04f, 0.18f), materials.PrimaryRoute);
+            // Lower City Foundation by 0.06m (top surface at y = -0.06m) so it never fights with any floor slab at y = 0.00m
+            CreateBlock(root, "City Foundation", new Vector3(0f, -0.56f, 45f), new Vector3(60f, 1f, 130f), materials.Asphalt);
 
-            CreateVisualBlock(root, "Central Connector", new Vector3(0f, -0.065f, 30f), new Vector3(0.14f, 0.045f, 44f), materials.TechnicalRoute);
-            CreateVisualBlock(root, "North Connector", new Vector3(0f, -0.065f, 62f), new Vector3(36f, 0.045f, 0.14f), materials.TechnicalRoute);
-            CreateVisualBlock(root, "South Connector", new Vector3(0f, -0.065f, 10f), new Vector3(36f, 0.045f, 0.14f), materials.TechnicalRoute);
+            CreateVisualBlock(root, "Main Perimeter West", new Vector3(-25f, -0.045f, 45f), new Vector3(0.2f, 0.02f, 119.6f), materials.Metal);
+            CreateVisualBlock(root, "Main Perimeter East", new Vector3(25f, -0.045f, 45f), new Vector3(0.2f, 0.02f, 119.6f), materials.Metal);
+            CreateVisualBlock(root, "Main Perimeter South", new Vector3(0f, -0.045f, -15f), new Vector3(49.8f, 0.02f, 0.2f), materials.Metal);
+            CreateVisualBlock(root, "Main Perimeter North", new Vector3(0f, -0.045f, 105f), new Vector3(49.8f, 0.02f, 0.2f), materials.Metal);
         }
 
         private static void CreateCentralPlaza(Transform parent, MaterialPalette materials)
         {
             Transform root = CreateGroup(parent, "01_CentralPlaza");
-            CreateBlock(root, "Central Plaza", new Vector3(0f, -0.02f, -3f), new Vector3(24f, 0.12f, 18f), materials.Concrete);
-            CreateVisualBlock(root, "Plaza Route Inlay", new Vector3(0f, 0.045f, -3f), new Vector3(1.1f, 0.015f, 14f), materials.PrimaryRoute);
+            // Plaza floor spans z = -13m to 3m, x = -10m to 10m, top at y = 0.00m
+            CreateBlock(root, "Plaza Floor", new Vector3(0f, -0.05f, -5f), new Vector3(20f, 0.1f, 16f), materials.Concrete);
 
-            CreateBlock(root, "Landmark Base", new Vector3(-8.5f, 0.45f, -6f), new Vector3(2.6f, 0.9f, 2.6f), materials.Facade);
-            GameObject landmark = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            landmark.name = "Central Light Spire";
-            landmark.transform.SetParent(root);
-            landmark.transform.position = new Vector3(-8.5f, 4.8f, -6f);
-            landmark.transform.localScale = new Vector3(0.65f, 4.4f, 0.65f);
-            landmark.GetComponent<Renderer>().sharedMaterial = materials.PrimaryRoute;
-            Object.DestroyImmediate(landmark.GetComponent<Collider>());
-            SetStatic(landmark);
+            // High Drop landing zone floor on East side (z = 3m to 8m, x = 8m to 12m) at y = 0.00m
+            CreateBlock(root, "Plaza East Landing Zone", new Vector3(10f, -0.05f, 5.5f), new Vector3(4f, 0.1f, 5f), materials.Concrete);
 
-            CreateVisualBlock(root, "East District Marker", new Vector3(10.5f, 1.6f, 2.8f), new Vector3(0.2f, 3.2f, 1.1f), materials.TechnicalRoute);
-            CreateVisualBlock(root, "West District Marker", new Vector3(-10.5f, 1.6f, 2.8f), new Vector3(0.2f, 3.2f, 1.1f), materials.PrimaryRoute);
+            // Visual markers elevated 0.005m above the y = 0.00m floor (top at y = 0.010m)
+            CreateVisualBlock(root, "Plaza Start Line", new Vector3(0f, 0.005f, -5f), new Vector3(3f, 0.01f, 0.25f), materials.PrimaryRoute);
+            CreateVisualBlock(root, "Plaza Departure Guide Left", new Vector3(-1.6f, 0.005f, -1f), new Vector3(0.12f, 0.01f, 8f), materials.TechnicalRoute);
+            CreateVisualBlock(root, "Plaza Departure Guide Right", new Vector3(1.6f, 0.005f, -1f), new Vector3(0.12f, 0.01f, 8f), materials.TechnicalRoute);
+
+            CreateBlock(root, "Plaza Monolith West", new Vector3(-8.5f, 2.5f, -6f), new Vector3(1.6f, 5f, 1.6f), materials.Facade);
+            CreateVisualBlock(root, "Monolith West Light", new Vector3(-8.5f, 5.05f, -6f), new Vector3(1.2f, 0.1f, 1.2f), materials.WarmLight);
+
+            CreateBlock(root, "Plaza Monolith East", new Vector3(8.5f, 2.5f, -6f), new Vector3(1.6f, 5f, 1.6f), materials.Facade);
+            CreateVisualBlock(root, "Monolith East Light", new Vector3(8.5f, 5.05f, -6f), new Vector3(1.2f, 0.1f, 1.2f), materials.PrimaryRoute);
         }
 
-        private static void CreateEastObstacleAlley(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
+        private static void CreateSection1_VaultStreet(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
         {
-            Transform root = CreateGroup(parent, "02_EastObstacleAlley");
-            CreateBlock(root, "East Alley Floor", new Vector3(15f, -0.02f, 34f), new Vector3(12f, 0.12f, 58f), materials.Concrete);
-            CreateVisualBlock(root, "East Alley Edge", new Vector3(9.2f, 0.05f, 34f), new Vector3(0.16f, 0.03f, 54f), materials.TechnicalRoute);
+            Transform root = CreateGroup(parent, "02_Section1_VaultStreet");
+            // Floor from z = 3m to 37m (center z = 20m, size z = 34m), x = -3.2m to 3.2m, top at y = 0.00m
+            CreateBlock(root, "Vault Street Floor", new Vector3(0f, -0.05f, 20f), new Vector3(6.4f, 0.1f, 34f), materials.Concrete);
 
-            CreateParkourObstacle(prefabs.VaultBlock, root, "Jumping 1", new Vector3(14f, 0f, 22f), new Vector3(3.2f, 1.16f, 0.24f), 1);
-            CreateParkourObstacle(prefabs.VaultBlock, root, "Jumping 2", new Vector3(16.2f, 0f, 31f), new Vector3(3.2f, 1.16f, 0.24f), 2);
-            CreateParkourObstacle(prefabs.VaultBlock, root, "Jumping 3", new Vector3(13.8f, 0f, 40f), new Vector3(3.2f, 1.16f, 0.24f), 3);
-            CreateParkourObstacle(prefabs.VaultBlock, root, "Jump Over", new Vector3(15f, 0f, 50f), new Vector3(3.5f, 1.35f, 0.85f), 4);
+            CreateParkourObstacle(prefabs.VaultBlock, root, "Vault 1 Low", new Vector3(0f, 0f, 14f), new Vector3(3.2f, 0.90f, 0.25f), 1);
+            CreateParkourObstacle(prefabs.VaultBlock, root, "Vault 2 Mid", new Vector3(0f, 0f, 23f), new Vector3(3.2f, 1.16f, 0.25f), 2);
+            CreateParkourObstacle(prefabs.VaultBlock, root, "Vault 3 High Over", new Vector3(0f, 0f, 33f), new Vector3(3.5f, 1.35f, 0.85f), 4);
 
-            CreatePrefabInstance(prefabs.Wall, root, "East Alley Divider", new Vector3(21f, 0f, 34f), new Vector3(0.5f, 3.8f, 54f));
-            CreateVisualBlock(root, "Obstacle Alley Sign", new Vector3(20.72f, 2.6f, 8f), new Vector3(0.04f, 1.1f, 2.8f), materials.TechnicalRoute);
+            CreateBlock(root, "Street Curb Left", new Vector3(-3.2f, 0.25f, 20f), new Vector3(0.4f, 0.5f, 34f), materials.Metal);
+            CreateBlock(root, "Street Curb Right", new Vector3(3.2f, 0.25f, 20f), new Vector3(0.4f, 0.5f, 34f), materials.Metal);
+            CreateVisualBlock(root, "Street Guideline", new Vector3(0f, 0.005f, 20f), new Vector3(0.12f, 0.01f, 32f), materials.PrimaryRoute);
         }
 
-        private static void CreateWestWallRunAlley(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
+        private static void CreateSection2_WallRunTower(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
         {
-            Transform root = CreateGroup(parent, "03_WestWallRunAlley");
-            CreateBlock(root, "West Alley Floor", new Vector3(-17f, -0.02f, 33f), new Vector3(12f, 0.12f, 58f), materials.Concrete);
-            CreatePrefabInstance(prefabs.Wall, root, "West Outer Wall", new Vector3(-22.5f, 0f, 34f), new Vector3(0.55f, 5.2f, 54f));
+            Transform root = CreateGroup(parent, "03_Section2_WallRunTower");
+            // Floor from z = 37m to 61m (center z = 49m, size z = 24m), x = -16m to 2m, top at y = 0.00m
+            CreateBlock(root, "Wall Run Floor", new Vector3(-7f, -0.05f, 49f), new Vector3(18f, 0.1f, 24f), materials.Concrete);
 
-            CreatePrefabInstance(prefabs.Wall, root, "Wall Run A", new Vector3(-13.2f, 0f, 17f), new Vector3(0.55f, 4.5f, 9f));
-            CreatePrefabInstance(prefabs.Wall, root, "Wall Run B", new Vector3(-17.5f, 0f, 30f), new Vector3(0.55f, 5f, 10f), new Vector3(0f, 90f, 0f));
-            CreatePrefabInstance(prefabs.Wall, root, "Wall Run C", new Vector3(-13.2f, 0f, 43f), new Vector3(0.55f, 5.5f, 9f));
-            CreatePrefabInstance(prefabs.Wall, root, "Wall Run Turn", new Vector3(-17.5f, 0f, 51f), new Vector3(0.55f, 5.5f, 8f), new Vector3(0f, 90f, 0f));
+            // Right wall for Wall Run Right
+            CreateBlock(root, "Wall Run Right", new Vector3(-2.0f, 2.75f, 45f), new Vector3(0.45f, 5.5f, 10f), materials.LightConcrete);
+            CreateVisualBlock(root, "Wall Run Right Edge", new Vector3(-2.0f, 5.52f, 45f), new Vector3(0.5f, 0.04f, 10f), materials.PrimaryRoute);
+            CreateVisualBlock(root, "Wall Run Right Marker", new Vector3(-2.24f, 2.2f, 45f), new Vector3(0.02f, 0.18f, 9.5f), materials.TechnicalRoute);
 
-            CreateVisualBlock(root, "Wall Alley Entry Marker", new Vector3(-11.2f, 2.4f, 7f), new Vector3(0.08f, 1.4f, 1.8f), materials.PrimaryRoute);
+            // Left wall for Wall Run Left
+            CreateBlock(root, "Wall Run Left", new Vector3(-8.0f, 2.9f, 54f), new Vector3(0.45f, 5.8f, 12f), materials.LightConcrete);
+            CreateVisualBlock(root, "Wall Run Left Edge", new Vector3(-8.0f, 5.82f, 54f), new Vector3(0.5f, 0.04f, 12f), materials.PrimaryRoute);
+            CreateVisualBlock(root, "Wall Run Left Marker", new Vector3(-7.76f, 2.6f, 54f), new Vector3(0.02f, 0.18f, 11.5f), materials.TechnicalRoute);
+
+            // Wall Tower Backing Mass
+            CreateBlock(root, "Wall Tower Backing", new Vector3(-5.0f, 3.5f, 62f), new Vector3(7f, 7f, 0.5f), materials.Facade);
         }
 
-        private static void CreateNorthServiceYard(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
+        private static void CreateSection3_SkybridgeSlide(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
         {
-            Transform root = CreateGroup(parent, "04_NorthServiceYard");
-            CreateBlock(root, "Service Yard Floor", new Vector3(0f, -0.02f, 75f), new Vector3(38f, 0.12f, 18f), materials.Concrete);
+            Transform root = CreateGroup(parent, "04_Section3_SkybridgeSlide");
 
-            CreatePrefabInstance(
-                prefabs.SlideGate,
-                root,
-                "Slide Tunnel",
-                new Vector3(-11f, 0f, 73f),
-                new Vector3(1f, 1f, 14f));
-            CreatePrefabInstance(prefabs.SlideGate, root, "Slide Gate B", new Vector3(-11f, 0f, 78f), Vector3.one);
-            CreateVisualBlock(root, "Slide Approach", new Vector3(-11f, 0.05f, 66.5f), new Vector3(1.2f, 0.025f, 5f), materials.TechnicalRoute);
+            // Upper Skybridge Platform at height y = 4.0m (z = 58m to 70m)
+            CreateBlock(root, "Skybridge Upper Platform", new Vector3(-14f, 2.0f, 64f), new Vector3(4f, 4.0f, 12f), materials.Concrete);
+            CreateBlock(root, "Upper Railing Left", new Vector3(-16.0f, 4.3f, 64f), new Vector3(0.2f, 0.6f, 12f), materials.Metal);
+            CreateBlock(root, "Upper Railing Right", new Vector3(-12.0f, 4.3f, 64f), new Vector3(0.2f, 0.6f, 12f), materials.Metal);
 
-            CreateBlock(root, "Short Roll Divider Left", new Vector3(4f, 0.7f, 74f), new Vector3(0.35f, 1.4f, 12f), materials.Metal);
-            CreateBlock(root, "Short Roll Divider Right", new Vector3(10f, 0.7f, 74f), new Vector3(0.35f, 1.4f, 12f), materials.Metal);
-            CreateVisualBlock(root, "Short Roll Lane", new Vector3(7f, 0.05f, 74f), new Vector3(0.7f, 0.025f, 10f), materials.WarmLight);
+            // Step-Down edge at z = 70m dropping 0.35m to y = 3.65m. Raised 0.005m above floor so top is at y = 4.01m
+            CreateVisualBlock(root, "Step Down Marker", new Vector3(-14f, 4.005f, 70f), new Vector3(3.6f, 0.01f, 0.2f), materials.WarmLight);
 
-            CreatePrefabInstance(prefabs.VaultBlock, root, "Service Vault", new Vector3(15f, 0f, 76f), new Vector3(2.8f, 0.75f, 0.7f));
+            // Lower Skybridge Platform at height y = 3.65m (z = 70m to 86m, exactly touching Turn Platform at z = 86m)
+            CreateBlock(root, "Skybridge Lower Platform", new Vector3(-14f, 1.825f, 78f), new Vector3(4f, 3.65f, 16f), materials.Concrete);
+            CreateBlock(root, "Lower Railing Left", new Vector3(-16.0f, 3.95f, 78f), new Vector3(0.2f, 0.6f, 16f), materials.Metal);
+            CreateBlock(root, "Lower Railing Right", new Vector3(-12.0f, 3.95f, 78f), new Vector3(0.2f, 0.6f, 16f), materials.Metal);
+
+            // Slide Gate at z = 77m with 1.25m clearance (bottom of beam at 4.90m)
+            CreateBlock(root, "Slide Gate Left Post", new Vector3(-15.82f, 4.25f, 77f), new Vector3(0.26f, 1.6f, 0.45f), materials.Metal);
+            CreateBlock(root, "Slide Gate Right Post", new Vector3(-12.18f, 4.25f, 77f), new Vector3(0.26f, 1.6f, 0.45f), materials.Metal);
+            CreateBlock(root, "Slide Gate Low Beam", new Vector3(-14f, 5.15f, 77f), new Vector3(3.8f, 0.5f, 0.6f), materials.LightConcrete);
+            CreateVisualBlock(root, "Slide Gate Marker", new Vector3(-14f, 5.41f, 77f), new Vector3(1.6f, 0.04f, 0.04f), materials.TechnicalRoute);
+            CreateVisualBlock(root, "Slide Approach Marker", new Vector3(-14f, 3.655f, 74f), new Vector3(1.2f, 0.01f, 4f), materials.TechnicalRoute);
+
+            // North Corner Turn Platform at z = 86m to 90m (x = -16m to -12m)
+            CreateBlock(root, "North West Turn Platform", new Vector3(-14f, 1.825f, 88f), new Vector3(4f, 3.65f, 4f), materials.Concrete);
         }
 
-        private static void CreateRooftopCircuit(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
+        private static void CreateSection4_RooftopHangAndRoll(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
         {
-            Transform root = CreateGroup(parent, "05_RooftopCircuit");
+            Transform root = CreateGroup(parent, "05_Section4_RooftopHangAndRoll");
 
-            CreatePrefabInstance(prefabs.RoofUnit, root, "Roof Entry", new Vector3(26f, 0f, 12f), new Vector3(11f, 2.4f, 10f));
-            CreateRamp(root, "Roof Entry Ramp", new Vector3(21.5f, 1.1f, 12f), new Vector3(10f, 0.7f, 5f), new Vector3(0f, 0f, 13f), materials.Concrete);
+            // West Crossover Platform (x = -12m to -2m, touching Turn Platform at x = -12m) at height y = 3.65m
+            CreateBlock(root, "West Crossover Platform", new Vector3(-7.0f, 1.825f, 88f), new Vector3(10f, 3.65f, 4f), materials.Concrete);
+            CreateVisualBlock(root, "Takeoff Edge Marker", new Vector3(-2.05f, 3.655f, 88f), new Vector3(0.15f, 0.01f, 3.96f), materials.PrimaryRoute);
 
-            CreatePrefabInstance(prefabs.RoofUnit, root, "Roof Two", new Vector3(28f, 0f, 24.5f), new Vector3(12f, 3f, 11f));
-            CreatePrefabInstance(prefabs.RoofUnit, root, "Roof Three", new Vector3(26f, 0f, 38.5f), new Vector3(10f, 3.6f, 10f));
-            CreatePrefabInstance(prefabs.RoofUnit, root, "Roof Four", new Vector3(30f, 0f, 54.5f), new Vector3(12f, 4.2f, 12f));
+            // East Crossover Platform (x = 1.2m to 8.0m, touching East High Runway at x = 8.0m) across 3.2m gap
+            CreateBlock(root, "East Crossover Platform", new Vector3(4.6f, 1.825f, 88f), new Vector3(6.8f, 3.65f, 4f), materials.Concrete);
+            CreateVisualBlock(root, "Ledge Grab Edge Marker", new Vector3(1.22f, 3.655f, 88f), new Vector3(0.08f, 0.01f, 3.96f), materials.PrimaryRoute);
 
-            CreateRamp(root, "Roof Exit Ramp", new Vector3(24f, 2.1f, 63f), new Vector3(14f, 0.7f, 5f), new Vector3(0f, 0f, 17f), materials.LightConcrete);
-            CreateVisualBlock(root, "Roof Circuit Marker", new Vector3(36.2f, 4f, 42f), new Vector3(0.12f, 5f, 1.8f), materials.WarmLight);
+            // East High Runway running South along x = 10m (x = 8.0m to 12.0m) from z = 90m down to z = 8m
+            CreateBlock(root, "East High Runway", new Vector3(10.0f, 1.825f, 49.0f), new Vector3(4.0f, 3.65f, 82.0f), materials.Concrete);
+            CreateBlock(root, "Runway Parapet East", new Vector3(12.1f, 3.95f, 49.0f), new Vector3(0.2f, 0.6f, 82.0f), materials.Metal);
+            CreateBlock(root, "Runway Parapet West", new Vector3(7.9f, 3.95f, 47.0f), new Vector3(0.2f, 0.6f, 78.0f), materials.Metal);
+            CreateVisualBlock(root, "Runway Guideline", new Vector3(10.0f, 3.655f, 49.0f), new Vector3(0.2f, 0.01f, 80.0f), materials.PrimaryRoute);
 
-            CreateBlock(root, "Low Drop Landing Pad", new Vector3(38f, -0.02f, 20f), new Vector3(9f, 0.12f, 9f), materials.Concrete);
-            CreateBlock(root, "Medium Drop Landing Pad", new Vector3(38f, -0.02f, 39f), new Vector3(9f, 0.12f, 10f), materials.Concrete);
-            CreateBlock(root, "High Drop Landing Pad", new Vector3(38f, -0.02f, 58f), new Vector3(9f, 0.12f, 12f), materials.Concrete);
-        }
-
-        private static void CreateFutureTestYard(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
-        {
-            Transform root = CreateGroup(parent, "06_FutureTestYard");
-            CreateBlock(root, "Future Yard Floor", new Vector3(-33f, -0.02f, 72f), new Vector3(17f, 0.12f, 23f), materials.Asphalt);
-            CreatePrefabInstance(prefabs.Wall, root, "Wall Climb Test", new Vector3(-38f, 0f, 76f), new Vector3(4f, 1.85f, 5f));
-            CreateVisualBlock(root, "Wall Climb Runway", new Vector3(-30.5f, 0.05f, 76f), new Vector3(7f, 0.025f, 0.45f), materials.PrimaryRoute);
-            CreateVisualBlock(root, "Wall Climb Trigger Marker", new Vector3(-34.3f, 0.055f, 76f), new Vector3(0.08f, 0.03f, 5f), materials.TechnicalRoute);
-            CreateBlock(root, "Tall Thin Hanging Wall", new Vector3(-38f, 1.125f, 68f), new Vector3(0.16f, 2.25f, 5f), materials.LightConcrete);
-            CreateVisualBlock(root, "Tall Wall Runway", new Vector3(-30.5f, 0.05f, 68f), new Vector3(7f, 0.025f, 0.45f), materials.PrimaryRoute);
-            CreatePrefabInstance(prefabs.VaultBlock, root, "Flip Test Block", new Vector3(-29f, 0f, 70f), new Vector3(4f, 1.2f, 1.2f));
-            CreateVisualBlock(root, "Future Yard Boundary", new Vector3(-24.6f, 0.04f, 72f), new Vector3(0.16f, 0.025f, 21f), materials.WarmLight);
+            // High Drop Edge at z = 8m (drop from y = 3.65m to y = 0.00m)
+            CreateVisualBlock(root, "High Drop Edge Marker", new Vector3(10.0f, 3.655f, 8.05f), new Vector3(3.6f, 0.01f, 0.15f), materials.WarmLight);
         }
 
         private static void CreateCityBackdrop(Transform parent, MaterialPalette materials, PrefabPalette prefabs)
@@ -283,17 +306,6 @@ namespace JuicyFresh3D.Editor
         private static void CreateBuilding(Transform parent, GameObject prefab, string name, Vector3 position, Vector3 scale)
         {
             CreatePrefabInstance(prefab, parent, name, position, scale);
-        }
-
-        private static void CreateRamp(
-            Transform parent,
-            string name,
-            Vector3 position,
-            Vector3 scale,
-            Vector3 rotation,
-            Material material)
-        {
-            CreateBlock(parent, name, position, scale, material, rotation);
         }
 
         private static GameObject CreatePrefabInstance(
@@ -443,7 +455,7 @@ namespace JuicyFresh3D.Editor
             int removedCount = 0;
             foreach (GameObject rootObject in SceneManager.GetActiveScene().GetRootGameObjects())
             {
-                if (!duplicateNames.Contains(rootObject.name))
+                if (!duplicateNames.Contains(rootObject.name) && !rootObject.name.Contains("(Clone)"))
                 {
                     continue;
                 }

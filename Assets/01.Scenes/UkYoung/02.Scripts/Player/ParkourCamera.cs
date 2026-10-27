@@ -32,6 +32,8 @@ namespace JuicyFresh3D.Parkour
     }
 
     [RequireComponent(typeof(Camera))]
+    [RequireComponent(typeof(ParkourCameraImpact_y))]
+    [RequireComponent(typeof(ParkourCameraStride_y))]
     public sealed class ParkourCamera : MonoBehaviour
     {
         [SerializeField] private Transform _target;
@@ -73,6 +75,9 @@ namespace JuicyFresh3D.Parkour
         [SerializeField] private float _slideRoll = -5.0f;
         [SerializeField] private float _slideFieldOfView = 68f;
 
+        [Header("Wall Run Framing")]
+        [SerializeField] private float _wallRunRoll = 5f;
+
         [Header("Ledge Framing")]
         [SerializeField] private float _ledgeDistance = 4.1f;
         [SerializeField] private float _ledgeTargetOffsetY = 1.55f;
@@ -82,6 +87,11 @@ namespace JuicyFresh3D.Parkour
 
         private readonly RaycastHit[] _hitBuffer = new RaycastHit[8];
         private Camera _camera;
+        private ParkourCameraImpact_y _impact;
+        private ParkourCameraStride_y _stride;
+        private Vector3 _smoothedPosition;
+        private Quaternion _smoothedRotation;
+        private float _smoothedFieldOfView;
         private float _currentRoll;
         private float _currentDistance = 3.15f;
         private float _currentTargetOffsetY = 1.25f;
@@ -111,6 +121,11 @@ namespace JuicyFresh3D.Parkour
         private void Awake()
         {
             _camera = GetComponent<Camera>();
+            _impact = GetComponent<ParkourCameraImpact_y>();
+            _stride = GetComponent<ParkourCameraStride_y>();
+            _smoothedPosition = transform.position;
+            _smoothedRotation = transform.rotation;
+            _smoothedFieldOfView = _camera.fieldOfView;
             _yaw = transform.eulerAngles.y;
             _currentTargetOffsetY = _targetOffset.y;
             _currentDistance = _normalDistance;
@@ -151,6 +166,8 @@ namespace JuicyFresh3D.Parkour
             _pitch = Mathf.Clamp(_pitch - look.y * _lookSensitivity, _minimumPitch, _maximumPitch);
 
             var speedRatio = Mathf.InverseLerp(7f, 14f, _motor.PlanarSpeed);
+            _impact.UpdateImpact(Time.deltaTime);
+            _stride.UpdateStride(speedRatio, Time.deltaTime);
             var isSliding = _motor.IsSliding;
             var isLedgeTraversing = _motor.IsLedgeTraversing;
             if (isLedgeTraversing)
@@ -178,7 +195,8 @@ namespace JuicyFresh3D.Parkour
             ObstacleJumpCameraFeel_y jumpFeel = GetObstacleJumpCameraFeel();
             var framedPitch = _pitch
                               + _sprintPitchOffset * speedRatio
-                              + jumpFeel.PitchOffset * _obstacleJumpBlend;
+                              + jumpFeel.PitchOffset * _obstacleJumpBlend
+                              + _impact.PitchKick;
             Quaternion orbitRotation = Quaternion.Euler(framedPitch, _yaw, 0f);
             var targetDistance = isLedgeTraversing
                 ? _ledgeDistance
@@ -192,7 +210,9 @@ namespace JuicyFresh3D.Parkour
                 : isSliding
                     ? _slideTargetOffsetY
                     : _targetOffset.y + jumpFeel.HeightOffset * _obstacleJumpBlend;
-            var targetRoll = isSliding ? _slideRoll : 0f;
+            var targetRoll = (isSliding ? _slideRoll : 0f)
+                             - _motor.WallSide * _wallRunRoll
+                             + _impact.RollKick;
 
             _currentDistance = Mathf.Lerp(_currentDistance, targetDistance, 1f - Mathf.Exp(-8f * Time.deltaTime));
             _currentTargetOffsetY = Mathf.Lerp(_currentTargetOffsetY, targetOffsetY, 1f - Mathf.Exp(-8f * Time.deltaTime));
@@ -203,7 +223,7 @@ namespace JuicyFresh3D.Parkour
             Vector3 shoulderOffset = orbitRotation * Vector3.right * _shoulderOffset;
             Vector3 desiredPosition = pivotPoint
                                       + shoulderOffset
-                                      - orbitRotation * Vector3.forward * _currentDistance;
+                                      - orbitRotation * Vector3.forward * (_currentDistance + _impact.DistanceKick);
             desiredPosition = ResolveCameraCollision(pivotPoint, desiredPosition);
 
             _landingImpulse = Mathf.MoveTowards(
@@ -214,16 +234,20 @@ namespace JuicyFresh3D.Parkour
             float positionSharpness = isLedgeTraversing
                 ? _ledgePositionSharpness
                 : _positionSharpness;
-            transform.position = Vector3.Lerp(
-                transform.position,
+            _smoothedPosition = Vector3.Lerp(
+                _smoothedPosition,
                 desiredPosition + impactOffset,
                 1f - Mathf.Exp(-positionSharpness * Time.deltaTime));
+            // 보폭 바운스는 평활을 거치면 발 접지와 위상이 어긋나므로 평활 뒤에 더한다.
+            transform.position = _smoothedPosition + Vector3.up * _stride.HeightOffset;
 
             Quaternion desiredRotation = Quaternion.Euler(framedPitch, _yaw, _currentRoll);
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
+            _smoothedRotation = Quaternion.Slerp(
+                _smoothedRotation,
                 desiredRotation,
                 1f - Mathf.Exp(-_rotationSharpness * Time.deltaTime));
+            transform.rotation = _smoothedRotation
+                                 * Quaternion.Euler(_impact.ShakeEuler + Vector3.forward * _stride.RollOffset);
 
             var targetFieldOfView = isLedgeTraversing
                 ? _ledgeFieldOfView
@@ -232,10 +256,11 @@ namespace JuicyFresh3D.Parkour
                     : Mathf.Lerp(_normalFieldOfView, _fastFieldOfView, speedRatio)
                       + jumpFeel.FieldOfViewOffset * _obstacleJumpBlend;
 
-            _camera.fieldOfView = Mathf.Lerp(
-                _camera.fieldOfView,
+            _smoothedFieldOfView = Mathf.Lerp(
+                _smoothedFieldOfView,
                 targetFieldOfView,
                 1f - Mathf.Exp(-8f * Time.deltaTime));
+            _camera.fieldOfView = _smoothedFieldOfView + _impact.FieldOfViewKick;
         }
 
         private Vector3 ResolveCameraCollision(Vector3 pivotPoint, Vector3 desiredPosition)
