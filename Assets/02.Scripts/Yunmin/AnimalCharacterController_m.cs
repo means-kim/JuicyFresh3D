@@ -39,7 +39,8 @@ public class AnimalCharacterController_m : MonoBehaviour
         {
             if (_playerEffectController != null)
             {
-                _playerEffectController.PlayEffect(null);
+                //_playerEffectController.PlayEffect(null); 안광희 수정
+                _playerEffectController.PlayEffect();
             }
             else
             {
