@@ -1,0 +1,23 @@
+{
+    "ClipName": "mixamo.com",
+    "Duration": 1.1666667461395264,
+    "FrameCount": 72,
+    "T1_TimeToExtreme": 0.7065728306770325,
+    "T2_TimeToExit": 0.4600939154624939,
+    "ExtremeFrameIndex": 43,
+    "ExtremeType": "LowestHips",
+    "AbsoluteMinGroundMargin": 0.07366164028644562,
+    "WorstFrameIndex": 50,
+    "WorstBoneName": "LeftHand",
+    "HasGroundPenetration": false,
+    "FacingDeviationAngleDeg": -91.49630737304688,
+    "LeadLegExtended": "RightLeg",
+    "RootTotalDelta": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "AverageSpeed": 0.0,
+    "PeakSpeed": 0.0,
+    "ExportJsonPath": "Assets/01.Scenes/UkYoung/06.Animations/Motion_DNA_mixamo.com.json"
+}

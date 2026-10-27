@@ -1,0 +1,18 @@
+{
+  "clipName": "mixamo.com",
+  "duration": 0.500,
+  "frameCount": 31,
+  "phases": {
+    "tLowestExtremeDuration": 0.000,
+    "tApexExtremeDuration": 0.450,
+    "tRecoverToExitDuration": 0.500
+  },
+  "kinematics": {
+    "minGroundMargin": 1.658,
+    "leadLegExtended": "오른발 (RightFoot)",
+    "facingDeviationAngle": 166.5,
+    "rootDeltaForward": 0.000,
+    "rootDeltaLateral": 0.000,
+    "rootDeltaVertical": 0.000
+  }
+}

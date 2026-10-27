@@ -1,0 +1,62 @@
+{
+  "clipName": "Anim_RunningSlide",
+  "duration": 1.533,
+  "frameCount": 94,
+  "phases": {
+    "t1_accelerateToKeyDuration": 0.363,
+    "t2_recoverToExitDuration": 1.171,
+    "keyFrameIndex": 22,
+    "keyTime": 0.363
+  },
+  "kinematicMetrics": {
+    "minHipsHeight": 0.289,
+    "minBoneGroundMargin": 0.012,
+    "leadLegExtended": "RightLeg",
+    "facingDeviationAngleDeg": 170.6,
+    "rootDeltaX": 0.000,
+    "rootDeltaY": 0.000,
+    "rootDeltaZ": 0.000
+  },
+  "entryPose": {
+    "Hips": [0.002, 0.950, -0.025],
+    "Spine": [0.005, 1.007, -0.031],
+    "Chest": [0.006, 1.071, -0.042],
+    "Head": [-0.004, 1.275, -0.123],
+    "LeftShoulder": [0.034, 1.208, -0.103],
+    "LeftHand": [0.159, 0.912, -0.039],
+    "RightShoulder": [-0.034, 1.203, -0.105],
+    "RightHand": [-0.173, 0.850, -0.122],
+    "LeftLowerLeg": [0.041, 0.597, -0.263],
+    "LeftFoot": [0.024, 0.349, 0.127],
+    "RightLowerLeg": [-0.077, 0.520, -0.113],
+    "RightFoot": [-0.029, 0.134, 0.137]
+  },
+  "keyPose": {
+    "Hips": [-0.156, 0.249, -1.818],
+    "Spine": [-0.183, 0.282, -1.781],
+    "Chest": [-0.222, 0.324, -1.748],
+    "Head": [-0.400, 0.444, -1.758],
+    "LeftShoulder": [-0.338, 0.412, -1.770],
+    "LeftHand": [0.136, 0.253, -1.925],
+    "RightShoulder": [-0.355, 0.388, -1.709],
+    "RightHand": [-0.300, 0.036, -1.574],
+    "LeftLowerLeg": [-0.208, 0.217, -2.244],
+    "LeftFoot": [-0.245, 0.114, -2.694],
+    "RightLowerLeg": [-0.455, 0.103, -2.000],
+    "RightFoot": [-0.083, 0.012, -2.260]
+  },
+  "exitPose": {
+    "Hips": [-0.670, 0.950, -6.075],
+    "Spine": [-0.667, 1.007, -6.080],
+    "Chest": [-0.667, 1.071, -6.092],
+    "Head": [-0.676, 1.275, -6.172],
+    "LeftShoulder": [-0.638, 1.208, -6.153],
+    "LeftHand": [-0.513, 0.912, -6.089],
+    "RightShoulder": [-0.706, 1.203, -6.155],
+    "RightHand": [-0.845, 0.850, -6.172],
+    "LeftLowerLeg": [-0.632, 0.597, -6.313],
+    "LeftFoot": [-0.648, 0.349, -5.923],
+    "RightLowerLeg": [-0.749, 0.520, -6.162],
+    "RightFoot": [-0.701, 0.134, -5.913]
+  }
+}

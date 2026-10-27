@@ -10,6 +10,7 @@ namespace JuicyFresh3D.Parkour
         public virtual ParkourRootStateType_y RootStateType => ParkourRootStateType_y.None;
         public virtual ParkourSubStateType_y SubStateType => ParkourSubStateType_y.None;
         public ParkourStateBase_y CurrentSubState => _currentSubState;
+        public ParkourStateBase_y ActiveLeafState => _currentSubState?.ActiveLeafState ?? this;
 
         protected ParkourStateBase_y(ParkourMotor motor, ParkourStateMachine_y stateMachine)
         {
@@ -26,6 +27,11 @@ namespace JuicyFresh3D.Parkour
             _currentSubState?.UpdateState(deltaTime);
         }
 
+        public virtual void UpdateAfterMoveState()
+        {
+            _currentSubState?.UpdateAfterMoveState();
+        }
+
         public virtual void StopState()
         {
             StopSubState();
@@ -38,9 +44,11 @@ namespace JuicyFresh3D.Parkour
                 return;
             }
 
+            ParkourSubStateType_y previousSubStateType = StateMachine.CurrentSubStateType;
             _currentSubState?.StopState();
             _currentSubState = nextSubState;
             _currentSubState?.StartState();
+            StateMachine.NotifySubStateChanged(previousSubStateType);
         }
 
         protected void StopSubState()

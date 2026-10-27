@@ -25,6 +25,14 @@ namespace JuicyFresh3D.Editor
         private const string FallingToLandPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_FallingToLand.fbx";
         private const string FallingToRollPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_FallingToRoll.fbx";
         private const string WallRunPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_WallRun.fbx";
+        private const string SprintWallClimbPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_SprintWallClimb.fbx";
+        private const string CrouchedToSprintingPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_CrouchedToSprinting.fbx";
+        private const string JumpingToHangingPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_JumpingToHanging.fbx";
+        private const string HangingIdlePath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_HangingIdle.fbx";
+        private const string BracedHangHopLeftPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_BracedHangHopLeft.fbx";
+        private const string BracedHangHopRightPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_BracedHangHopRight.fbx";
+        private const string BracedHangToCrouchPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_BracedHangToCrouch.fbx";
+        private const string JumpFromWallPath = "Assets/01.Scenes/UkYoung/06.Animations/Anim_JumpFromWall.fbx";
         private static readonly string[] OptionalAnimationPaths =
         {
             "Assets/01.Scenes/UkYoung/06.Animations/Anim_FastRun.fbx",
@@ -38,6 +46,72 @@ namespace JuicyFresh3D.Editor
         private const string ControllerPath = ControllerFolder + "/AC_Ctrl_Parkour.controller";
         private const string MaterialFolder = "Assets/01.Scenes/UkYoung/09.Materials/Parkour";
         private const string ScenePath = "Assets/01.Scenes/UkYoung/01.Scenes/UkYoungScene.unity";
+
+        [InitializeOnLoadMethod]
+        private static void ScheduleLedgeParkourUpdate()
+        {
+            EditorApplication.delayCall += UpdateLedgeParkourAnimationsIfNeeded;
+        }
+
+        [MenuItem("Tools/JuicyFresh3D/Update Ledge Parkour Animations")]
+        public static void UpdateLedgeParkourAnimations()
+        {
+            Avatar avatar = GetCharacterAvatar();
+            AnimationClip sprintWallClimb = LoadOrConfigureAnimation(SprintWallClimbPath, avatar, false);
+            AnimationClip crouchedToSprinting = LoadOrConfigureAnimation(
+                CrouchedToSprintingPath,
+                avatar,
+                false,
+                true);
+
+            AnimationClip jumpingToHanging = LoadOrConfigureAnimation(JumpingToHangingPath, avatar, false);
+            AnimationClip hangingIdle = LoadOrConfigureAnimation(HangingIdlePath, avatar, true);
+            AnimationClip bracedHangHopLeft = LoadOrConfigureAnimation(BracedHangHopLeftPath, avatar, false);
+            AnimationClip bracedHangHopRight = LoadOrConfigureAnimation(BracedHangHopRightPath, avatar, false);
+            AnimationClip bracedHangToCrouch = LoadOrConfigureAnimation(BracedHangToCrouchPath, avatar, false);
+            AnimationClip jumpFromWall = LoadOrConfigureAnimation(JumpFromWallPath, avatar, false);
+
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+            if (controller == null)
+            {
+                throw new System.IO.FileNotFoundException("Parkour Animator Controller was not found.", ControllerPath);
+            }
+
+            AnimatorStateMachine stateMachine = controller.layers[0].stateMachine;
+            AddOrUpdateState(stateMachine, "Sprint Wall Climb", sprintWallClimb, new Vector3(1180f, 380f));
+            AddOrUpdateState(stateMachine, "Crouched To Sprint", crouchedToSprinting, new Vector3(1420f, 380f));
+            AddOrUpdateState(stateMachine, "Jumping To Hanging", jumpingToHanging, new Vector3(1180f, 500f));
+            AddOrUpdateState(stateMachine, "Hanging Idle", hangingIdle, new Vector3(1420f, 500f));
+            AddOrUpdateState(stateMachine, "Braced Hang Hop Left", bracedHangHopLeft, new Vector3(1660f, 440f));
+            AddOrUpdateState(stateMachine, "Braced Hang Hop Right", bracedHangHopRight, new Vector3(1660f, 500f));
+            AddOrUpdateState(stateMachine, "Braced Hang To Crouch", bracedHangToCrouch, new Vector3(1660f, 560f));
+            AddOrUpdateState(stateMachine, "Jump From Wall", jumpFromWall, new Vector3(1420f, 620f));
+
+            EditorUtility.SetDirty(controller);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Ledge parkour animations updated without rebuilding the Animator Controller.");
+        }
+
+        private static void UpdateLedgeParkourAnimationsIfNeeded()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode ||
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (NeedsLedgeParkourUpdate())
+                {
+                    UpdateLedgeParkourAnimations();
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogError($"Ledge parkour animation update failed: {exception}");
+            }
+        }
 
         [MenuItem("Tools/JuicyFresh3D/Build Parkour Scene")]
         public static void BuildParkourScene()
@@ -160,6 +234,139 @@ namespace JuicyFresh3D.Editor
             return avatar;
         }
 
+        private static Avatar GetCharacterAvatar()
+        {
+            Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(ModelPath)
+                .OfType<Avatar>()
+                .FirstOrDefault(candidate => candidate.isValid && candidate.isHuman);
+            return avatar != null ? avatar : ConfigureCharacterModel();
+        }
+
+        private static AnimationClip LoadOrConfigureAnimation(
+            string path,
+            Avatar avatar,
+            bool loop,
+            bool bakeRootHeight = false)
+        {
+            ModelImporter importer = AssetImporter.GetAtPath(path) as ModelImporter;
+            if (importer == null)
+            {
+                throw new System.IO.FileNotFoundException("Animation was not found.", path);
+            }
+
+            ModelImporterClipAnimation[] clips = importer.clipAnimations;
+            if (clips == null || clips.Length == 0)
+            {
+                clips = importer.defaultClipAnimations;
+            }
+
+            bool hasCorrectLoop = clips.Length > 0 && clips.All(clip =>
+                clip.loopTime == loop &&
+                clip.loopPose == loop &&
+                clip.keepOriginalOrientation &&
+                clip.keepOriginalPositionY &&
+                clip.keepOriginalPositionXZ &&
+                !clip.lockRootRotation &&
+                clip.lockRootHeightY == bakeRootHeight &&
+                !clip.lockRootPositionXZ);
+            bool isConfigured = importer.animationType == ModelImporterAnimationType.Human &&
+                                importer.avatarSetup == ModelImporterAvatarSetup.CopyFromOther &&
+                                importer.sourceAvatar == avatar &&
+                                hasCorrectLoop;
+
+            if (!isConfigured)
+            {
+                return ConfigureAnimation(path, avatar, loop, bakeRootHeight);
+            }
+
+            AnimationClip animationClip = AssetDatabase.LoadAllAssetsAtPath(path)
+                .OfType<AnimationClip>()
+                .FirstOrDefault(clip => !clip.name.StartsWith("__preview__"));
+            if (animationClip == null)
+            {
+                throw new System.InvalidOperationException($"Animation clip could not be loaded: {path}");
+            }
+
+            return animationClip;
+        }
+
+        private static bool NeedsLedgeParkourUpdate()
+        {
+            Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(ModelPath)
+                .OfType<Avatar>()
+                .FirstOrDefault(candidate => candidate.isValid && candidate.isHuman);
+            if (avatar == null)
+            {
+                return true;
+            }
+
+            string[] nonLoopingPaths =
+            {
+                SprintWallClimbPath,
+                JumpingToHangingPath,
+                BracedHangHopLeftPath,
+                BracedHangHopRightPath,
+                BracedHangToCrouchPath,
+                JumpFromWallPath
+            };
+            if (nonLoopingPaths.Any(path => !IsAnimationConfigured(path, avatar, false)) ||
+                !IsAnimationConfigured(CrouchedToSprintingPath, avatar, false, true) ||
+                !IsAnimationConfigured(HangingIdlePath, avatar, true))
+            {
+                return true;
+            }
+
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+            AnimatorState[] states = controller.layers[0].stateMachine.states
+                .Select(child => child.state)
+                .ToArray();
+            string[] requiredStateNames =
+            {
+                "Sprint Wall Climb",
+                "Crouched To Sprint",
+                "Jumping To Hanging",
+                "Hanging Idle",
+                "Braced Hang Hop Left",
+                "Braced Hang Hop Right",
+                "Braced Hang To Crouch",
+                "Jump From Wall"
+            };
+            return requiredStateNames.Any(requiredName =>
+                states.All(state => state.name != requiredName));
+        }
+
+        private static bool IsAnimationConfigured(
+            string path,
+            Avatar avatar,
+            bool loop,
+            bool bakeRootHeight = false)
+        {
+            ModelImporter importer = AssetImporter.GetAtPath(path) as ModelImporter;
+            if (importer == null ||
+                importer.animationType != ModelImporterAnimationType.Human ||
+                importer.avatarSetup != ModelImporterAvatarSetup.CopyFromOther ||
+                importer.sourceAvatar != avatar)
+            {
+                return false;
+            }
+
+            ModelImporterClipAnimation[] clips = importer.clipAnimations;
+            if (clips == null || clips.Length == 0)
+            {
+                clips = importer.defaultClipAnimations;
+            }
+
+            return clips.Length > 0 && clips.All(clip =>
+                clip.loopTime == loop &&
+                clip.loopPose == loop &&
+                clip.keepOriginalOrientation &&
+                clip.keepOriginalPositionY &&
+                clip.keepOriginalPositionXZ &&
+                !clip.lockRootRotation &&
+                clip.lockRootHeightY == bakeRootHeight &&
+                !clip.lockRootPositionXZ);
+        }
+
         private static AnimationClip ConfigureAnimation(
             string path,
             Avatar avatar,
@@ -191,7 +398,7 @@ namespace JuicyFresh3D.Editor
                 clip.keepOriginalOrientation = true;
                 clip.keepOriginalPositionY = true;
                 clip.keepOriginalPositionXZ = true;
-                clip.lockRootRotation = bakeRootHeight;
+                clip.lockRootRotation = false;
                 clip.lockRootHeightY = bakeRootHeight;
                 clip.lockRootPositionXZ = false;
                 clip.heightFromFeet = bakeRootHeight;
@@ -404,6 +611,26 @@ namespace JuicyFresh3D.Editor
             AnimatorState state = stateMachine.AddState(name, position);
             state.motion = motion;
             state.writeDefaultValues = true;
+            return state;
+        }
+
+        private static AnimatorState AddOrUpdateState(
+            AnimatorStateMachine stateMachine,
+            string name,
+            Motion motion,
+            Vector3 position)
+        {
+            AnimatorState state = stateMachine.states
+                .Select(child => child.state)
+                .FirstOrDefault(candidate => candidate.name == name);
+            if (state == null)
+            {
+                state = stateMachine.AddState(name, position);
+            }
+
+            state.motion = motion;
+            state.writeDefaultValues = true;
+            EditorUtility.SetDirty(state);
             return state;
         }
 

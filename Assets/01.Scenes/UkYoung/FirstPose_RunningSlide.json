@@ -1,0 +1,26 @@
+{
+  "clipName": "Anim_RunningSlide",
+  "frame": 0,
+  "time": 0.0,
+  "rootPosition": [0.845, 0.040, 13.534],
+  "bones": [
+    {"name": "Hips", "worldY": 0.990, "relX": 0.002, "relY": 0.950, "relZ": -0.025},
+    {"name": "Spine", "worldY": 1.047, "relX": 0.005, "relY": 1.007, "relZ": -0.031},
+    {"name": "Chest", "worldY": 1.111, "relX": 0.006, "relY": 1.071, "relZ": -0.042},
+    {"name": "Head", "worldY": 1.315, "relX": -0.004, "relY": 1.275, "relZ": -0.123},
+    {"name": "LeftShoulder", "worldY": 1.248, "relX": 0.034, "relY": 1.208, "relZ": -0.103},
+    {"name": "LeftUpperArm", "worldY": 1.225, "relX": 0.099, "relY": 1.185, "relZ": -0.086},
+    {"name": "LeftLowerArm", "worldY": 1.102, "relX": 0.153, "relY": 1.062, "relZ": 0.116},
+    {"name": "LeftHand", "worldY": 0.952, "relX": 0.159, "relY": 0.912, "relZ": -0.039},
+    {"name": "RightShoulder", "worldY": 1.243, "relX": -0.034, "relY": 1.203, "relZ": -0.105},
+    {"name": "RightUpperArm", "worldY": 1.206, "relX": -0.095, "relY": 1.166, "relZ": -0.096},
+    {"name": "RightLowerArm", "worldY": 1.031, "relX": -0.190, "relY": 0.991, "relZ": 0.041},
+    {"name": "RightHand", "worldY": 0.890, "relX": -0.173, "relY": 0.850, "relZ": -0.122},
+    {"name": "LeftUpperLeg", "worldY": 0.900, "relX": 0.064, "relY": 0.860, "relZ": -0.016},
+    {"name": "LeftLowerLeg", "worldY": 0.637, "relX": 0.041, "relY": 0.597, "relZ": -0.263},
+    {"name": "LeftFoot", "worldY": 0.389, "relX": 0.024, "relY": 0.349, "relZ": 0.127},
+    {"name": "RightUpperLeg", "worldY": 0.907, "relX": -0.068, "relY": 0.867, "relZ": -0.009},
+    {"name": "RightLowerLeg", "worldY": 0.560, "relX": -0.077, "relY": 0.520, "relZ": -0.113},
+    {"name": "RightFoot", "worldY": 0.174, "relX": -0.029, "relY": 0.134, "relZ": 0.137}
+  ]
+}
