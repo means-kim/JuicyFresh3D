@@ -12,6 +12,8 @@ public sealed class PlayerEffectController_m : MonoBehaviour
     [SerializeField] private ShilhouetteOutlineEffect_m _silhouetteOutlineEffect;
     [SerializeField] private OutlineParticleLightEffect_m _outlineParticleLightEffect;
     [SerializeField] private PlayerMove _target;
+    [SerializeField] private Animator _animator;
+    private static readonly int TakeDamageTrigger = Animator.StringToHash("TakeDamage");
 
     [Header("Shared Settings")]
     [Tooltip("Fallback color used only when no dodge outline profile is assigned.")]
@@ -91,6 +93,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         ApplySharedSettings();
 
         _hitEffectController?.PlayHitEffect();
+        _animator?.SetTrigger(TakeDamageTrigger);
     }
 
     private void Awake()
@@ -131,6 +134,10 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         if (_postProcessManager == null)
         {
             _postProcessManager = FindAnyObjectByType<PostProcessEffectController_m>();
+        }
+        if (_animator == null)
+        {
+            _animator = GetComponent<Animator>();
         }
     }
 

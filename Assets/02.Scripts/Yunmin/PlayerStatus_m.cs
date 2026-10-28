@@ -18,6 +18,14 @@ public class PlayerStatus_m : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            TakeDamage(10f); // Example damage value
+        }
+    }
+
    /// <summary>
    /// 피격시 호출하는 함수. 필요시 인터페이스로 분리해야함.
    /// </summary>
