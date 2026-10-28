@@ -22,7 +22,6 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
     // 연출 수치는 재생 요청마다 프로필로 전달받습니다.
     private OutlineEffectProfile_m _activeProfile;
     private Color _activeColor;
-    private float _stopFadeDuration = 0.4f;
 
     private sealed class RimLayer
     {
@@ -38,11 +37,8 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
     private readonly List<RimLayer> _rimLayers = new List<RimLayer>();
     private MaterialPropertyBlock _rimProperties;
     private bool _isRimPlaying;
-    private bool _isRimStopping;
     private float _rimOpacity;
     private float _rimElapsedTime;
-    private float _rimStopElapsedTime;
-    private float _rimStopStartOpacity;
 
     internal void PlayEffect(OutlineEffectProfile_m profile)
     {
@@ -76,61 +72,27 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         _activeProfile = profile;
         _activeColor = color;
         _isRimPlaying = true;
-        _isRimStopping = false;
         _rimElapsedTime = 0f;
         _rimOpacity = EvaluateOutlineOpacity(0f);
-        _rimStopElapsedTime = 0f;
         UpdateRimRenderers();
     }
 
     internal void StopEffect()
     {
-        if (_stopFadeDuration <= 0f)
-        {
-            HideRim();
-            return;
-        }
-
-        if (_isRimPlaying && !_isRimStopping)
-        {
-            _rimStopStartOpacity = _rimOpacity;
-            _rimStopElapsedTime = 0f;
-            _isRimStopping = true;
-        }
-    }
-
-    internal void SetStopFadeDuration(float stopFadeDuration)
-    {
-        _stopFadeDuration = Mathf.Max(0f, stopFadeDuration);
+        HideRim();
     }
 
     private void LateUpdate()
     {
         if (!_isRimPlaying) return;
-        if (_isRimStopping)
+        _rimElapsedTime += Time.deltaTime;
+        if (_rimElapsedTime >= _activeProfile.TotalDuration)
         {
-            _rimStopElapsedTime += Time.deltaTime;
-            float duration = Mathf.Max(0f, _stopFadeDuration);
-
-            if (_rimStopElapsedTime >= duration)
-            {
-                HideRim();
-                return;
-            }
-
-            _rimOpacity = _rimStopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _rimStopElapsedTime / duration));
+            HideRim();
+            return;
         }
-        else
-        {
-            _rimElapsedTime += Time.deltaTime;
-            if (_rimElapsedTime >= _activeProfile.TotalDuration)
-            {
-                HideRim();
-                return;
-            }
 
-            _rimOpacity = EvaluateOutlineOpacity(_rimElapsedTime);
-        }
+        _rimOpacity = EvaluateOutlineOpacity(_rimElapsedTime);
 
         UpdateRimRenderers();
     }
@@ -320,10 +282,8 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
     private void HideRim()
     {
         _isRimPlaying = false;
-        _isRimStopping = false;
         _rimOpacity = 0f;
         _rimElapsedTime = 0f;
-        _rimStopElapsedTime = 0f;
 
         foreach (RimLayer layer in _rimLayers)
         {

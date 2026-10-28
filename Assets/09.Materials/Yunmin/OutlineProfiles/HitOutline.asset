@@ -16,4 +16,4 @@ MonoBehaviour:
   _width: 3
   _brightness: 3
   _fadeInDuration: 0
-  _fadeOutDuration: 0.35
+  _fadeOutDuration: 0.66

@@ -767,6 +767,10 @@ PrefabInstance:
       propertyPath: _postProcessManager
       value: 
       objectReference: {fileID: 1880000012}
+    - target: {fileID: 3118520892350985848, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+      propertyPath: _hitEffectController
+      value: 
+      objectReference: {fileID: 2408088833215119517}
     - target: {fileID: 4329750253024872555, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

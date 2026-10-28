@@ -39,7 +39,6 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     [SerializeField, Min(0f)] private float _flashFadeOutDuration = 1f;
 
     private Color _effectColor;
-    private float _stopFadeDuration = 0.4f;
 
     private GameObject _flashObject;
     private Mesh _flashMesh;
@@ -47,11 +46,8 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     private MaterialPropertyBlock _flashProperties;
     private float _elapsedTime;
     private float _opacity;
-    private float _stopStartOpacity;
     private float _horizontalStretch = 1f;
-    private float _stopStartHorizontalStretch;
     private bool _isFlashPlaying;
-    private bool _isStopping;
 
     internal void PlayEffect()
     {
@@ -74,7 +70,6 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         EnsureFlashObject();
 
         _elapsedTime = 0f;
-        _isStopping = false;
         _isFlashPlaying = true;
         _horizontalStretch = 1f;
         _opacity = EvaluateFlashOpacity(0f);
@@ -85,27 +80,14 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
 
     internal void StopEffect()
     {
-        if (_stopFadeDuration <= 0f)
-        {
-            HideFlash();
-            return;
-        }
-
-        if (_isFlashPlaying && !_isStopping)
-        {
-            _stopStartOpacity = _opacity;
-            _stopStartHorizontalStretch = _horizontalStretch;
-            _elapsedTime = 0f;
-            _isStopping = true;
-        }
+        HideFlash();
     }
 
-    internal void SetSharedSettings(Color color, float stopFadeDuration)
+    internal void SetEffectColor(Color color)
     {
         bool colorChanged = _effectColor != color;
 
         _effectColor = color;
-        _stopFadeDuration = Mathf.Max(0f, stopFadeDuration);
 
         if (colorChanged && _flashRenderer != null)
         {
@@ -118,9 +100,7 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
         if (!_isFlashPlaying) return;
 
         _elapsedTime += Time.deltaTime;
-        float duration = _isStopping
-            ? Mathf.Max(0f, _stopFadeDuration)
-            : Mathf.Max(0f, _flashFadeInDuration) + Mathf.Max(0f, _flashHoldDuration) + Mathf.Max(0f, _flashFadeOutDuration);
+        float duration = Mathf.Max(0f, _flashFadeInDuration) + Mathf.Max(0f, _flashHoldDuration) + Mathf.Max(0f, _flashFadeOutDuration);
 
         if (_elapsedTime >= duration)
         {
@@ -128,11 +108,11 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
             return;
         }
 
-        _opacity = _isStopping ? _stopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _elapsedTime / duration)) : EvaluateFlashOpacity(_elapsedTime);
+        _opacity = EvaluateFlashOpacity(_elapsedTime);
 
-        float stretchProgress = _isStopping ? Mathf.SmoothStep(0f, 1f, _elapsedTime / duration) : EvaluateFadeOutProgress(_elapsedTime);
+        float stretchProgress = EvaluateFadeOutProgress(_elapsedTime);
 
-        _horizontalStretch = Mathf.Lerp((_isStopping ? _stopStartHorizontalStretch : 1f), Mathf.Max(1f, _flashEndHorizontalStretch), stretchProgress);
+        _horizontalStretch = Mathf.Lerp(1f, Mathf.Max(1f, _flashEndHorizontalStretch), stretchProgress);
 
         Camera effectCamera = ResolveCamera();
 
@@ -292,7 +272,6 @@ public sealed class CrossFlashEffect_m : MonoBehaviour
     private void HideFlash()
     {
         _isFlashPlaying = false;
-        _isStopping = false;
         _opacity = 0f;
         _horizontalStretch = 1f;
 
