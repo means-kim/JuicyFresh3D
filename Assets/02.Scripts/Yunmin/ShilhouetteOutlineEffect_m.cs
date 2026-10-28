@@ -18,17 +18,10 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
     [SerializeField, InspectorName("Outline Material")] private Material _rimMaterial;
     [Tooltip("Marks the original silhouette before drawing the outline. Uses stencil bit 0.")]
     [SerializeField] private Material _outlineMaskMaterial;
-    [Tooltip("Thickness outside the silhouette in render-target pixels.")]
-    [SerializeField, Range(0f, 10f), InspectorName("Outline Width (Pixels)")]
-    private float _rimWidth = 2f;
-    [SerializeField, Min(0f), InspectorName("Outline Brightness")]
-    private float _rimBrightness = 3f;
-    [Tooltip("Time to reach full outline brightness. Zero lights it immediately.")]
-    [SerializeField, Min(0f)] private float _outlineFadeInDuration = 0.05f;
-    [Tooltip("Time to automatically fade the outline to zero after reaching full brightness.")]
-    [SerializeField, Min(0f)] private float _outlineFadeOutDuration = 1.5f;
 
-    private Color _effectColor;
+    // 연출 수치는 재생 요청마다 프로필로 전달받습니다.
+    private OutlineEffectProfile_m _activeProfile;
+    private Color _activeColor;
     private float _stopFadeDuration = 0.4f;
 
     private sealed class RimLayer
@@ -51,9 +44,21 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
     private float _rimStopElapsedTime;
     private float _rimStopStartOpacity;
 
-    internal void PlayEffect()
+    internal void PlayEffect(OutlineEffectProfile_m profile)
+    {
+        if (profile == null) return;
+        PlayEffect(profile, profile.Color);
+    }
+
+    internal void PlayEffect(OutlineEffectProfile_m profile, Color color)
     {
         if (!Application.isPlaying || !isActiveAndEnabled) return;
+
+        if (profile == null)
+        {
+            Debug.LogWarning("Assign an outline effect profile before playing the outline.", this);
+            return;
+        }
 
         if (_rimMaterial == null || _outlineMaskMaterial == null)
         {
@@ -68,6 +73,8 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
             return;
         }
 
+        _activeProfile = profile;
+        _activeColor = color;
         _isRimPlaying = true;
         _isRimStopping = false;
         _rimElapsedTime = 0f;
@@ -92,13 +99,9 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         }
     }
 
-    internal void SetSharedSettings(Color color, float stopFadeDuration)
+    internal void SetStopFadeDuration(float stopFadeDuration)
     {
-        bool colorChanged = _effectColor != color;
-        _effectColor = color;
         _stopFadeDuration = Mathf.Max(0f, stopFadeDuration);
-        if (colorChanged && _rimProperties != null)
-            ApplyRimProperties();
     }
 
     private void LateUpdate()
@@ -120,9 +123,7 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         else
         {
             _rimElapsedTime += Time.deltaTime;
-            float duration = Mathf.Max(0f, _outlineFadeInDuration) + Mathf.Max(0f, _outlineFadeOutDuration);
-
-            if (_rimElapsedTime >= duration)
+            if (_rimElapsedTime >= _activeProfile.TotalDuration)
             {
                 HideRim();
                 return;
@@ -136,13 +137,13 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     private float EvaluateOutlineOpacity(float elapsedTime)
     {
-        float fadeInDuration = Mathf.Max(0f, _outlineFadeInDuration);
+        float fadeInDuration = _activeProfile.FadeInDuration;
         if (fadeInDuration > 0f && elapsedTime < fadeInDuration)
         {
             return Mathf.SmoothStep(0f, 1f, elapsedTime / fadeInDuration);
         }
 
-        float fadeOutDuration = Mathf.Max(0f, _outlineFadeOutDuration);
+        float fadeOutDuration = _activeProfile.FadeOutDuration;
 
         return (fadeOutDuration > 0f) ? (1f - Mathf.SmoothStep(0f, 1f, (elapsedTime - fadeInDuration) / fadeOutDuration)) : 0f;
     }
@@ -232,7 +233,7 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
             bool visible = source.enabled
                         && source.gameObject.activeInHierarchy
                         && _rimMaterial != null && _outlineMaskMaterial != null
-                        && _rimWidth > 0f;
+                        && _activeProfile != null && _activeProfile.Width > 0f;
 
             rimRenderer.enabled = visible;
             maskRenderer.enabled = visible;
@@ -300,10 +301,12 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     private void ApplyRimProperties()
     {
-        _rimProperties.SetColor(EffectColorId, _effectColor);
-        _rimProperties.SetFloat(BrightnessId, Mathf.Max(0f, _rimBrightness));
+        if (_rimProperties == null || _activeProfile == null) return;
+
+        _rimProperties.SetColor(EffectColorId, _activeColor);
+        _rimProperties.SetFloat(BrightnessId, _activeProfile.Brightness);
         _rimProperties.SetFloat(OpacityId, _rimOpacity);
-        _rimProperties.SetFloat(OutlineWidthId, Mathf.Clamp(_rimWidth, 0f, 10f));
+        _rimProperties.SetFloat(OutlineWidthId, _activeProfile.Width);
 
         foreach (RimLayer layer in _rimLayers)
         {

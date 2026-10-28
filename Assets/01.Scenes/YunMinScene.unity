@@ -550,6 +550,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb52dc74603945d4a64cf6a2daecd717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1959900175 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8661829458560147186, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+  m_PrefabInstance: {fileID: 2408088833215119515}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1959900179 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7989090618179757947, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+  m_PrefabInstance: {fileID: 2408088833215119515}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959900175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de71f3fcad9468bb533b1397429c112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShilhouetteOutlineEffect_m
+--- !u!114 &1959900181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959900175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3171b06f77444a6ae428a06afaeb2fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitEffectController_m
+  _silhouetteOutlineEffect: {fileID: 1959900179}
+  _hitOutlineProfile: {fileID: 11400000, guid: db76fc81f50649a392d12a3ab365073e, type: 2}
 --- !u!1001 &2054618043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -799,7 +829,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8661829458560147186, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1959900181}
   m_SourcePrefab: {fileID: 100100000, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
 --- !u!1001 &5020129448276025491
 PrefabInstance:

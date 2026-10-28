@@ -2350,6 +2350,7 @@ MonoBehaviour:
   _target: {fileID: 1055879555390096245}
   _effectColor: {r: 0.4935883, g: 0.892322, b: 1.4142135, a: 1}
   _stopFadeDuration: 0
+  _dodgeOutlineProfile: {fileID: 11400000, guid: e4c9e571c60d4127ace3cdb3327ae9c8, type: 2}
   _crossFlashEffect: {fileID: 1483044308863585899}
   _silhouetteOutlineEffect: {fileID: 7989090618179757947}
   _outlineParticleLightEffect: {fileID: 7278901390345345314}
@@ -2817,10 +2818,6 @@ MonoBehaviour:
   - {fileID: 8866554457860683310}
   _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
   _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
-  _rimWidth: 2.7
-  _rimBrightness: 3
-  _outlineFadeInDuration: 0.05
-  _outlineFadeOutDuration: 1
 --- !u!114 &7278901390345345314
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
 public sealed class PlayerEffectController_m : MonoBehaviour
@@ -9,18 +10,23 @@ public sealed class PlayerEffectController_m : MonoBehaviour
     [SerializeField] private PlayerMove _target;
 
     [Header("Shared Settings")]
-    [SerializeField, ColorUsage(true, true)]
-    private Color _effectColor = new Color(0.35f, 1f, 0.85f, 1f);
+    [Tooltip("Fallback color used only when no dodge outline profile is assigned.")]
+    [SerializeField, ColorUsage(true, true), FormerlySerializedAs("_effectColor")]
+    private Color _defaultEffectColor = new Color(0.35f, 1f, 0.85f, 1f);
 
     [Tooltip("Manual stop fade duration shared by both effects. Zero stops immediately.")]
     [SerializeField, Min(0f)] private float _stopFadeDuration = 0.4f;
+
+    [Tooltip("Outline width and timing for dodge. Its color is shared by every dodge effect.")]
+    [SerializeField] private OutlineEffectProfile_m _dodgeOutlineProfile;
+
+    // 회피 연출 전체가 프로필 색을 따르고, 프로필이 없을 때만 기본 색을 씁니다.
+    private Color DodgeEffectColor => _dodgeOutlineProfile != null ? _dodgeOutlineProfile.Color : _defaultEffectColor;
 
     [Header("Effect Components")]
     [SerializeField] private CrossFlashEffect_m _crossFlashEffect;
     [SerializeField] private ShilhouetteOutlineEffect_m _silhouetteOutlineEffect;
     [SerializeField] private OutlineParticleLightEffect_m _outlineParticleLightEffect;
-
-    public Color EffectColor => _effectColor;
 
     public void PlayEffect()
     {
@@ -34,7 +40,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
         if (_silhouetteOutlineEffect != null)
         {
-            _silhouetteOutlineEffect.PlayEffect();
+            _silhouetteOutlineEffect.PlayEffect(_dodgeOutlineProfile);
         }
 
         if (_outlineParticleLightEffect != null)
@@ -73,7 +79,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     public void SetEffectColor(Color color)
     {
-        _effectColor = color;
+        _defaultEffectColor = color;
         ApplySharedSettings();
     }
 
@@ -99,9 +105,11 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     private void ApplySharedSettings()
     {
-        if (_crossFlashEffect != null) _crossFlashEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
-        if (_silhouetteOutlineEffect != null) _silhouetteOutlineEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
-        if (_outlineParticleLightEffect != null) _outlineParticleLightEffect.SetSharedSettings(_effectColor, _stopFadeDuration);
+        Color color = DodgeEffectColor;
+        if (_crossFlashEffect != null) _crossFlashEffect.SetSharedSettings(color, _stopFadeDuration);
+        // 아웃라인 색은 재생 시점에만 전달해 피격 등 다른 연출 색을 덮어쓰지 않습니다.
+        if (_silhouetteOutlineEffect != null) _silhouetteOutlineEffect.SetStopFadeDuration(_stopFadeDuration);
+        if (_outlineParticleLightEffect != null) _outlineParticleLightEffect.SetSharedSettings(color, _stopFadeDuration);
     }
 
     private void ResolveReferences()
