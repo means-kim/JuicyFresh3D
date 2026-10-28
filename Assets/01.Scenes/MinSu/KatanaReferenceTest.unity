@@ -915,7 +915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1306621876
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1051,6 +1051,10 @@ MonoBehaviour:
   _canvasGroup: {fileID: 1333478616}
   _faceCamera: 0
   _hideWhenDead: 0
+  _healthSmoothTime: 0.06
+  _damageTrailDelay: 0.15
+  _damageTrailSmoothTime: 0.25
+  _damageTrailColor: {r: 1, g: 0.5, b: 0.1, a: 1}
 --- !u!225 &1333478616
 CanvasGroup:
   m_ObjectHideFlags: 0
