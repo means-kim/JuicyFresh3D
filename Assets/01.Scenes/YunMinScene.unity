@@ -550,36 +550,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb52dc74603945d4a64cf6a2daecd717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1959900175 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8661829458560147186, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
-  m_PrefabInstance: {fileID: 2408088833215119515}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1959900179 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7989090618179757947, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
   m_PrefabInstance: {fileID: 2408088833215119515}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959900175}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6de71f3fcad9468bb533b1397429c112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShilhouetteOutlineEffect_m
---- !u!114 &1959900181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959900175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3171b06f77444a6ae428a06afaeb2fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HitEffectController_m
-  _silhouetteOutlineEffect: {fileID: 1959900179}
-  _hitOutlineProfile: {fileID: 11400000, guid: db76fc81f50649a392d12a3ab365073e, type: 2}
 --- !u!1001 &2054618043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -778,6 +759,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1483044308863585899, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+      propertyPath: _effectCamera
+      value: 
+      objectReference: {fileID: 1311075673}
     - target: {fileID: 3118520892350985848, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
       propertyPath: _postProcessManager
       value: 
@@ -830,10 +815,47 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8661829458560147186, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 7213417370336245531, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 2408088833215119517}
+    - targetCorrespondingSourceObject: {fileID: 7213417370336245531, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1959900181}
+      addedObject: {fileID: 2408088833215119518}
   m_SourcePrefab: {fileID: 100100000, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+--- !u!1 &2408088833215119516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7213417370336245531, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+  m_PrefabInstance: {fileID: 2408088833215119515}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2408088833215119517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2408088833215119516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3171b06f77444a6ae428a06afaeb2fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitEffectController_m
+  _silhouetteOutlineEffect: {fileID: 1959900179}
+  _hitOutlineProfile: {fileID: 11400000, guid: db76fc81f50649a392d12a3ab365073e, type: 2}
+--- !u!114 &2408088833215119518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2408088833215119516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30a1941013164af42b348d77978ddda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus_m
+  _effectController: {fileID: 0}
+  _maxHealth: 100
+  _currentHealth: 100
 --- !u!1001 &5020129448276025491
 PrefabInstance:
   m_ObjectHideFlags: 0

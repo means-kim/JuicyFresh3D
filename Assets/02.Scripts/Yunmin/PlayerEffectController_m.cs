@@ -7,6 +7,10 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private PostProcessEffectController_m _postProcessManager;
+    [SerializeField] private HitEffectController_m _hitEffectController;
+    [SerializeField] private CrossFlashEffect_m _crossFlashEffect;
+    [SerializeField] private ShilhouetteOutlineEffect_m _silhouetteOutlineEffect;
+    [SerializeField] private OutlineParticleLightEffect_m _outlineParticleLightEffect;
     [SerializeField] private PlayerMove _target;
 
     [Header("Shared Settings")]
@@ -17,16 +21,12 @@ public sealed class PlayerEffectController_m : MonoBehaviour
     [Tooltip("Manual stop fade duration shared by both effects. Zero stops immediately.")]
     [SerializeField, Min(0f)] private float _stopFadeDuration = 0.4f;
 
+    [Header("Outline Profiles")]
     [Tooltip("Outline width and timing for dodge. Its color is shared by every dodge effect.")]
     [SerializeField] private OutlineEffectProfile_m _dodgeOutlineProfile;
 
     // 회피 연출 전체가 프로필 색을 따르고, 프로필이 없을 때만 기본 색을 씁니다.
     private Color DodgeEffectColor => _dodgeOutlineProfile != null ? _dodgeOutlineProfile.Color : _defaultEffectColor;
-
-    [Header("Effect Components")]
-    [SerializeField] private CrossFlashEffect_m _crossFlashEffect;
-    [SerializeField] private ShilhouetteOutlineEffect_m _silhouetteOutlineEffect;
-    [SerializeField] private OutlineParticleLightEffect_m _outlineParticleLightEffect;
 
     public void PlayEffect()
     {
@@ -81,6 +81,19 @@ public sealed class PlayerEffectController_m : MonoBehaviour
     {
         _defaultEffectColor = color;
         ApplySharedSettings();
+    }
+
+    public void PlayHitEffect()
+    {
+        if (!Application.isPlaying || !isActiveAndEnabled)
+        {
+            return;
+        }
+
+        ResolveReferences();
+        ApplySharedSettings();
+
+        _hitEffectController?.PlayHitEffect();
     }
 
     private void Awake()
