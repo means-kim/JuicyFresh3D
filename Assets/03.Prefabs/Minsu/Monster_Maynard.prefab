@@ -855,6 +855,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4108070678092718280}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8351042073968210043}
   m_SourcePrefab: {fileID: 100100000, guid: b16de64f344835249a16622b834ca21f, type: 3}
 --- !u!95 &1439677759213502829 stripped
 Animator:
@@ -1088,6 +1091,24 @@ MonoBehaviour:
   _outlineLayer:
     serializedVersion: 0
     m_Bits: 256
+--- !u!114 &8351042073968210043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643361297610178989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e8164c759b467cac73ac7a230e3348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterHitFlash_s
+  _bodyRenderers:
+  - {fileID: 1875922231405531826}
+  _overlayMaterial: {fileID: 2100000, guid: 7a9b3c2ef5c94a51a2408c0e9aa63270, type: 2}
+  _flashColor: {r: 0.65, g: 0.9, b: 1, a: 1}
+  _flashOpacity: 0.7
+  _flashDuration: 0.08
 --- !u!4 &6567930685159949108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: b16de64f344835249a16622b834ca21f, type: 3}
