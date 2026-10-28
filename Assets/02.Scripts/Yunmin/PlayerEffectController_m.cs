@@ -6,8 +6,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private PostProcessEffectController_m _postProcessManager;
-    //[SerializeField] private PlayerMove _target; 안광희 수정
-    [SerializeField] private BossAttackController _bossAttackController;
+    [SerializeField] private PlayerMove _target;
 
     [Header("Shared Settings")]
     [SerializeField, ColorUsage(true, true)]
@@ -23,33 +22,6 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     public Color EffectColor => _effectColor;
 
-    /*
-    public void PlayEffect(PlayerMove player)
-    {
-        // A null player is the manual preview path used by AnimalCharacterController_m.
-        if (!Application.isPlaying || !isActiveAndEnabled || (player != null && !player.IsRolling)) return;
-
-        ResolveReferences();
-        ApplySharedSettings();
-
-        if (_silhouetteOutlineEffect != null)
-        {
-            _silhouetteOutlineEffect.PlayEffect();
-        }
-
-        if (_outlineParticleLightEffect != null)
-        {
-            _outlineParticleLightEffect.PlayEffect();
-        }
-
-        if (_crossFlashEffect != null)
-        {
-            _crossFlashEffect.PlayEffect();
-        }
-
-        _postProcessManager?.PlayDodgeEffect();
-    }
-    */
     public void PlayEffect()
     {
         if (!Application.isPlaying || !isActiveAndEnabled)
@@ -134,13 +106,10 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
     private void ResolveReferences()
     {
-        /*
         if (_target == null)
         {
             _target = GetComponent<PlayerMove>();
         }
-        */
-        // 안광희 수정
 
         if (_postProcessManager == null)
         {
@@ -148,43 +117,25 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         }
     }
 
-    /*
     private void SubscribeEvents()
     {
-        if (_target != null)
-        {
-            _target.RollStarted -= PlayEffect;
-            _target.RollStarted += PlayEffect;
-        }
-    }
-
-    private void UnsubscribeEvents()
-    {
-        if (_target != null)
-        {
-            _target.RollStarted -= PlayEffect;
-        }
-    }
-    */
-    private void SubscribeEvents()
-    {
-        if (_bossAttackController == null)
+        if (_target == null)
         {
             return;
         }
 
-        _bossAttackController.DodgeSucceeded -= PlayEffect;
-        _bossAttackController.DodgeSucceeded += PlayEffect;
+        _target.DodgeSucceeded -= PlayEffect;
+        _target.DodgeSucceeded += PlayEffect;
     }
 
     private void UnsubscribeEvents()
     {
-        if (_bossAttackController == null)
+        if (_target == null)
         {
             return;
         }
 
-        _bossAttackController.DodgeSucceeded -= PlayEffect;
+        _target.DodgeSucceeded -= PlayEffect;
     }
     // 안광희 수정
     private void ResolveComponents()

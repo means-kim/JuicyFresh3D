@@ -2422,6 +2422,7 @@ MonoBehaviour:
   _dashDistance: 4
   _dashDuration: 0.3
   _dashClip: {fileID: 7400000, guid: a1c595f7b742e174cbd81d7061b3bd10, type: 3}
+  _dodgeTimeSlowEffect: {fileID: 6877719246330000506}
 --- !u!114 &6703836808568044412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2746,6 +2747,7 @@ GameObject:
   - component: {fileID: 1483044308863585899}
   - component: {fileID: 7989090618179757947}
   - component: {fileID: 7278901390345345314}
+  - component: {fileID: 6877719246330000506}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -2845,6 +2847,71 @@ MonoBehaviour:
   _gravityModifier: 0.1
   _noiseStrength: 0.86
   _particleBrightness: 4.98
+--- !u!114 &6877719246330000506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661829458560147186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31244f0efb9b26f4398a5fc26d57109b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DodgeTimeSlowEffect_m
+  _timeSlow:
+    _timeScaleCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1.0000001
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.25622317
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.41064113
+        value: 0.2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.7
+        value: 0.2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    _duration: 1
 --- !u!1 &8683742917807725138
 GameObject:
   m_ObjectHideFlags: 0

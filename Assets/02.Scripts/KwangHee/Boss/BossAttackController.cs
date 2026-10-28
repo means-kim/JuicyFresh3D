@@ -39,7 +39,6 @@ public class BossAttackController : MonoBehaviour
                                                          && frame + 0.0001f >= _meleeDodgeStartFrame &&
                                                          frame + 0.0001f < _meleeDodgeEndFrame;
     public event System.Action AttackFinished;
-    public event System.Action DodgeSucceeded;
 
     private void Awake()
     {
@@ -141,7 +140,7 @@ public class BossAttackController : MonoBehaviour
         _canJudgeMeleeDodge = false;
         Debug.Log("회피성공!", this);
         // 연출 담당에는 성공 신호만 전달합니다.
-        DodgeSucceeded?.Invoke();
+        player.NotifyDodgeSucceeded();
     }
 
     public void TryStartAttack(BossAttackType attackType)
