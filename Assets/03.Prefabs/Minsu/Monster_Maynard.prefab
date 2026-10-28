@@ -858,6 +858,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8351042073968210043}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8351042073968210044}
   m_SourcePrefab: {fileID: 100100000, guid: b16de64f344835249a16622b834ca21f, type: 3}
 --- !u!95 &1439677759213502829 stripped
 Animator:
@@ -1114,3 +1117,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: b16de64f344835249a16622b834ca21f, type: 3}
   m_PrefabInstance: {fileID: 4796429134751546620}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8351042073968210044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643361297610178989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64d73fc1ea384b09b88933fdb7238a9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterDamagePopup_s
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _fontSize: 32
+  _duration: 0.7
+  _rise: 65
+  _horizontalSpacing: 24
+  _worldHeightOffset: 0.25
+  _intermediateScale: 0.85
+  _finalScale: 1.15
+  _chargedScale: 1.3

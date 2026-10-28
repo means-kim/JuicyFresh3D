@@ -207,7 +207,9 @@ public class SwordHitDetector_s : MonoBehaviour
             : _charge != null ? _charge.ReleasedStage : 1;
         // 피해 이벤트에서 재진입하더라도 중복 적용하지 않는다.
         _hitTargets.Add(health);
-        if (!health.TakeDamage(damage))
+        DamagePopupKind popupKind = hitSkillSwing ? DamagePopupKind.Charged
+            : intermediate ? DamagePopupKind.Intermediate : DamagePopupKind.Final;
+        if (!health.TakeDamage(damage, point, popupKind))
         {
             _hitTargets.Remove(health);
             return;

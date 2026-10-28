@@ -12,6 +12,7 @@ public class Health_s : MonoBehaviour
 
     public event Action<int, int> HealthChanged;
     public event Action<int> Damaged;
+    public event Action<int, Vector3, DamagePopupKind> DamagePresented;
     public event Action<int> Healed;
     public event Action Died;
 
@@ -23,6 +24,11 @@ public class Health_s : MonoBehaviour
 
     public bool TakeDamage(int damage)
     {
+        return TakeDamage(damage, transform.position + Vector3.up, DamagePopupKind.Normal);
+    }
+
+    public bool TakeDamage(int damage, Vector3 point, DamagePopupKind kind)
+    {
         if (!isActiveAndEnabled || IsDead || damage <= 0)
         {
             return false;
@@ -33,6 +39,9 @@ public class Health_s : MonoBehaviour
         _currentHealth -= applied;
 
         bool died = IsDead;
+
+        // 사망 콜백이 대상을 숨기기 전에 실제 감소량과 명중 위치를 전달한다.
+        DamagePresented?.Invoke(applied, point, kind);
 
         Damaged?.Invoke(applied);
 
