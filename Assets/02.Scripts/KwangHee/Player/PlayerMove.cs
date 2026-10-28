@@ -27,6 +27,10 @@ public class PlayerMove : MonoBehaviour
     [SerializeField][Min(0.05f)] private float _dashDuration = 0.3f;
     [SerializeField] private AnimationClip _dashClip;
 
+    [Header("회피 성공 연출")]
+    [Tooltip("미지정 시 같은 오브젝트의 DodgeTimeSlowEffect_m을 사용합니다.")]
+    [SerializeField] private DodgeTimeSlowEffect_m _dodgeTimeSlowEffect;
+
     private CharacterController _characterController;
     private Animator _animator;
     private PlayerAttack _playerAttack;
@@ -57,12 +61,28 @@ public class PlayerMove : MonoBehaviour
     public bool IsDashing => _currentState == PlayerMoveState.Dashing;
     private bool CanReadGameplayInput => _cameraController == null || _cameraController.CanReadGameplayInput;
     public event System.Action<PlayerMove> RollStarted;
+    public event System.Action DodgeSucceeded;
+
+    // 회피 판정은 보스가 하지만 성공 신호는 플레이어가 발행합니다.
+    public void NotifyDodgeSucceeded()
+    {
+        if (_dodgeTimeSlowEffect != null)
+        {
+            _dodgeTimeSlowEffect.PlayEffect();
+        }
+        DodgeSucceeded?.Invoke();
+    }
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _playerAttack = GetComponent<PlayerAttack>();
+
+        if (_dodgeTimeSlowEffect == null)
+        {
+            _dodgeTimeSlowEffect = GetComponentInChildren<DodgeTimeSlowEffect_m>();
+        }
 
         if (_cameraTransform == null && Camera.main != null)
         {
