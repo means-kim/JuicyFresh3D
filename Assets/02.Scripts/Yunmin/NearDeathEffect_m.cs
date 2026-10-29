@@ -10,16 +10,11 @@ public sealed class NearDeathEffect_m : MonoBehaviour
 {
     [Header("Vignette")]
     [SerializeField, ColorUsage(false)] private Color _color = new Color(0.6f, 0f, 0f, 1f);
-    [Tooltip("박동이 가장 약할 때의 비네팅 강도입니다.")]
-    [SerializeField, Range(0f, 1f)] private float _minIntensity = 0.2f;
-    [Tooltip("박동이 가장 강할 때의 비네팅 강도입니다.")]
-    [SerializeField, Range(0f, 1f)] private float _maxIntensity = 0.45f;
-    [SerializeField, Range(0.01f, 1f)] private float _smoothness = 0.4f;
 
     [Header("Heartbeat")]
     [Tooltip("박동 한 주기(초). 슬로우 연출 중에도 일정하도록 unscaled time을 씁니다.")]
     [SerializeField, Min(0.05f)] private float _heartbeatPeriod = 0.9f;
-    [Tooltip("한 주기(0~1) 동안의 박동 곡선. 0이면 최소 강도, 1이면 최대 강도입니다.")]
+    [Tooltip("X는 한 주기의 진행도(0~1), Y는 비네팅 강도(0~1)입니다. 시작/종료 페이드는 별도로 적용됩니다.")]
     [SerializeField]
     private AnimationCurve _heartbeatCurve = new AnimationCurve(
         new Keyframe(0f, 0f),
@@ -53,7 +48,8 @@ public sealed class NearDeathEffect_m : MonoBehaviour
 
         _vignette.color.overrideState = true;
         _vignette.intensity.overrideState = true;
-        _vignette.smoothness.overrideState = true;
+        // 가장자리의 공간적 번짐은 고정하고, 박동 강도는 곡선으로만 제어합니다.
+        _vignette.smoothness.Override(0.4f);
         _vignette.center.Override(new Vector2(0.5f, 0.5f));
         _vignette.rounded.Override(false);
         _vignette.active = false;
@@ -92,11 +88,10 @@ public sealed class NearDeathEffect_m : MonoBehaviour
         }
 
         float pulse = Mathf.Clamp01(_heartbeatCurve.Evaluate(_heartbeatTime / _heartbeatPeriod));
-        float intensity = _fade * Mathf.Lerp(_minIntensity, _maxIntensity, pulse);
+        float intensity = _fade * pulse;
 
         _vignette.color.value = _color;
         _vignette.intensity.value = intensity;
-        _vignette.smoothness.value = Mathf.Clamp(_smoothness, 0.01f, 1f);
         _vignette.active = isActiveAndEnabled && intensity > 0f;
         TargetVolume.weight = intensity > 0f ? 1f : 0f;
     }
