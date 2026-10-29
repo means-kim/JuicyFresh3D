@@ -11,6 +11,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
     [SerializeField] private CrossFlashEffect_m _crossFlashEffect;
     [SerializeField] private ShilhouetteOutlineEffect_m _silhouetteOutlineEffect;
     [SerializeField] private OutlineParticleLightEffect_m _outlineParticleLightEffect;
+    [SerializeField] private CameraShakeEffect_m _cameraShakeEffect;
     [SerializeField] private PlayerMove _target;
     [SerializeField] private Animator _animator;
     private static readonly int TakeDamageTrigger = Animator.StringToHash("TakeDamage");
@@ -94,6 +95,20 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
         _hitEffectController?.PlayHitEffect();
         _animator?.SetTrigger(TakeDamageTrigger);
+        _cameraShakeEffect?.PlayHitShake();
+    }
+
+    // 빈사 진입 시 한 번 호출합니다. 일반 피격 연출은 PlayHitEffect에서 따로 재생됩니다.
+    public void PlayNearDeathEffect()
+    {
+        if (!Application.isPlaying || !isActiveAndEnabled)
+        {
+            return;
+        }
+
+        ResolveReferences();
+
+        _cameraShakeEffect?.PlayNearDeathShake();
     }
 
     private void Awake()
@@ -175,6 +190,10 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         if (_outlineParticleLightEffect == null)
         {
             _outlineParticleLightEffect = GetComponentInChildren<OutlineParticleLightEffect_m>();
+        }
+        if (_cameraShakeEffect == null)
+        {
+            _cameraShakeEffect = GetComponentInChildren<CameraShakeEffect_m>();
         }
     }
 
