@@ -2304,10 +2304,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4329750253024872555}
   - component: {fileID: 3118520892350985848}
+  - component: {fileID: 4101252341052776919}
   - component: {fileID: 2273756616619187829}
   - component: {fileID: 7171922623653153219}
   - component: {fileID: 1055879555390096245}
   - component: {fileID: 6703836808568044412}
+  - component: {fileID: 8809079281806158757}
   m_Layer: 0
   m_Name: ParticledPlayer
   m_TagString: Untagged
@@ -2347,12 +2349,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectController_m
   _postProcessManager: {fileID: 0}
-  _target: {fileID: 1055879555390096245}
-  _effectColor: {r: 0.4935883, g: 0.892322, b: 1.4142135, a: 1}
-  _stopFadeDuration: 0
+  _hitEffectController: {fileID: 4101252341052776919}
   _crossFlashEffect: {fileID: 1483044308863585899}
   _silhouetteOutlineEffect: {fileID: 7989090618179757947}
   _outlineParticleLightEffect: {fileID: 7278901390345345314}
+  _target: {fileID: 1055879555390096245}
+  _defaultEffectColor: {r: 0.4935883, g: 0.892322, b: 1.4142135, a: 1}
+  _dodgeOutlineProfile: {fileID: 11400000, guid: e4c9e571c60d4127ace3cdb3327ae9c8, type: 2}
+--- !u!114 &4101252341052776919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3171b06f77444a6ae428a06afaeb2fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitEffectController_m
+  _silhouetteOutlineEffect: {fileID: 7989090618179757947}
+  _hitOutlineProfile: {fileID: 11400000, guid: db76fc81f50649a392d12a3ab365073e, type: 2}
 --- !u!143 &2273756616619187829
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2450,6 +2467,21 @@ MonoBehaviour:
   _comboBlendDuration: 0.08
   _combo45StartOffset: 0.1
   _combo45BlendDuration: 0.04
+--- !u!114 &8809079281806158757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7213417370336245531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30a1941013164af42b348d77978ddda0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus_m
+  _effectController: {fileID: 0}
+  _maxHealth: 100
+  _currentHealth: 100
 --- !u!1 &7404618803377014162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2817,10 +2849,6 @@ MonoBehaviour:
   - {fileID: 8866554457860683310}
   _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
   _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
-  _rimWidth: 2.7
-  _rimBrightness: 3
-  _outlineFadeInDuration: 0.05
-  _outlineFadeOutDuration: 1
 --- !u!114 &7278901390345345314
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -45,14 +45,10 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
 
     private readonly List<ParticleEmitter> _emitters = new List<ParticleEmitter>();
     private Color _effectColor = Color.white;
-    private float _stopFadeDuration = 0.4f;
     private float _elapsedTime;
-    private float _stopElapsedTime;
     private float _opacity;
-    private float _stopStartOpacity;
     private int _emittedParticleCount;
     private bool _isPlaying;
-    private bool _isStopping;
 
     internal void PlayEffect()
     {
@@ -72,11 +68,9 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         }
 
         _elapsedTime = 0f;
-        _stopElapsedTime = 0f;
         _emittedParticleCount = 0;
         _opacity = 1f;
         _isPlaying = true;
-        _isStopping = false;
 
         EmitUntilCount(1);
         ApplyParticleProperties();
@@ -84,32 +78,13 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
 
     internal void StopEffect()
     {
-        if (!_isPlaying) return;
-
-        if (_stopFadeDuration <= 0f)
-        {
-            HideParticles();
-            return;
-        }
-
-        if (!_isStopping)
-        {
-            foreach (ParticleEmitter emitter in _emitters)
-            {
-                emitter.Particles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            }
-
-            _stopStartOpacity = _opacity;
-            _stopElapsedTime = 0f;
-            _isStopping = true;
-        }
+        HideParticles();
     }
 
-    internal void SetSharedSettings(Color color, float stopFadeDuration)
+    internal void SetEffectColor(Color color)
     {
         bool colorChanged = _effectColor != color;
         _effectColor = color;
-        _stopFadeDuration = Mathf.Max(0f, stopFadeDuration);
 
         if (colorChanged && _emitters.Count > 0)
         {
@@ -124,22 +99,6 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
         foreach (ParticleEmitter emitter in _emitters)
         {
             UpdateEmitterTransform(emitter);
-        }
-
-        if (_isStopping)
-        {
-            _stopElapsedTime += Time.deltaTime;
-            float duration = Mathf.Max(0f, _stopFadeDuration);
-            if (_stopElapsedTime >= duration)
-            {
-                HideParticles();
-                return;
-            }
-
-            _opacity = _stopStartOpacity * (1f - Mathf.SmoothStep(0f, 1f, _stopElapsedTime / duration));
-
-            ApplyParticleProperties();
-            return;
         }
 
         _elapsedTime += Time.deltaTime;
@@ -375,10 +334,8 @@ public sealed class OutlineParticleLightEffect_m : MonoBehaviour
     private void HideParticles()
     {
         _isPlaying = false;
-        _isStopping = false;
         _opacity = 0f;
         _elapsedTime = 0f;
-        _stopElapsedTime = 0f;
         _emittedParticleCount = 0;
 
         foreach (ParticleEmitter emitter in _emitters)
