@@ -109,6 +109,7 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         ResolveReferences();
 
         _cameraShakeEffect?.PlayNearDeathShake();
+        _postProcessManager?.PlayNearDeathEffect();
     }
 
     private void Awake()

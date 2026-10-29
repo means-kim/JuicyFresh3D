@@ -124,6 +124,71 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4329750253024872555, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
   m_PrefabInstance: {fileID: 2408088833215119515}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &522694203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 522694204}
+  - component: {fileID: 522694206}
+  - component: {fileID: 522694205}
+  m_Layer: 0
+  m_Name: NearDeathVolume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &522694204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522694203}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2095118705}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &522694205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522694203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f511ca08c6c445bdaf7b24f974709374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VignetteEffect_m
+  _color: {r: 1, g: 0.18396229, b: 0.18396229, a: 1}
+  _maxIntensity: 0.5
+  _smoothness: 0.5
+--- !u!114 &522694206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522694203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: f5fa8d679ed5c9a48b707582388f1d26, type: 2}
 --- !u!1 &813339867
 GameObject:
   m_ObjectHideFlags: 0
@@ -826,17 +891,106 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!1 &2095118699 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1676661674026811953, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+  m_PrefabInstance: {fileID: 7107009193218683735}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2095118704 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1278217734517628045, guid: 15e693d61aaf315478085915550afb7f, type: 3}
   m_PrefabInstance: {fileID: 7107009193218683735}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2095118699}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb52dc74603945d4a64cf6a2daecd717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2095118705 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3130610400766988576, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+  m_PrefabInstance: {fileID: 7107009193218683735}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2095118706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095118699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e4ee0cb5041ef4b8749b59ce54e49e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NearDeathEffect_m
+  _color: {r: 0.6, g: 0, b: 0, a: 1}
+  _minIntensity: 0.2
+  _maxIntensity: 0.45
+  _smoothness: 0.4
+  _heartbeatPeriod: 0.9
+  _heartbeatCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.22
+      value: 0.35
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.32
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.6
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _fadeInDuration: 0.3
+  _fadeOutDuration: 1
 --- !u!1001 &2408088833215119515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -977,6 +1131,10 @@ PrefabInstance:
       propertyPath: _effectCamera
       value: 
       objectReference: {fileID: 1311075673}
+    - target: {fileID: 1278217734517628045, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+      propertyPath: _nearDeathEffect
+      value: 
+      objectReference: {fileID: 2095118706}
     - target: {fileID: 1676661674026811953, guid: 15e693d61aaf315478085915550afb7f, type: 3}
       propertyPath: m_Name
       value: '@PostProcessEffectController'
@@ -1031,8 +1189,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3130610400766988576, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 522694204}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1676661674026811953, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2095118706}
   m_SourcePrefab: {fileID: 100100000, guid: 15e693d61aaf315478085915550afb7f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

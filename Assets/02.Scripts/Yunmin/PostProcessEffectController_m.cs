@@ -14,10 +14,15 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     [SerializeField, Min(0f)] private float _holdDuration = 2f;
     [SerializeField, Min(0f)] private float _fadeOutDuration = 0.8f;
 
+    [Header("Near Death")]
+    [Tooltip("빈사 비네팅. 비워두면 자식 오브젝트에서 찾습니다.")]
+    [SerializeField] private NearDeathEffect_m _nearDeathEffect;
+
     private enum Phase { Idle, FadeIn, Hold, FadeOut }
 
     private Volume _volume;
     private VolumeProfile _runtimeProfile;
+    private VolumeProfile _nearDeathRuntimeProfile;
     private VignetteEffect_m _vignette;
     private DepthOfFieldEffect_m _depthOfField;
     private ChromaticAberrationEffect_m _chromaticAberration;
@@ -28,6 +33,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
 
     public bool IsPlaying => _phase != Phase.Idle;
     public float CurrentStrength => _strength;
+    public bool IsNearDeath => _nearDeathEffect != null && _nearDeathEffect.IsPlaying;
 
     [ContextMenu("연출 재생")]
     public void PlayDodgeEffect()
@@ -65,6 +71,30 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         ApplyDodgeEffects();
     }
 
+    [ContextMenu("빈사 연출 재생")]
+    public void PlayNearDeathEffect()
+    {
+        if (!Application.isPlaying || !isActiveAndEnabled)
+            return;
+
+        if (!EnsureNearDeathInitialized())
+        {
+            Debug.LogWarning("Add a NearDeathEffect_m child before playing near death effect.", this);
+            return;
+        }
+
+        _nearDeathEffect.Play();
+    }
+
+    [ContextMenu("빈사 연출 정지")]
+    public void StopNearDeathEffect()
+    {
+        if (_nearDeathEffect != null)
+        {
+            _nearDeathEffect.Stop();
+        }
+    }
+
     private void OnEnable()
     {
         if (!Application.isPlaying)
@@ -79,15 +109,24 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!IsPlaying) return;
-        if (!EnsureInitialized())
+        if (IsPlaying)
         {
-            Clear();
-            return;
+            if (EnsureInitialized())
+            {
+                AdvanceTime(Time.deltaTime);
+                ApplyDodgeEffects();
+            }
+            else
+            {
+                ClearDodge();
+            }
         }
 
-        AdvanceTime(Time.deltaTime);
-        ApplyDodgeEffects();
+        if (_nearDeathEffect != null && _nearDeathEffect.IsVisible)
+        {
+            // 박동은 슬로우 연출과 무관하게 일정한 속도로 뜁니다.
+            _nearDeathEffect.Tick(Time.unscaledDeltaTime);
+        }
     }
 
     private void AdvanceTime(float deltaTime)
@@ -145,19 +184,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
 
         if (_runtimeProfile == null)
         {
-            _volume.weight = 0f;
-            _volume.isGlobal = true;
-
-            // Volume.profile deep-copies the shared profile and its components.
-
-            _runtimeProfile = _volume.profile;
-            _runtimeProfile.name = name + " Post Process (Runtime)";
-            _runtimeProfile.hideFlags = HideFlags.DontSave;
-
-            foreach (VolumeComponent component in _runtimeProfile.components)
-            {
-                component.hideFlags = HideFlags.DontSave;
-            }
+            _runtimeProfile = CreateRuntimeProfile(_volume, " Post Process (Runtime)");
 
             _vignette.Initialize(_runtimeProfile);
             _depthOfField.Initialize(_runtimeProfile, _effectCamera);
@@ -165,6 +192,46 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         }
 
         return true;
+    }
+
+    private bool EnsureNearDeathInitialized()
+    {
+        ResolveComponents();
+        if (_nearDeathEffect == null || _nearDeathEffect.TargetVolume == null) return false;
+
+        if (_nearDeathRuntimeProfile == null)
+        {
+            Volume nearDeathVolume = _nearDeathEffect.TargetVolume;
+
+            // 회피 Volume보다 우선순위를 높여 빈사 중엔 빨간 비네팅이 이깁니다.
+            if (_volume != null && nearDeathVolume.priority <= _volume.priority)
+            {
+                nearDeathVolume.priority = _volume.priority + 1f;
+            }
+
+            _nearDeathRuntimeProfile = CreateRuntimeProfile(nearDeathVolume, " Near Death (Runtime)");
+            _nearDeathEffect.Initialize(_nearDeathRuntimeProfile);
+        }
+
+        return true;
+    }
+
+    private VolumeProfile CreateRuntimeProfile(Volume volume, string suffix)
+    {
+        volume.weight = 0f;
+        volume.isGlobal = true;
+
+        // Volume.profile deep-copies the shared profile and its components.
+        VolumeProfile profile = volume.profile;
+        profile.name = name + suffix;
+        profile.hideFlags = HideFlags.DontSave;
+
+        foreach (VolumeComponent component in profile.components)
+        {
+            component.hideFlags = HideFlags.DontSave;
+        }
+
+        return profile;
     }
 
     private void ResolveComponents()
@@ -185,6 +252,10 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         {
             _chromaticAberration = GetComponent<ChromaticAberrationEffect_m>();
         }
+        if (_nearDeathEffect == null)
+        {
+            _nearDeathEffect = GetComponentInChildren<NearDeathEffect_m>(true);
+        }
     }
 
     private void ApplyDodgeEffects()
@@ -198,6 +269,20 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     }
 
     private void Clear()
+    {
+        ClearDodge();
+        ClearNearDeath();
+    }
+
+    private void ClearNearDeath()
+    {
+        if (_nearDeathEffect != null)
+        {
+            _nearDeathEffect.Clear();
+        }
+    }
+
+    private void ClearDodge()
     {
         _phase = Phase.Idle;
         _strength = 0f;
@@ -231,16 +316,22 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     {
         Clear();
 
-        if (_runtimeProfile == null) return;
-        if (_volume != null) _volume.profile = null;
+        DestroyRuntimeProfile(_volume, _runtimeProfile);
+        _runtimeProfile = null;
+        DestroyRuntimeProfile(_nearDeathEffect != null ? _nearDeathEffect.TargetVolume : null, _nearDeathRuntimeProfile);
+        _nearDeathRuntimeProfile = null;
+    }
 
-        foreach (VolumeComponent component in _runtimeProfile.components)
+    private static void DestroyRuntimeProfile(Volume volume, VolumeProfile profile)
+    {
+        if (profile == null) return;
+        if (volume != null) volume.profile = null;
+
+        foreach (VolumeComponent component in profile.components)
         {
             Destroy(component);
         }
 
-
-        Destroy(_runtimeProfile);
-        _runtimeProfile = null;
+        Destroy(profile);
     }
 }
