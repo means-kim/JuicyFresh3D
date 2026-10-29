@@ -2906,7 +2906,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.2
+        time: 0.23333333
         value: 1
         inSlope: 0
         outSlope: 0
@@ -3010,8 +3010,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21643c84c44b10c4e80fb6ed8d965dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraShakeEffect_m
-  _hitForce: 0.2
-  _nearDeathForce: 1
+  _hitForce: 1
+  _nearDeathForce: 1.5
 --- !u!1 &8683742917807725138
 GameObject:
   m_ObjectHideFlags: 0
