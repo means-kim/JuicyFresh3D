@@ -57,7 +57,7 @@
 
 - [ ] UNI 연결 및 Both 추가는 사용자 지침에 따라 플레이·시뮬레이션·컴파일/빌드·스타일 검사·시각 검증 모두 미실행. Unity에서 패키지 의존성 해결 및 임포트가 필요하며, 실제 그래프 크기/색/지면 회전은 사용자 확인 후 조정한다.
 - [ ] Inspector: PlayerChargeVFXController_s의 Style을 Original로 바꾸면 기존 효과로 복귀. PlayerUniChargeVFX_s의 Use Ground Onslaught을 끄면 바닥만 제외.
-- [x] 돌진 조기 정지 대응: Katana_Reference 프리팹의 CharacterController.m_MinMoveDistance를 0.001에서 0으로 변경했다. 미세 잔여 이동이 무시되어 장애물로 오판하는 원인을 제거하도록 설정했다. 실제 돌진 거리 확인은 사용자 진행 예정이며 플레이·컴파일·빌드·스타일 검사는 미실행.
+- [x] 돌진 조기 정지 수정: Katana_Reference 프리팹의 CharacterController.m_MinMoveDistance를 0.001에서 0으로 변경했다. 2026-10-29 사용자가 수정 완료를 확인했다. Codex의 플레이·컴파일·빌드·스타일 검사는 미실행.
 - [ ] 히트스톱과 향후 별도 timeScale 일시정지 시스템의 소유권 통합은 추후 필요.
 - 변경 사항은 미커밋이다.
 
