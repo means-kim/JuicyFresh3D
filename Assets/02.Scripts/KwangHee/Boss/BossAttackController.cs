@@ -20,30 +20,41 @@ public class BossAttackController : MonoBehaviour
     [SerializeField][Min(0)] private int _meleeDodgeStartFrame = 40;
     [SerializeField][Min(0)] private int _meleeDodgeEndFrame = 60;
 
+    [Header("돌진 회피 Window · Attack02_End 원본 애니메이션 프레임")]
+    [SerializeField][Min(0)] private int _chargeDodgeStartFrame = 40;
+    [SerializeField][Min(0)] private int _chargeDodgeEndFrame = 80;
+
     private Animator _animator;
     private BossCombatController _combatController;
     private PlayerMove _targetPlayer;
     private Transform _subscribedTarget;
     private bool _isAttacking;
     private bool _canJudgeMeleeDodge;
+    private bool _canJudgeChargeDodge;
     private readonly List<AnimatorClipInfo> _clipInfos = new(2);
+    private BossChargeArea_k _chargeArea;
 
     private static readonly int AttackTypeHash = Animator.StringToHash("AttackType");
     private static readonly int AttackStartHash = Animator.StringToHash("AttackStart");
     private static readonly int MeleeStateHash = Animator.StringToHash("Base Layer.Boss_Attack01");
+    private static readonly int ChargeEndStateHash = Animator.StringToHash("Base Layer.Boss_ChargeEnd");
 
     public bool IsAttacking => _isAttacking;
-    public float CurrentMeleeFrame => TryGetMeleeFrame(out float frame) ? frame : -1f;
-    public bool IsDodgeWindowOpen => _canJudgeMeleeDodge && TryGetMeleeFrame(out float frame)
-                                                         && _meleeDodgeEndFrame > _meleeDodgeStartFrame
-                                                         && frame + 0.0001f >= _meleeDodgeStartFrame &&
-                                                         frame + 0.0001f < _meleeDodgeEndFrame;
+    public float CurrentMeleeFrame => TryGetAttackFrame(MeleeStateHash, out float frame) ? frame : -1f;
+    public float CurrentChargeFrame => TryGetAttackFrame(ChargeEndStateHash, out float frame) ? frame : -1f;
+    public bool IsMeleeDodgeWindowOpen => _canJudgeMeleeDodge
+        && IsWithinDodgeWindow(MeleeStateHash, _meleeDodgeStartFrame, _meleeDodgeEndFrame);
+    public bool IsChargeDodgeWindowActive => IsWithinDodgeWindow(ChargeEndStateHash, _chargeDodgeStartFrame, _chargeDodgeEndFrame)
+        && _animator.GetInteger(AttackTypeHash) == (int)BossAttackType.Charge;
+    public bool IsChargeDodgeWindowOpen => _canJudgeChargeDodge && IsChargeDodgeWindowActive;
+    public bool IsDodgeWindowOpen => IsMeleeDodgeWindowOpen || IsChargeDodgeWindowOpen;
     public event System.Action AttackFinished;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _combatController = GetComponent<BossCombatController>();
+        _chargeArea = GetComponent<BossChargeArea_k>();
 
         if (_animator == null)
         {
@@ -67,6 +78,12 @@ public class BossAttackController : MonoBehaviour
     {
         UnsubscribeTarget();
         _canJudgeMeleeDodge = false;
+        _canJudgeChargeDodge = false;
+
+        if (_chargeArea != null)
+        {
+            _chargeArea.ClearChargeArea();
+        }
     }
 
     private void RefreshTargetSubscription()
@@ -90,7 +107,13 @@ public class BossAttackController : MonoBehaviour
         _subscribedTarget = null;
     }
 
-    private bool TryGetMeleeFrame(out float frame)
+    private bool IsWithinDodgeWindow(int stateHash, int startFrame, int endFrame)
+    {
+        return endFrame > startFrame && TryGetAttackFrame(stateHash, out float frame)
+               && frame + 0.0001f >= startFrame && frame + 0.0001f < endFrame;
+    }
+
+    private bool TryGetAttackFrame(int stateHash, out float frame)
     {
         frame = -1f;
 
@@ -103,12 +126,12 @@ public class BossAttackController : MonoBehaviour
         bool isTransitioning = _animator.IsInTransition(0);
         AnimatorStateInfo next = isTransitioning ? _animator.GetNextAnimatorStateInfo(0) : default;
 
-        if (isTransitioning && next.fullPathHash == MeleeStateHash)
+        if (isTransitioning && next.fullPathHash == stateHash)
         {
             state = next;
             _animator.GetNextAnimatorClipInfo(0, _clipInfos);
         }
-        else if (state.fullPathHash == MeleeStateHash && !isTransitioning)
+        else if (state.fullPathHash == stateHash && !isTransitioning)
         {
             _animator.GetCurrentAnimatorClipInfo(0, _clipInfos);
         }
@@ -130,14 +153,23 @@ public class BossAttackController : MonoBehaviour
 
     private void HandleRollStarted(PlayerMove player)
     {
-        if (player == null || player != _targetPlayer || !player.IsRolling
-            || !IsDodgeWindowOpen || _combatController == null
-            || !_combatController.IsWithinMeleeRange(player.transform.position))
+        if (player == null || player != _targetPlayer || !player.IsRolling)
+        {
+            return;
+        }
+
+        bool meleeDodge = IsMeleeDodgeWindowOpen && _combatController != null
+            && _combatController.IsWithinMeleeRange(player.transform.position);
+        bool chargeDodge = IsChargeDodgeWindowOpen && _chargeArea != null
+            && _chargeArea.IsWithinChargeArea(player.transform.position);
+
+        if (!meleeDodge && !chargeDodge)
         {
             return;
         }
         // 이벤트 처리 중에도 다시 성공하지 못하도록 먼저 이번 공격의 판정을 닫습니다.
         _canJudgeMeleeDodge = false;
+        _canJudgeChargeDodge = false;
         Debug.Log("회피성공!", this);
         // 연출 담당에는 성공 신호만 전달합니다.
         player.NotifyDodgeSucceeded();
@@ -149,6 +181,7 @@ public class BossAttackController : MonoBehaviour
 
         _isAttacking = true;
         _canJudgeMeleeDodge = attackType == BossAttackType.Melee;
+        _canJudgeChargeDodge = attackType == BossAttackType.Charge;
 
         _animator.SetInteger(AttackTypeHash, (int)attackType);
         _animator.SetTrigger(AttackStartHash);
@@ -157,8 +190,17 @@ public class BossAttackController : MonoBehaviour
     public void OnAttackFinished()
     {
         _canJudgeMeleeDodge = false;
+        _canJudgeChargeDodge = false;
 
-        if (!_isAttacking) return;
+        if (_chargeArea != null)
+        {
+            _chargeArea.ClearChargeArea();
+        }
+
+        if (!_isAttacking)
+        {
+            return;
+        }
 
         _isAttacking = false;
         AttackFinished?.Invoke();
@@ -198,7 +240,7 @@ public class BossAttackController : MonoBehaviour
 
         if (combat == null) return;
 
-        Gizmos.color = IsDodgeWindowOpen ? Color.green : Color.gray;
+        Gizmos.color = IsMeleeDodgeWindowOpen ? Color.green : Color.gray;
         Gizmos.DrawWireSphere(transform.position, combat.MeleeRange);
     }
 }
