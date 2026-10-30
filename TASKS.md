@@ -2,6 +2,8 @@
 
 ## 현재 목표
 
+- 게임필 추가(계획: 플레이어 피격 피드백, 몬스터 공격 예고 발광, 스폰 예고, 시체 가라앉기). 코드·에디터 연결 완료, 사용자 확인 대기.
+
 - 몬스터 BloodSprayFX 피격 혈흔 연결 완료. 사용자 플레이에서 방출 방향·크기·다단/처치 명중 확인.
 
 - 던전 무한 몬스터 스포너 연결 완료. 사용자 플레이에서 생성·보충·사망 정리 확인.
@@ -21,6 +23,8 @@
 - 테스트는 사용자가 담당한다. 명시적 요청 없이 플레이/시뮬레이션/검증용 컴파일·빌드/스타일 검사를 실행하지 않는다.
 
 ## 완료 사항
+
+- [x] 게임필 코드(2026-10-30): PlayerHitFeedback_s 신규(런타임 Volume 붉은 비네트·Impulse·HitStop_s.Stop 0.04초, 사망 시 비네트 유지 옵션). MonsterAttackTelegraph_s 신규(MonsterAttack_s.AttackStarted → MonsterHitFlash_s.Flash 붉은 주황 0.25초, 게임 시간). MonsterHitFlash_s에 공개 Flash(color, opacity, duration, unscaled) 추가하고 피격은 기존 값 그대로 호출. MonsterSpawner_s에 스폰 예고(_spawnTelegraph 비면 기존 즉시 생성, 예약 수는 최대 생존 수에 포함, 플레이어가 1m 안이면 0.2초씩 연기)와 시체 가라앉기(5초 후 1.5초간 1.2m, Release 전) 추가. 몬스터 Animator Root Motion 꺼짐 확인. 에디터 연결 완료: Katana_Reference 루트에 PlayerHitFeedback_s, Monster_Maynard 루트에 MonsterAttackTelegraph_s 추가. `Assets/03.Prefabs/Minsu/VFX/MonsterSpawn/MonsterSpawnTelegraph.prefab`(바닥 원형 상승 먼지 + 0.75초 등장 버스트, MonsterSpawnDust.mat = URP ParticlesUnlit 복제) 생성 후 KatanaDungeonArena Monster Spawner에 연결·저장. 에디터 연결을 위해 com.unity.pipeline 0.9.1-exp.1을 manifest에 추가. 플레이·시각 확인·스타일 검사 미실행.
 
 - [x] MonsterBloodVFX_s / BloodSprayPool_s 및 meta 추가. Health_s.DamagePresented의 실제 명중 위치에서 혈흔 재생(처치 타격 포함), 몸 중심→명중점 방향에 약간의 상향 적용. 기본 Size 1 / Emission Duration 0.15초. 공유 런타임 풀 최대 32개, 포화 시 신규 효과만 생략. 방출 종료 후 기존 입자를 유지하고 모두 소멸하면 비활성 회수(8초 안전 상한). 월드 공간으로 넉백과 분리, 몬스터 사망/제거 후에도 유지. 히트스톱/일시정지에 맞춘 게임 시간 사용. 원본 BloodSprayFX를 상속하는 MonsterBloodSpray.prefab과 URP Particles/Unlit 알파 블렌드 머터리얼 3개를 Assets/03.Prefabs/Minsu/VFX/MonsterBlood에 생성. 원본 Blood 에셋 미수정. Monster_Maynard 프리팹에 연결하여 스폰 몬스터도 상속. 플레이·입력 시뮬레이션·파티클 재생/시각 검증·별도 검증용 컴파일/빌드·스타일 검사는 미실행.
 
@@ -72,6 +76,8 @@
 - 변경 사항은 미커밋이다.
 
 ## 다음 작업
+
+- 게임필 사용자 확인: 피격 비네트/흔들림/정지 강도, 공격 예고 발광(공격 0%~판정 시작까지 최대 밝기 유지 후 0.15초 감쇠), 스폰 예고 먼지(어두운 붉은색이 바닥에 묻혀 안 보여 가산 블렌드 밝은 적주황·크기/수량 증가로 변경) 모양·0.8초, 시체 가라앉기. 값은 PlayerHitFeedback_s / MonsterAttackTelegraph_s / Monster Spawner Inspector에서 조절.
 
 - 피격 플래시: 사용자가 명중/다단 명중, 히트스톱 중 소멸, 락온 동시 표시, 벽 뒤 가림을 확인하고 MonsterHitFlash_s의 Color/Opacity/Duration 조절.
 

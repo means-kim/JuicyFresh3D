@@ -868,6 +868,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3094262382854090080}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b16de64f344835249a16622b834ca21f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8532305953733636237}
   m_SourcePrefab: {fileID: 100100000, guid: b16de64f344835249a16622b834ca21f, type: 3}
 --- !u!95 &1439677759213502829 stripped
 Animator:
@@ -1080,7 +1083,7 @@ MonoBehaviour:
   _handHitboxes:
   - {fileID: 2113370024002548393}
   - {fileID: 2509390477604660688}
-  _attackDistance: 0.95
+  _attackDistance: 1
   _damage: 10
   _cooldown: 1
   _damageWindow: {x: 0.12, y: 0.78}
@@ -1156,6 +1159,21 @@ MonoBehaviour:
   _emissionDuration: 0.15
   _size: 1
   _bodyCenterHeight: 0.9
+--- !u!114 &8532305953733636237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643361297610178989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619cf9c06ad8e5f43b755e265b90d19d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterAttackTelegraph_s
+  _color: {r: 1, g: 0.35, b: 0.1, a: 1}
+  _opacity: 0.6
+  _duration: 0.25
 --- !u!4 &6567930685159949108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: b16de64f344835249a16622b834ca21f, type: 3}

@@ -5025,6 +5025,12 @@ MonoBehaviour:
   _blockingLayers:
     serializedVersion: 2
     m_Bits: 307
+  _spawnTelegraph: {fileID: 3855682863864251196, guid: 2adba9bdf0f170a4e966631a335020f7, type: 3}
+  _telegraphDuration: 0.8
+  _telegraphLinger: 1
+  _telegraphPlayerClearance: 1
+  _sinkDuration: 1.5
+  _sinkDepth: 1.2
 --- !u!4 &1823079902
 Transform:
   m_ObjectHideFlags: 0

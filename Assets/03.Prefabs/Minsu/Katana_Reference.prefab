@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 8879718190356453941}
   - component: {fileID: 8879718190356453942}
   - component: {fileID: 8879718190356453943}
+  - component: {fileID: 9215043754179642525}
   m_Layer: 0
   m_Name: Katana_Reference
   m_TagString: Player
@@ -314,8 +315,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7903568ad14c304b98237e2c072ef2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAnimation_s
-  _useSlashEvents: 1
   _animator: {fileID: 4781896052676969055}
+  _useSlashEvents: 1
   _firstChainTime: 0.32
   _secondChainTime: 0.34
   _thirdChainTime: 0.36
@@ -582,6 +583,28 @@ MonoBehaviour:
   _output: {fileID: 0}
   _volume: 1
   _spatialBlend: 0
+--- !u!114 &9215043754179642525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a76dcd2ae83a1ba4e9a065b274c17558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHitFeedback_s
+  _vignetteColor: {r: 0.55, g: 0, b: 0, a: 1}
+  _vignetteIntensity: 0.45
+  _vignetteSmoothness: 0.6
+  _vignetteDuration: 0.35
+  _holdOnDeath: 1
+  _volumePriority: 100
+  _impulseSource: {fileID: 0}
+  _impulseForce: 0.2
+  _hitStop: {fileID: 0}
+  _hitStopDuration: 0.04
 --- !u!1 &771901796826988475
 GameObject:
   m_ObjectHideFlags: 0
@@ -1830,6 +1853,10 @@ MonoBehaviour:
     m_Bits: 4294967295
   _damage: {x: 20, y: 25, z: 35}
   _fourthDamage: 45
+  _slashDamageMultipliers: {x: 1, y: 1, z: 1, w: 1}
+  _intermediateKnockbackMultiplier: 0.35
+  _intermediateHitStopMultiplier: 0.5
+  _intermediateImpulseMultiplier: 0.5
   _impulseSource: {fileID: 0}
   _hitImpulseForce: 0.1
 --- !u!1 &4378163209709932017
