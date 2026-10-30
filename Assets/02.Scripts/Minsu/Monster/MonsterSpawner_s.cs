@@ -17,7 +17,16 @@ public class MonsterSpawner_s : MonoBehaviour
     [SerializeField, Min(0f)] private float _clearance = 0.15f;
     [SerializeField, Min(0f)] private float _corpseLifetime = 5f;
     [SerializeField] private LayerMask _blockingLayers = Physics.DefaultRaycastLayers;
+    [Header("Spawn Telegraph")]
+    [SerializeField] private GameObject _spawnTelegraph;
+    [SerializeField, Min(0f)] private float _telegraphDuration = 0.8f;
+    [SerializeField, Min(0f)] private float _telegraphLinger = 1f;
+    [SerializeField, Min(0f)] private float _telegraphPlayerClearance = 1f;
+    [Header("Corpse Sink")]
+    [SerializeField, Min(0f)] private float _sinkDuration = 1.5f;
+    [SerializeField, Min(0f)] private float _sinkDepth = 1.2f;
     private readonly List<SpawnedMonster_s> _monsters = new List<SpawnedMonster_s>();
+    private readonly List<PendingSpawn_s> _pending = new List<PendingSpawn_s>();
     private NavMeshAgent _prefabAgent;
     private NavMeshPath _path;
     private float _nextSpawnTime;
@@ -30,6 +39,16 @@ public class MonsterSpawner_s : MonoBehaviour
         public Action DeathHandler;
         public bool Dead;
         public float RemoveAt;
+        public bool Sinking;
+        public float SinkStart;
+        public Vector3 SinkOrigin;
+    }
+
+    private sealed class PendingSpawn_s
+    {
+        public Vector3 Position;
+        public float SpawnAt;
+        public GameObject Effect;
     }
 
     private void Awake()
@@ -57,8 +76,15 @@ public class MonsterSpawner_s : MonoBehaviour
     private void Update()
     {
         CleanupMonsters();
-        if (_player == null || !_player.isActiveAndEnabled || _player.IsDead || Time.deltaTime <= 0f) return;
-        if (AliveCount >= Mathf.Max(1, _maxAlive) || Time.time < _nextSpawnTime) return;
+        if (_player == null || !_player.isActiveAndEnabled || _player.IsDead)
+        {
+            ClearPending();
+            return;
+        }
+        if (Time.deltaTime <= 0f) return;
+        UpdatePending();
+        // 예고 중인 몬스터도 동시 생존 수에 포함한다.
+        if (AliveCount + _pending.Count >= Mathf.Max(1, _maxAlive) || Time.time < _nextSpawnTime) return;
 
         // 실패해도 간격을 두고 재시도하며, 한 프레임에 여러 마리를 몰아서 생성하지 않는다.
         _nextSpawnTime = Time.time + Mathf.Max(0.1f, _spawnInterval);
@@ -66,10 +92,47 @@ public class MonsterSpawner_s : MonoBehaviour
         {
             int index = (_nextPoint + attempt) % _spawnPoints.Length;
             if (_spawnPoints[index] == null || !TryGetSpawnPosition(_spawnPoints[index].position, out Vector3 position)) continue;
-            if (!Spawn(position)) continue;
+            if (!BeginSpawn(position)) continue;
             _nextPoint = (index + 1) % _spawnPoints.Length;
             break;
         }
+    }
+
+    private bool BeginSpawn(Vector3 position)
+    {
+        if (_spawnTelegraph == null || _telegraphDuration <= 0f) return Spawn(position);
+        var effect = Instantiate(_spawnTelegraph, position, Quaternion.identity);
+        _pending.Add(new PendingSpawn_s { Position = position, SpawnAt = Time.time + _telegraphDuration, Effect = effect });
+        return true;
+    }
+
+    private void UpdatePending()
+    {
+        for (int i = _pending.Count - 1; i >= 0; i--)
+        {
+            var pending = _pending[i];
+            if (Time.time < pending.SpawnAt) continue;
+            Vector3 offset = _player.transform.position - pending.Position;
+            offset.y = 0f;
+            // 예고 지점 위에 플레이어가 서 있으면 겹쳐 생성되지 않도록 잠시 미룬다.
+            if (offset.sqrMagnitude < _telegraphPlayerClearance * _telegraphPlayerClearance)
+            {
+                pending.SpawnAt = Time.time + 0.2f;
+                continue;
+            }
+            _pending.RemoveAt(i);
+            Spawn(pending.Position);
+            if (pending.Effect != null) Destroy(pending.Effect, _telegraphLinger);
+        }
+    }
+
+    private void ClearPending()
+    {
+        foreach (var pending in _pending)
+        {
+            if (pending.Effect != null) Destroy(pending.Effect);
+        }
+        _pending.Clear();
     }
 
     private bool TryGetSpawnPosition(Vector3 point, out Vector3 position)
@@ -117,6 +180,12 @@ public class MonsterSpawner_s : MonoBehaviour
             {
                 return false;
             }
+        }
+        foreach (var pending in _pending)
+        {
+            Vector3 separation = pending.Position - hit.position;
+            separation.y = 0f;
+            if (separation.sqrMagnitude < radius * radius * 4f) return false;
         }
         position = hit.position;
         return true;
@@ -170,6 +239,7 @@ public class MonsterSpawner_s : MonoBehaviour
             }
             bool unavailable = monster.Health == null || !monster.Health.gameObject.activeInHierarchy;
             if (!unavailable && (!monster.Dead || Time.time < monster.RemoveAt)) continue;
+            if (!unavailable && UpdateSink(monster)) continue;
             if (!monster.Dead)
             {
                 AliveCount--;
@@ -177,6 +247,23 @@ public class MonsterSpawner_s : MonoBehaviour
             Release(monster);
             _monsters.RemoveAt(i);
         }
+    }
+
+    // 가라앉는 중이면 true를 반환하고, 끝나면 false를 반환해 제거로 넘어간다.
+    private bool UpdateSink(SpawnedMonster_s monster)
+    {
+        if (_sinkDuration <= 0f || _sinkDepth <= 0f) return false;
+        var body = monster.Health.transform;
+        if (!monster.Sinking)
+        {
+            monster.Sinking = true;
+            monster.SinkStart = Time.time;
+            monster.SinkOrigin = body.position;
+        }
+        float progress = (Time.time - monster.SinkStart) / _sinkDuration;
+        if (progress >= 1f) return false;
+        body.position = monster.SinkOrigin + Vector3.down * (_sinkDepth * progress * progress);
+        return true;
     }
 
     private void Release(SpawnedMonster_s monster)
@@ -191,6 +278,7 @@ public class MonsterSpawner_s : MonoBehaviour
     {
         foreach (var monster in _monsters) Release(monster);
         _monsters.Clear();
+        ClearPending();
         AliveCount = 0;
     }
 

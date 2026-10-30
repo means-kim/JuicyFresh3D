@@ -21,11 +21,22 @@ public class HitStop_s : MonoBehaviour
         // 같은 공격의 다른 대상은 정지 종료 후 맞더라도 다시 정지시키지 않는다.
         _lastSwing = swing;
         _lastSkillSwing = skillSwing;
+        BeginStop(_hitStopDuration * durationMultiplier);
+    }
+
+    public void Stop(float duration)
+    {
+        if (!isActiveAndEnabled || duration <= 0f) return;
+        BeginStop(duration);
+    }
+
+    private void BeginStop(float duration)
+    {
         if (_routine != null || Time.timeScale <= 0f) return;
 
         _previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
-        _routine = StartCoroutine(StopRoutine(_hitStopDuration * durationMultiplier));
+        _routine = StartCoroutine(StopRoutine(duration));
     }
 
     private IEnumerator StopRoutine(float duration)
