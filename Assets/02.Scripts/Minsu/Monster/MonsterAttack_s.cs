@@ -18,7 +18,9 @@ public class MonsterAttack_s : MonoBehaviour
     private bool _attacking;
     private float _nextAttackTime;
 
+    public event System.Action AttackStarted;
     public bool IsAttacking => _attacking;
+    public float DamageWindowStart => _damageWindow.x;
     public int HitsThisAttack => _hitTargets.Count;
     public bool IsFinished => !_attacking || !HasLivingTarget
         || (_animation.TryGetAttackTime(out float time) && time >= 1f);
@@ -48,6 +50,11 @@ public class MonsterAttack_s : MonoBehaviour
         }
     }
 
+    public bool TryGetAttackTime(out float time)
+    {
+        return _animation.TryGetAttackTime(out time);
+    }
+
     private void Awake()
     {
         if (_movement == null) _movement = GetComponent<MonsterMovement_s>();
@@ -74,10 +81,13 @@ public class MonsterAttack_s : MonoBehaviour
         _hitTargets.Clear();
         _attacking = true;
         var target = _movement.Target;
-        if (target == null) return;
-        Vector3 direction = target.position - transform.position;
-        direction.y = 0f;
-        if (direction.sqrMagnitude > 0.001f) transform.rotation = Quaternion.LookRotation(direction);
+        if (target != null)
+        {
+            Vector3 direction = target.position - transform.position;
+            direction.y = 0f;
+            if (direction.sqrMagnitude > 0.001f) transform.rotation = Quaternion.LookRotation(direction);
+        }
+        AttackStarted?.Invoke();
     }
 
     public void CancelAttack()

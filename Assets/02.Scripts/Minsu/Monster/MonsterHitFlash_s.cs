@@ -15,6 +15,10 @@ public class MonsterHitFlash_s : MonoBehaviour
     private SkinnedMeshRenderer[] _overlays;
     private MaterialPropertyBlock _properties;
     private float _remainingTime;
+    private float _activeDuration;
+    private Color _activeColor;
+    private float _activeOpacity;
+    private bool _activeUnscaled;
 
     private void Awake()
     {
@@ -63,30 +67,41 @@ public class MonsterHitFlash_s : MonoBehaviour
 
     private void OnDamaged(int damage)
     {
-        if (_health.IsDead) return;
+        Flash(_flashColor, _flashOpacity, _flashDuration, true);
+    }
+
+    // 피격 외의 연출(공격 예고 등)도 같은 오버레이를 재사용한다.
+    public void Flash(Color color, float opacity, float duration, bool unscaled)
+    {
+        if (!isActiveAndEnabled || _health.IsDead) return;
         CreateOverlays();
-        _remainingTime = Mathf.Max(0.001f, _flashDuration);
+        _activeColor = color;
+        _activeOpacity = opacity;
+        _activeDuration = Mathf.Max(0.001f, duration);
+        _activeUnscaled = unscaled;
+        _remainingTime = _activeDuration;
         ApplyFlash(1f);
     }
 
     private void LateUpdate()
     {
         if (_remainingTime <= 0f) return;
-        _remainingTime = Mathf.Max(0f, _remainingTime - Time.unscaledDeltaTime);
+        float deltaTime = _activeUnscaled ? Time.unscaledDeltaTime : Time.deltaTime;
+        _remainingTime = Mathf.Max(0f, _remainingTime - deltaTime);
         if (_remainingTime <= 0f)
         {
             Hide();
             return;
         }
-        float progress = _remainingTime / Mathf.Max(0.001f, _flashDuration);
+        float progress = _remainingTime / _activeDuration;
         ApplyFlash(progress * progress);
     }
 
     private void ApplyFlash(float strength)
     {
         if (_overlays == null) return;
-        Color color = _flashColor;
-        color.a = Mathf.Clamp01(_flashOpacity * strength);
+        Color color = _activeColor;
+        color.a = Mathf.Clamp01(_activeOpacity * strength);
         _properties.SetColor(FlashColor, color);
         for (int i = 0; i < _overlays.Length; i++)
         {
