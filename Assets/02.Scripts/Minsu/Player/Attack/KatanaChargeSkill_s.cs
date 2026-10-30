@@ -34,6 +34,7 @@ public class KatanaChargeSkill_s : MonoBehaviour
     public float ChargeTime => _chargeTime;
     public int ChargeStage => _chargeTime >= _maxChargeTime ? 3 : _chargeTime >= _partialChargeTime ? 2 : 1;
     public float ChargeProgress => Mathf.Clamp01(_chargeTime / _maxChargeTime);
+    public float PartialChargeRatio => _partialChargeTime / _maxChargeTime;
     public bool IsCharging => _active && _movement != null && _movement.CurrentState == MovementState.Charging;
     public bool IsDirectionLocked => _active && (_releaseQueued || _step >= 0);
     public bool IsFinisher => _active && _step == 1;

@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 8879718190356453942}
   - component: {fileID: 8879718190356453943}
   - component: {fileID: 9215043754179642525}
+  - component: {fileID: 4939308435827480469}
   m_Layer: 0
   m_Name: Katana_Reference
   m_TagString: Player
@@ -316,6 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerComboAnimation_s
   _animator: {fileID: 4781896052676969055}
+  _attackLayerName: UpperBody
   _useSlashEvents: 1
   _firstChainTime: 0.32
   _secondChainTime: 0.34
@@ -605,6 +607,30 @@ MonoBehaviour:
   _impulseForce: 0.2
   _hitStop: {fileID: 0}
   _hitStopDuration: 0.04
+--- !u!114 &4939308435827480469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626022022165125785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a264ac37b76427240b0c63d6660dd80b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeGauge_s
+  _height: 2.1
+  _screenOffset: {x: 0, y: 12}
+  _cellSize: {x: 36, y: 8}
+  _cellSpacing: 4
+  _emptyColor: {r: 0.05, g: 0.08, b: 0.12, a: 0.6}
+  _chargeColor: {r: 0.25, g: 0.6, b: 1, a: 1}
+  _maxColor: {r: 0.85, g: 0.95, b: 1, a: 1}
+  _fadeInTime: 0.08
+  _holdTime: 0.25
+  _fadeOutTime: 0.12
+  _pulseTime: 0.12
+  _pulseScale: 1.25
 --- !u!1 &771901796826988475
 GameObject:
   m_ObjectHideFlags: 0

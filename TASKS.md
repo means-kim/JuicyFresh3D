@@ -2,6 +2,8 @@
 
 ## 현재 목표
 
+- 차징 게이지(2026-10-30): PlayerChargeGauge_s를 Katana_Reference 루트에 추가. 런타임 Screen Overlay Canvas(sortingOrder 40)에 단계 칸 3개를 루트+2.1m 위치로 투영. KatanaChargeSkill_s 이벤트 구독, 경계는 PartialChargeRatio(0.6/1.5). 단계 도달 펄스, 3단계 흰색 깜빡임, 발도·취소 후 0.25초 유지 후 페이드, 피격·사망 시 즉시 숨김. 컴파일 확인, 플레이 미실행 → 사용자 확인 대기.
+
 - 공격 중 이동(2026-10-30): 콤보 1~4타를 KatanaReferenceAC의 UpperBody 레이어(KatanaUpperBodyMask: Body·Head·팔·손가락)에서 재생하고 Base는 이동 애니메이션 유지. 공격 중 걷기 허용(질주·점프 차단), 레이어 없는 캐릭터는 기존 정지 동작. 이전 납도 레이어 작업은 전부 폐기. 컴파일 확인, 플레이 미실행 → 사용자 확인 대기.
 
 - 게임필 추가(계획: 플레이어 피격 피드백, 몬스터 공격 예고 발광, 스폰 예고, 시체 가라앉기). 코드·에디터 연결 완료, 사용자 확인 대기.
