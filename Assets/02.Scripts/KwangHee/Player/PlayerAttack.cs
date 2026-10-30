@@ -50,6 +50,8 @@ public class PlayerAttack : MonoBehaviour
         Animator.StringToHash("Base Layer.AttackCombo05")
     };
 
+    public event System.Action AttackStarted;
+
     public bool IsAttacking => _isAttacking;
     public int CurrentCombo => _isAttacking ? _activeComboIndex + 1 : 0;
     public int NextCombo => ComboRemainingTime > 0f ? _nextComboIndex + 1 : 1;
@@ -184,6 +186,7 @@ public class PlayerAttack : MonoBehaviour
         _animator.ResetTrigger(DashTriggerHash);
         _animator.CrossFadeInFixedTime(ComboStateHashes[_activeComboIndex],
             Mathf.Max(0f, blendDuration), 0, startOffset);
+        AttackStarted?.Invoke();
     }
 
     public void CancelForRoll()
