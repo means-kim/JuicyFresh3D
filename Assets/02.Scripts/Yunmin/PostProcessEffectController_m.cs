@@ -17,6 +17,8 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     [Header("Near Death")]
     [Tooltip("빈사 비네팅. 비워두면 자식 오브젝트에서 찾습니다.")]
     [SerializeField] private NearDeathEffect_m _nearDeathEffect;
+    [Tooltip("빈사 화면 깨짐. 비워두면 자신과 자식 오브젝트에서 찾습니다.")]
+    [SerializeField] private ScreenCrackEffect_m _screenCrackEffect;
 
     private enum Phase { Idle, FadeIn, Hold, FadeOut }
 
@@ -77,13 +79,20 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         if (!Application.isPlaying || !isActiveAndEnabled)
             return;
 
-        if (!EnsureNearDeathInitialized())
+        // 비네팅과 화면 깨짐은 서로 독립적으로 재생합니다.
+        if (EnsureNearDeathInitialized())
         {
-            Debug.LogWarning("Add a NearDeathEffect_m child before playing near death effect.", this);
-            return;
+            _nearDeathEffect.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Add a NearDeathEffect_m child before playing near death vignette.", this);
         }
 
-        _nearDeathEffect.Play();
+        if (_screenCrackEffect != null)
+        {
+            _screenCrackEffect.Play();
+        }
     }
 
     [ContextMenu("빈사 연출 정지")]
@@ -92,6 +101,10 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         if (_nearDeathEffect != null)
         {
             _nearDeathEffect.Stop();
+        }
+        if (_screenCrackEffect != null)
+        {
+            _screenCrackEffect.Stop();
         }
     }
 
@@ -126,6 +139,11 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         {
             // 박동은 슬로우 연출과 무관하게 일정한 속도로 뜁니다.
             _nearDeathEffect.Tick(Time.unscaledDeltaTime);
+        }
+
+        if (_screenCrackEffect != null && _screenCrackEffect.IsAnimating)
+        {
+            _screenCrackEffect.Tick(Time.unscaledDeltaTime);
         }
     }
 
@@ -256,6 +274,10 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         {
             _nearDeathEffect = GetComponentInChildren<NearDeathEffect_m>(true);
         }
+        if (_screenCrackEffect == null)
+        {
+            _screenCrackEffect = GetComponentInChildren<ScreenCrackEffect_m>(true);
+        }
     }
 
     private void ApplyDodgeEffects()
@@ -279,6 +301,10 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         if (_nearDeathEffect != null)
         {
             _nearDeathEffect.Clear();
+        }
+        if (_screenCrackEffect != null)
+        {
+            _screenCrackEffect.Clear();
         }
     }
 
