@@ -15,6 +15,7 @@ public class PlayerAttack_s : MonoBehaviour
 
     public bool IsAttacking => _comboAnimation != null && _comboAnimation.IsPlaying;
     public bool IsFinished => !IsAttacking;
+    public bool CanMoveWhileAttacking => _comboAnimation != null && _comboAnimation.AllowsMovement;
 
     private void Awake()
     {

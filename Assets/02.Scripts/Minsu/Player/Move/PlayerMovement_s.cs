@@ -132,8 +132,19 @@ public class PlayerMovement_s : MonoBehaviour
             return;
         }
         bool grounded = _characterController.isGrounded && _yVelocity <= 0f;
-        // 공격 처리에는 관여하지 않고 이동/점프/질주 입력만 차단한다.
-        if (_combat != null && _combat.IsAttacking) input = new FrameInput();
+        // 공격이 상체 레이어에서 재생되면 이동은 허용하고 질주·점프만 차단한다.
+        if (_combat != null && _combat.IsAttacking)
+        {
+            if (_combat.CanMoveWhileAttacking)
+            {
+                input.Sprint = false;
+                input.Jump = false;
+            }
+            else
+            {
+                input = new FrameInput();
+            }
+        }
         ChangeState(grounded ? SelectGroundedState(input) : _airborne);
         _state.Tick(input, deltaTime);
     }
