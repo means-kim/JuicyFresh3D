@@ -12,23 +12,17 @@ public class PlayerStatus_m : MonoBehaviour
 
     private void Awake()
     {
-        if (_effectController == null)
-        {
-            _effectController = GetComponentInChildren<PlayerEffectController_m>();
-        }
+        if (_effectController == null) _effectController = GetComponentInChildren<PlayerEffectController_m>();
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            TakeDamage(10f); // Example damage value
-        }
+        if (Input.GetKeyDown(KeyCode.I)) TakeDamage(10f); // Example damage value
     }
 
-   /// <summary>
-   /// 피격시 호출하는 함수. 필요시 인터페이스로 분리해야함.
-   /// </summary>
+    /// <summary>
+    /// 피격시 호출하는 함수. 필요시 인터페이스로 분리해야함.
+    /// </summary>
     public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
