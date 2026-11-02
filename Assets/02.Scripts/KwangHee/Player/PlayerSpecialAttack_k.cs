@@ -5,11 +5,12 @@ public class PlayerSpecialAttack_k : MonoBehaviour
 {
     [SerializeField] private PlayerMove _target;
     [SerializeField] private PlayerAttack _playerAttack;
-    [Tooltip("칼에 붙어있는 Shiny Slash 이펙트 오브젝트. 평소엔 비활성 상태로 둡니다.")]
+    [Tooltip("검에 붙은 얼음 오라와 궤적 이펙트. 평소에는 비활성 상태로 둡니다.")]
     [SerializeField] private GameObject _swordEffect;
     [SerializeField][Min(0f)] private float _duration = 2f;
 
     private float _remaining;
+    private TrailRenderer[] _swingTrails;
 
     public bool IsSpecialAttack { get; private set; }
 
@@ -23,8 +24,10 @@ public class PlayerSpecialAttack_k : MonoBehaviour
         {
             _playerAttack = GetComponent<PlayerAttack>();
         }
+        _swingTrails = _swordEffect != null
+            ? _swordEffect.GetComponentsInChildren<TrailRenderer>(true)
+            : System.Array.Empty<TrailRenderer>();
         SetState(false);
-        StopEffect();
     }
 
     private void OnEnable()
@@ -52,7 +55,6 @@ public class PlayerSpecialAttack_k : MonoBehaviour
             _playerAttack.AttackStarted -= OnAttackStarted;
         }
         SetState(false);
-        StopEffect();
     }
 
     private void Update()
@@ -73,12 +75,31 @@ public class PlayerSpecialAttack_k : MonoBehaviour
         IsSpecialAttack = true;
     }
 
+    private void LateUpdate()
+    {
+        if (_swingTrails == null)
+        {
+            return;
+        }
+
+        bool emitting = IsSpecialAttack && _playerAttack != null && _playerAttack.IsSwinging
+                        && _swordEffect != null && _swordEffect.activeInHierarchy;
+
+        foreach (TrailRenderer trail in _swingTrails)
+        {
+            if (trail != null)
+            {
+                trail.emitting = emitting;
+            }
+        }
+    }
+
     private void OnAttackStarted()
     {
         if (!IsSpecialAttack || _swordEffect == null) return;
 
-        // 껐다 켜서 파티클을 처음부터 다시 재생합니다(연속 콤보에서도 매 공격마다 출력).
         _swordEffect.SetActive(false);
+        ClearTrails();
         _swordEffect.SetActive(true);
     }
 
@@ -88,14 +109,33 @@ public class PlayerSpecialAttack_k : MonoBehaviour
         if (!active)
         {
             _remaining = 0f;
+            StopEffect();
         }
     }
 
     private void StopEffect()
     {
+        ClearTrails();
         if (_swordEffect != null)
         {
             _swordEffect.SetActive(false);
+        }
+    }
+
+    private void ClearTrails()
+    {
+        if (_swingTrails == null)
+        {
+            return;
+        }
+
+        foreach (TrailRenderer trail in _swingTrails)
+        {
+            if (trail != null)
+            {
+                trail.emitting = false;
+                trail.Clear();
+            }
         }
     }
 }
