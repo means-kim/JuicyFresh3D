@@ -2353,7 +2353,9 @@ MonoBehaviour:
   _crossFlashEffect: {fileID: 1483044308863585899}
   _silhouetteOutlineEffect: {fileID: 7989090618179757947}
   _outlineParticleLightEffect: {fileID: 7278901390345345314}
+  _cameraShakeEffect: {fileID: 427182389773960095}
   _target: {fileID: 1055879555390096245}
+  _animator: {fileID: 0}
   _defaultEffectColor: {r: 0.4935883, g: 0.892322, b: 1.4142135, a: 1}
   _dodgeOutlineProfile: {fileID: 11400000, guid: e4c9e571c60d4127ace3cdb3327ae9c8, type: 2}
 --- !u!114 &4101252341052776919
@@ -2482,6 +2484,7 @@ MonoBehaviour:
   _effectController: {fileID: 0}
   _maxHealth: 100
   _currentHealth: 100
+  _nearDeathHealthRatio: 0.3
 --- !u!1 &7404618803377014162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2780,6 +2783,8 @@ GameObject:
   - component: {fileID: 7989090618179757947}
   - component: {fileID: 7278901390345345314}
   - component: {fileID: 6877719246330000506}
+  - component: {fileID: 8457056484247041837}
+  - component: {fileID: 427182389773960095}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -2901,7 +2906,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.25622317
+        time: 0.23333333
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2940,6 +2945,73 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     _duration: 1
+--- !u!114 &8457056484247041837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661829458560147186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseSource
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 3
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.25
+    ImpulseType: 0
+    DissipationRate: 0.25
+    RawSignal: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &427182389773960095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661829458560147186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21643c84c44b10c4e80fb6ed8d965dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShakeEffect_m
+  _hitForce: 1
+  _nearDeathForce: 1.5
 --- !u!1 &8683742917807725138
 GameObject:
   m_ObjectHideFlags: 0

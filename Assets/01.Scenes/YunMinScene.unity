@@ -616,6 +616,7 @@ GameObject:
   - component: {fileID: 2083780960}
   - component: {fileID: 2083780959}
   - component: {fileID: 2083780958}
+  - component: {fileID: 2083780962}
   m_Layer: 0
   m_Name: PlayerFollowCamera
   m_TagString: Untagged
@@ -729,6 +730,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2083780962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083780957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseListener
+  ApplyAfter: 2
+  ChannelMask: 1
+  Gain: 0
+  Use2DDistance: 0
+  UseCameraSpace: 1
+  SignalCombinationMode: 0
+  ReactionSettings:
+    m_SecondaryNoise: {fileID: 11400000, guid: 2d00ba2b828377343b95136161372bb2, type: 2}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    Duration: 0.35
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &2095118704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1278217734517628045, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+  m_PrefabInstance: {fileID: 7107009193218683735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb52dc74603945d4a64cf6a2daecd717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2408088833215119515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -737,6 +773,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3118520892350985848, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
+      propertyPath: _postProcessManager
+      value: 
+      objectReference: {fileID: 2095118704}
     - target: {fileID: 4329750253024872555, guid: 74277d1183da1e44cbffba30164c278b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
