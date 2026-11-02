@@ -24,6 +24,18 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField][Min(0f)] private float _combo45StartOffset = 0.1f;
     [SerializeField][Min(0f)] private float _combo45BlendDuration = 0.04f;
 
+    [Header("검기 생성 구간 · 콤보 01~05 원본 프레임")]
+    [Tooltip("X: 시작 프레임 포함, Y: 종료 프레임 제외")]
+    [SerializeField]
+    private Vector2Int[] _swingFrames =
+    {
+        new(7, 12),
+        new(7, 12),
+        new(1, 9),
+        new(11, 15),
+        new(4, 13)
+    };
+
     private Animator _animator;
     private PlayerMove _playerMove;
     private CharacterController _characterController;
@@ -50,7 +62,39 @@ public class PlayerAttack : MonoBehaviour
         Animator.StringToHash("Base Layer.AttackCombo05")
     };
 
+    public event System.Action AttackStarted;
+
     public bool IsAttacking => _isAttacking;
+    public bool IsSwinging
+    {
+        get
+        {
+            if (!isActiveAndEnabled || !_isAttacking || _animator == null
+                || !_animator.isActiveAndEnabled || _swingFrames == null
+                || _activeComboIndex < 0 || _activeComboIndex >= _swingFrames.Length)
+            {
+                return false;
+            }
+
+            Vector2Int frames = _swingFrames[_activeComboIndex];
+            AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(0);
+            int stateHash = ComboStateHashes[_activeComboIndex];
+
+            if (_animator.IsInTransition(0))
+            {
+                state = _animator.GetNextAnimatorStateInfo(0);
+            }
+
+            if (state.fullPathHash != stateHash || frames.y <= frames.x)
+            {
+                return false;
+            }
+
+            AnimationClip clip = _comboClips[_activeComboIndex];
+            float frame = state.normalizedTime * clip.length * clip.frameRate;
+            return frame + 0.0001f >= frames.x && frame + 0.0001f < frames.y;
+        }
+    }
     public int CurrentCombo => _isAttacking ? _activeComboIndex + 1 : 0;
     public int NextCombo => ComboRemainingTime > 0f ? _nextComboIndex + 1 : 1;
     public bool HasBufferedAttack => _hasBufferedAttack && IsBufferValid();
@@ -184,6 +228,7 @@ public class PlayerAttack : MonoBehaviour
         _animator.ResetTrigger(DashTriggerHash);
         _animator.CrossFadeInFixedTime(ComboStateHashes[_activeComboIndex],
             Mathf.Max(0f, blendDuration), 0, startOffset);
+        AttackStarted?.Invoke();
     }
 
     public void CancelForRoll()

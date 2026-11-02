@@ -20,10 +20,7 @@ public class PlayerStatus_m : MonoBehaviour
 
     private void Awake()
     {
-        if (_effectController == null)
-        {
-            _effectController = GetComponentInChildren<PlayerEffectController_m>();
-        }
+        if (_effectController == null) _effectController = GetComponentInChildren<PlayerEffectController_m>();
     }
 
     private void Update()
