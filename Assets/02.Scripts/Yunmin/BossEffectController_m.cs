@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 보스 연출 진입점입니다. 보스가 피격되면 아웃라인과 화이트 플래시를 함께 재생합니다.
+// 보스 연출 진입점입니다. 보스가 피격되면 아웃라인, 화이트 플래시, 카메라 쉐이크를 함께 재생합니다.
 [DisallowMultipleComponent]
 public sealed class BossEffectController_m : MonoBehaviour
 {
@@ -8,6 +8,7 @@ public sealed class BossEffectController_m : MonoBehaviour
     [SerializeField] private BossStatus_k _bossStatus;
     [SerializeField] private HitEffectController_m _hitEffectController;
     [SerializeField] private HitFlashEffect_m _hitFlashEffect;
+    [SerializeField] private CameraShakeEffect_m _cameraShakeEffect;
 
     private float _lastBossHp;
 
@@ -29,6 +30,11 @@ public sealed class BossEffectController_m : MonoBehaviour
         if (_hitFlashEffect != null && EffectToggleSettings_m.IsOn(EffectToggleType_m.BossHitFlash))
         {
             _hitFlashEffect.PlayEffect();
+        }
+
+        if (EffectToggleSettings_m.IsOn(EffectToggleType_m.BossHitCameraShake))
+        {
+            _cameraShakeEffect?.PlayHitShake();
         }
     }
 
@@ -97,6 +103,10 @@ public sealed class BossEffectController_m : MonoBehaviour
         if (_hitFlashEffect == null)
         {
             _hitFlashEffect = GetComponentInChildren<HitFlashEffect_m>();
+        }
+        if (_cameraShakeEffect == null)
+        {
+            _cameraShakeEffect = GetComponentInChildren<CameraShakeEffect_m>();
         }
     }
 }
