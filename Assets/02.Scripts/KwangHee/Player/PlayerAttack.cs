@@ -36,6 +36,9 @@ public class PlayerAttack : MonoBehaviour
         new(4, 13)
     };
 
+    [Header("콤보 01~05 단계별 데미지")]
+    [SerializeField] private float[] _comboDamages = { 10f, 10f, 12f, 15f, 25f };
+
     private Animator _animator;
     private PlayerMove _playerMove;
     private CharacterController _characterController;
@@ -95,6 +98,9 @@ public class PlayerAttack : MonoBehaviour
             return frame + 0.0001f >= frames.x && frame + 0.0001f < frames.y;
         }
     }
+    public float CurrentDamage => _activeComboIndex >= 0 && _activeComboIndex < _comboDamages.Length
+        ? _comboDamages[_activeComboIndex]
+        : 0f;
     public int CurrentCombo => _isAttacking ? _activeComboIndex + 1 : 0;
     public int NextCombo => ComboRemainingTime > 0f ? _nextComboIndex + 1 : 1;
     public bool HasBufferedAttack => _hasBufferedAttack && IsBufferValid();
