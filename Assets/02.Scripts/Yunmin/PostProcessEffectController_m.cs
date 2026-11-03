@@ -32,6 +32,7 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     private float _strength;
     private float _phaseElapsed;
     private float _phaseStartStrength;
+    private bool _nearDeathRequested;
 
     public bool IsPlaying => _phase != Phase.Idle;
     public float CurrentStrength => _strength;
@@ -79,25 +80,25 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         if (!Application.isPlaying || !isActiveAndEnabled)
             return;
 
+        _nearDeathRequested = true;
+
         // 비네팅과 화면 깨짐은 서로 독립적으로 재생합니다.
-        if (EnsureNearDeathInitialized())
+        if (EffectToggleSettings_m.IsOn(EffectToggleType_m.NearDeathVignette))
         {
-            _nearDeathEffect.Play();
-        }
-        else
-        {
-            Debug.LogWarning("Add a NearDeathEffect_m child before playing near death vignette.", this);
+            PlayNearDeathVignette();
         }
 
-        if (_screenCrackEffect != null)
+        if (EffectToggleSettings_m.IsOn(EffectToggleType_m.NearDeathScreenCrack))
         {
-            _screenCrackEffect.Play();
+            PlayScreenCrack();
         }
     }
 
     [ContextMenu("빈사 연출 정지")]
     public void StopNearDeathEffect()
     {
+        _nearDeathRequested = false;
+
         if (_nearDeathEffect != null)
         {
             _nearDeathEffect.Stop();
@@ -118,6 +119,44 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
         ResolveComponents();
         Clear();
         EnsureInitialized();
+        EffectToggleSettings_m.Changed += OnEffectToggleChanged;
+    }
+
+    private void PlayNearDeathVignette()
+    {
+        if (EnsureNearDeathInitialized())
+        {
+            _nearDeathEffect.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Add a NearDeathEffect_m child before playing near death vignette.", this);
+        }
+    }
+
+    private void PlayScreenCrack()
+    {
+        if (_screenCrackEffect != null)
+        {
+            _screenCrackEffect.Play();
+        }
+    }
+
+    // 빈사는 지속 상태라 토글 변경을 바로 반영합니다.
+    private void OnEffectToggleChanged(EffectToggleType_m type, bool isOn)
+    {
+        if (!_nearDeathRequested) return;
+
+        if (type == EffectToggleType_m.NearDeathVignette)
+        {
+            if (isOn) PlayNearDeathVignette();
+            else if (_nearDeathEffect != null) _nearDeathEffect.Stop();
+        }
+        else if (type == EffectToggleType_m.NearDeathScreenCrack)
+        {
+            if (isOn) PlayScreenCrack();
+            else if (_screenCrackEffect != null) _screenCrackEffect.Stop();
+        }
     }
 
     private void LateUpdate()
@@ -284,9 +323,9 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
     {
         if (_runtimeProfile == null || _volume == null) return;
 
-        _vignette.ApplyStrength(_strength);
-        _depthOfField.ApplyStrength(_strength, _effectCamera);
-        _chromaticAberration.ApplyStrength(_strength);
+        _vignette.ApplyStrength(EffectToggleSettings_m.IsOn(EffectToggleType_m.DodgeVignette) ? _strength : 0f);
+        _depthOfField.ApplyStrength(EffectToggleSettings_m.IsOn(EffectToggleType_m.DodgeDepthOfField) ? _strength : 0f, _effectCamera);
+        _chromaticAberration.ApplyStrength(EffectToggleSettings_m.IsOn(EffectToggleType_m.DodgeChromaticAberration) ? _strength : 0f);
         _volume.weight = IsPlaying && _strength > 0f ? 1f : 0f;
     }
 
@@ -335,6 +374,8 @@ public sealed class PostProcessEffectController_m : MonoBehaviour
 
     private void OnDisable()
     {
+        EffectToggleSettings_m.Changed -= OnEffectToggleChanged;
+        _nearDeathRequested = false;
         Clear();
     }
 

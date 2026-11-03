@@ -82,7 +82,14 @@ public class PlayerSpecialAttack_k : MonoBehaviour
             return;
         }
 
-        bool emitting = IsSpecialAttack && _playerAttack != null && _playerAttack.IsSwinging
+        // 검기 이펙트가 꺼져 있으면 강화 상태는 유지하고 보이는 것만 숨깁니다.
+        bool effectOn = EffectToggleSettings_m.IsOn(EffectToggleType_m.SpecialAttackSword);
+        if (!effectOn && _swordEffect != null && _swordEffect.activeSelf)
+        {
+            StopEffect();
+        }
+
+        bool emitting = effectOn && IsSpecialAttack && _playerAttack != null && _playerAttack.IsSwinging
                         && _swordEffect != null && _swordEffect.activeInHierarchy;
 
         foreach (TrailRenderer trail in _swingTrails)
@@ -97,6 +104,7 @@ public class PlayerSpecialAttack_k : MonoBehaviour
     private void OnAttackStarted()
     {
         if (!IsSpecialAttack || _swordEffect == null) return;
+        if (!EffectToggleSettings_m.IsOn(EffectToggleType_m.SpecialAttackSword)) return;
 
         _swordEffect.SetActive(false);
         ClearTrails();

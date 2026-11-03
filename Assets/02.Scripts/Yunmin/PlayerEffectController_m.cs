@@ -38,17 +38,17 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         ResolveReferences();
         ApplySharedSettings();
 
-        if (_silhouetteOutlineEffect != null)
+        if (_silhouetteOutlineEffect != null && EffectToggleSettings_m.IsOn(EffectToggleType_m.DodgeOutline))
         {
             _silhouetteOutlineEffect.PlayEffect(_dodgeOutlineProfile);
         }
 
-        if (_outlineParticleLightEffect != null)
+        if (_outlineParticleLightEffect != null && EffectToggleSettings_m.IsOn(EffectToggleType_m.DodgeLightParticle))
         {
             _outlineParticleLightEffect.PlayEffect();
         }
 
-        if (_crossFlashEffect != null)
+        if (_crossFlashEffect != null && EffectToggleSettings_m.IsOn(EffectToggleType_m.DodgeCrossFlash))
         {
             _crossFlashEffect.PlayEffect();
         }
@@ -93,9 +93,15 @@ public sealed class PlayerEffectController_m : MonoBehaviour
         ResolveReferences();
         ApplySharedSettings();
 
-        _hitEffectController?.PlayHitEffect();
+        if (EffectToggleSettings_m.IsOn(EffectToggleType_m.HitOutline))
+        {
+            _hitEffectController?.PlayHitEffect();
+        }
         _animator?.SetTrigger(TakeDamageTrigger);
-        _cameraShakeEffect?.PlayHitShake();
+        if (EffectToggleSettings_m.IsOn(EffectToggleType_m.HitCameraShake))
+        {
+            _cameraShakeEffect?.PlayHitShake();
+        }
     }
 
     // 빈사 진입 시 한 번 호출합니다. 일반 피격 연출은 PlayHitEffect에서 따로 재생됩니다.
@@ -108,7 +114,10 @@ public sealed class PlayerEffectController_m : MonoBehaviour
 
         ResolveReferences();
 
-        _cameraShakeEffect?.PlayNearDeathShake();
+        if (EffectToggleSettings_m.IsOn(EffectToggleType_m.NearDeathCameraShake))
+        {
+            _cameraShakeEffect?.PlayNearDeathShake();
+        }
         _postProcessManager?.PlayNearDeathEffect();
     }
 
