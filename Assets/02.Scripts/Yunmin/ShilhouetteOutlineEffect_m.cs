@@ -112,6 +112,12 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     private void EnsureRimObjects()
     {
+        // 렌더러를 지정하지 않았다면 런타임 아웃라인 생성 전에 자식 모델 렌더러를 수집합니다.
+        if ((_modelRenderers == null || _modelRenderers.Length == 0) && _rimLayers.Count == 0)
+        {
+            _modelRenderers = GetComponentsInChildren<SkinnedMeshRenderer>(true);
+        }
+
         if (_modelRenderers == null) return;
         if (_rimProperties == null)
         {

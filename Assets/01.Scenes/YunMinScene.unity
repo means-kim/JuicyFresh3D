@@ -3379,6 +3379,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1124327046}
+    - targetCorrespondingSourceObject: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1124327047}
+    - targetCorrespondingSourceObject: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1124327048}
   m_SourcePrefab: {fileID: 100100000, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
 --- !u!1 &1124327043 stripped
 GameObject:
@@ -3420,6 +3426,36 @@ MonoBehaviour:
   _chargeAreaVisual: {fileID: 1280971960}
   _chargeAreaHeightOffset: 0.03
   _groundTransform: {fileID: 813339871}
+--- !u!114 &1124327047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124327043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de71f3fcad9468bb533b1397429c112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShilhouetteOutlineEffect_m
+  _modelRenderers: []
+  _rimMaterial: {fileID: 2100000, guid: 22b3f3a4f37941a7929f7a79ec2eac1f, type: 2}
+  _outlineMaskMaterial: {fileID: 2100000, guid: 95e4e159b4594a21b90105dc2c2fc2d5, type: 2}
+--- !u!114 &1124327048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124327043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3171b06f77444a6ae428a06afaeb2fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitEffectController_m
+  _silhouetteOutlineEffect: {fileID: 1124327047}
+  _hitOutlineProfile: {fileID: 11400000, guid: 59ccf2b4d0d8e804a8a326a4da6f8e2c, type: 2}
+  _bossStatus: {fileID: 1124327045}
 --- !u!1 &1127483216
 GameObject:
   m_ObjectHideFlags: 0
