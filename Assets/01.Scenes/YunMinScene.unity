@@ -3385,6 +3385,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1124327048}
+    - targetCorrespondingSourceObject: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1124327049}
+    - targetCorrespondingSourceObject: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1124327050}
   m_SourcePrefab: {fileID: 100100000, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
 --- !u!1 &1124327043 stripped
 GameObject:
@@ -3455,7 +3461,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitEffectController_m
   _silhouetteOutlineEffect: {fileID: 1124327047}
   _hitOutlineProfile: {fileID: 11400000, guid: 59ccf2b4d0d8e804a8a326a4da6f8e2c, type: 2}
+--- !u!114 &1124327049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124327043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e04241d89d54013a244435bb36a63be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlashEffect_m
+  _modelRenderers: []
+  _flashMaterial: {fileID: 2100000, guid: ece9c32d42914ba9aae4fa5ff794e6dd, type: 2}
+  _flashColor: {r: 1, g: 1, b: 1, a: 1}
+  _maxOpacity: 0.85
+  _fadeInDuration: 0
+  _holdDuration: 0.05
+  _fadeOutDuration: 0.15
+--- !u!114 &1124327050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124327043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d7ce709346945439988fd88f1e730a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossEffectController_m
   _bossStatus: {fileID: 1124327045}
+  _hitEffectController: {fileID: 1124327048}
+  _hitFlashEffect: {fileID: 1124327049}
 --- !u!1 &1127483216
 GameObject:
   m_ObjectHideFlags: 0
