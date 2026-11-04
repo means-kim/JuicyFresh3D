@@ -23,6 +23,11 @@ public enum EffectToggleType_m
 
     // 특수공격
     SpecialAttackSword,
+
+    // 보스 피격
+    BossHitOutline,
+    BossHitFlash,
+    BossHitCameraShake,
 }
 
 // 연출별 on/off 상태입니다. 공유 컴포넌트가 있어 컴포넌트를 끄지 않고 호출 지점에서 확인합니다.

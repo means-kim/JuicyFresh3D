@@ -112,6 +112,12 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
 
     private void EnsureRimObjects()
     {
+        // 렌더러를 지정하지 않았다면 런타임 아웃라인 생성 전에 자식 모델 렌더러를 수집합니다.
+        if ((_modelRenderers == null || _modelRenderers.Length == 0) && _rimLayers.Count == 0)
+        {
+            _modelRenderers = CollectModelRenderers(this);
+        }
+
         if (_modelRenderers == null) return;
         if (_rimProperties == null)
         {
@@ -144,7 +150,23 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         }
     }
 
-    private static SkinnedMeshRenderer CreateOutlineRenderer(SkinnedMeshRenderer source, string suffix)
+    // 다른 연출이 만든 런타임 렌더러(DontSave)는 원본 모델이 아니므로 제외합니다.
+    internal static SkinnedMeshRenderer[] CollectModelRenderers(Component root)
+    {
+        List<SkinnedMeshRenderer> renderers = new List<SkinnedMeshRenderer>();
+
+        foreach (SkinnedMeshRenderer renderer in root.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+        {
+            if ((renderer.gameObject.hideFlags & HideFlags.DontSave) == 0)
+            {
+                renderers.Add(renderer);
+            }
+        }
+
+        return renderers.ToArray();
+    }
+
+    internal static SkinnedMeshRenderer CreateOutlineRenderer(SkinnedMeshRenderer source, string suffix)
     {
         GameObject outlineObject = new GameObject($"{source.name} {suffix}(Runtime)")
         {
@@ -232,7 +254,7 @@ public sealed class ShilhouetteOutlineEffect_m : MonoBehaviour
         ApplyRimProperties();
     }
 
-    private static void SynchronizeOutlineRenderer(SkinnedMeshRenderer source, SkinnedMeshRenderer target, Mesh mesh)
+    internal static void SynchronizeOutlineRenderer(SkinnedMeshRenderer source, SkinnedMeshRenderer target, Mesh mesh)
     {
         if (target.sharedMesh != mesh)
         {
