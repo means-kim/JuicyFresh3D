@@ -15,12 +15,14 @@ public class PlayerStatus_m : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float _nearDeathHealthRatio = 0.3f;
 
     private bool _isNearDeath;
+    private PlayerMove _playerMove;
 
     public bool IsNearDeath => _isNearDeath;
 
     private void Awake()
     {
         if (_effectController == null) _effectController = GetComponentInChildren<PlayerEffectController_m>();
+        _playerMove = GetComponentInParent<PlayerMove>();
     }
 
     private void Update()
@@ -38,10 +40,11 @@ public class PlayerStatus_m : MonoBehaviour
     {
         _currentHealth -= damage;
         _currentHealth = Mathf.Clamp(_currentHealth, 0f, _maxHealth);
-        Debug.Log($"Player took {damage} damage. Current health: {_currentHealth}/{_maxHealth}");
+        Debug.Log($"{damage} 데미지 받음! 현재체력 : {_currentHealth}");
 
-        // 피격 이펙트 호출
-        _effectController.PlayHitEffect();
+        // 구르기 중에는 피해만 받고 피격 연출(TakeDamage 애니 포함)은 막아 구르기 애니메이션을 방해하지 않습니다.
+        bool isRolling = _playerMove != null && _playerMove.IsRolling;
+        if (_effectController != null && !isRolling) _effectController.PlayHitEffect();
 
         // 기준 체력을 처음 넘는 순간에만 빈사 연출을 켭니다.
         if (!_isNearDeath && _currentHealth <= _maxHealth * _nearDeathHealthRatio)

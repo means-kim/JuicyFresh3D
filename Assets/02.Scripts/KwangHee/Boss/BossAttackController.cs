@@ -24,6 +24,11 @@ public class BossAttackController : MonoBehaviour
     [SerializeField][Min(0)] private int _chargeDodgeStartFrame = 40;
     [SerializeField][Min(0)] private int _chargeDodgeEndFrame = 80;
 
+    [Header("근접 피해 Window · 실제로 내려치는 원본 애니메이션 프레임 (임시값, 조정 필요)")]
+    [SerializeField][Min(0)] private float _meleeDamage = 20f;
+    [SerializeField][Min(0)] private int _meleeDamageStartFrame = 50;
+    [SerializeField][Min(0)] private int _meleeDamageEndFrame = 70;
+
     private Animator _animator;
     private BossCombatController _combatController;
     private PlayerMove _targetPlayer;
@@ -48,6 +53,11 @@ public class BossAttackController : MonoBehaviour
         && _animator.GetInteger(AttackTypeHash) == (int)BossAttackType.Charge;
     public bool IsChargeDodgeWindowOpen => _canJudgeChargeDodge && IsChargeDodgeWindowActive;
     public bool IsDodgeWindowOpen => IsMeleeDodgeWindowOpen || IsChargeDodgeWindowOpen;
+    public bool IsDamageWindowOpen => _isAttacking
+        && IsWithinDodgeWindow(MeleeStateHash, _meleeDamageStartFrame, _meleeDamageEndFrame);
+    public float CurrentDamage => _meleeDamage;
+    // 이번 공격에서 회피에 성공했으면 남은 피해 판정에서 제외합니다.
+    public bool HasPlayerDodged { get; private set; }
     public event System.Action AttackFinished;
 
     private void Awake()
@@ -170,6 +180,7 @@ public class BossAttackController : MonoBehaviour
         // 이벤트 처리 중에도 다시 성공하지 못하도록 먼저 이번 공격의 판정을 닫습니다.
         _canJudgeMeleeDodge = false;
         _canJudgeChargeDodge = false;
+        HasPlayerDodged = true;
         Debug.Log("회피성공!", this);
         // 연출 담당에는 성공 신호만 전달합니다.
         player.NotifyDodgeSucceeded();
@@ -180,6 +191,7 @@ public class BossAttackController : MonoBehaviour
         if (!isActiveAndEnabled || _animator == null || IsAttacking) return;
 
         _isAttacking = true;
+        HasPlayerDodged = false;
         _canJudgeMeleeDodge = attackType == BossAttackType.Melee;
         _canJudgeChargeDodge = attackType == BossAttackType.Charge;
 
