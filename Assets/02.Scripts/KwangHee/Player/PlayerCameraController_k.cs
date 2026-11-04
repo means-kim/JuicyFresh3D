@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 [DefaultExecutionOrder(-100)]
 [DisallowMultipleComponent]
@@ -17,6 +20,7 @@ public class PlayerCameraController_k : MonoBehaviour
     private bool _hasFocus;
     private bool _ownsCursor;
     private int _captureFrame = -1;
+    private readonly List<RaycastResult> _uiRaycastResults = new();
 
     public bool CanReadGameplayInput => isActiveAndEnabled && _hasFocus
         && Cursor.lockState == CursorLockMode.Locked && Time.frameCount > _captureFrame;
@@ -70,7 +74,7 @@ public class PlayerCameraController_k : MonoBehaviour
 
         if (Cursor.lockState != CursorLockMode.Locked)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !IsPointerOverUI(Input.mousePosition))
             {
                 CaptureCursor();
             }
@@ -98,6 +102,29 @@ public class PlayerCameraController_k : MonoBehaviour
 
         // PlayerMove.Update가 끝난 위치를 CinemachineBrain보다 먼저 반영합니다.
         transform.position = _target.position + Vector3.up * _targetHeight;
+    }
+
+    private bool IsPointerOverUI(Vector2 screenPosition)
+    {
+        _uiRaycastResults.Clear();
+        EventSystem eventSystem = EventSystem.current;
+        if (eventSystem == null)
+        {
+            return false;
+        }
+
+        // UI보다 먼저 실행되므로 이전 프레임의 포인터 판정 대신 현재 위치를 검사합니다.
+        PointerEventData pointer = new(eventSystem) { position = screenPosition };
+        eventSystem.RaycastAll(pointer, _uiRaycastResults);
+        foreach (RaycastResult result in _uiRaycastResults)
+        {
+            if (result.module is GraphicRaycaster)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void CaptureCursor()

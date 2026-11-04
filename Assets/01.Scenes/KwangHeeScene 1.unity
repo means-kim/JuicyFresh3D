@@ -6594,7 +6594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23e86eaede78ad4885ac9a186e6e016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar_k
-  _bossStatus: {fileID: 2054618055}
+  _bossStatus: {fileID: 7212774884212054178}
   _backImage: {fileID: 81622353}
   _gainImage: {fileID: 1206986210}
   _lossImage: {fileID: 909565740}
@@ -6802,7 +6802,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -202}
+  m_AnchoredPosition: {x: 30, y: -93}
   m_SizeDelta: {x: 530, y: 890}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1749586846
@@ -7764,86 +7764,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
---- !u!1001 &2054618043
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3299384306173182570, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: _target
-      value: 
-      objectReference: {fileID: 146023281}
-    - target: {fileID: 4862897217523663090, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: _groundTransform
-      value: 
-      objectReference: {fileID: 813339871}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.2728856
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.00000022200494
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 10.243737
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 6046896764674074715, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6386443184417485537, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: m_Name
-      value: BossMonster
-      objectReference: {fileID: 0}
-    - target: {fileID: 7600195464409873942, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-      propertyPath: _target
-      value: 
-      objectReference: {fileID: 146023281}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
---- !u!114 &2054618055 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7212774883504644889, guid: c92f968e303a5ce4788e95559f7d2bc9, type: 3}
-  m_PrefabInstance: {fileID: 2054618043}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 242d0e0bcca012545b36b96638145ecd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossStatus_k
 --- !u!1 &2083780957
 GameObject:
   m_ObjectHideFlags: 0
@@ -8187,6 +8107,75 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 785d9c90082f85245873ed1e50883599, type: 3}
+--- !u!1001 &6097201794557550748
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.2728856
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.00000022200494
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.243737
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635055209985472327, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2160376110807100925, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: m_Name
+      value: BossMonster
+      objectReference: {fileID: 0}
+    - target: {fileID: 7625033662653260202, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: _groundTransform
+      value: 
+      objectReference: {fileID: 813339871}
+    - target: {fileID: 7846622137040279996, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: _target
+      value: 
+      objectReference: {fileID: 146023281}
+    - target: {fileID: 8884705753750338403, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+      propertyPath: _target
+      value: 
+      objectReference: {fileID: 146023281}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
 --- !u!1001 &7107009193218683735
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8252,6 +8241,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15e693d61aaf315478085915550afb7f, type: 3}
+--- !u!114 &7212774884212054178 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6909577998660356968, guid: 1698b150c2efa5f4098ae1d0fc74889c, type: 3}
+  m_PrefabInstance: {fileID: 6097201794557550748}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 242d0e0bcca012545b36b96638145ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossStatus_k
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -8265,5 +8265,5 @@ SceneRoots:
   - {fileID: 7107009193218683735}
   - {fileID: 449940337}
   - {fileID: 1002298918}
-  - {fileID: 2054618043}
+  - {fileID: 6097201794557550748}
   - {fileID: 169217326}
